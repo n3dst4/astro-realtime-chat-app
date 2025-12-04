@@ -1,0 +1,310 @@
+---
+const { roomId } = Astro.params;
+
+if (!roomId) return Astro.redirect("/");
+
+// Generate a random user ID and username (in production, use authentication)
+const userId = crypto.randomUUID();
+const defaultUsername = `User${Math.floor(Math.random() * 10000)}`;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chat Room: {roomId}</title>
+    </head>
+    <body>
+        <div id="app">
+            <h1>Chat Room: {roomId}</h1>
+
+            <div id="connection-status">
+                <span id="status-indicator">●</span>
+                <span id="status-text">Connecting...</span>
+            </div>
+
+            <div id="presence-container">
+                <strong>Online Users:</strong>
+                <div id="user-list"></div>
+            </div>
+
+            <div id="messages-container"></div>
+
+            <form id="message-form">
+                <input
+                    type="text"
+                    id="message-input"
+                    placeholder="Type a message..."
+                    autocomplete="off"
+                    required
+                />
+                <button type="submit">Send</button>
+            </form>
+        </div>
+
+        <script define:vars={{ roomId, userId, defaultUsername }}>
+            // WebSocket connection
+            let ws = null;
+            let reconnectAttempts = 0;
+            const maxReconnectAttempts = 5;
+            let username = defaultUsername;
+
+            // DOM elements
+            const statusIndicator = document.getElementById("status-indicator");
+            const statusText = document.getElementById("status-text");
+            const messagesContainer =
+                document.getElementById("messages-container");
+            const messageForm = document.getElementById("message-form");
+            const messageInput = document.getElementById("message-input");
+            const userList = document.getElementById("user-list");
+
+            /**
+             * Connect to the WebSocket server
+             */
+            function connect() {
+                // Determine WebSocket protocol (ws:// or wss://)
+                const protocol =
+                    window.location.protocol === "https:" ? "wss:" : "ws:";
+                const host = window.location.host;
+
+                // Build WebSocket URL
+                const wsUrl = `${protocol}//${host}/api/chat/${roomId}?userId=${userId}&username=${encodeURIComponent(username)}`;
+
+                // Create WebSocket connection
+                ws = new WebSocket(wsUrl);
+
+                // Connection opened
+                ws.addEventListener("open", () => {
+                    console.log("WebSocket connected");
+                    reconnectAttempts = 0;
+                    updateConnectionStatus("connected");
+                });
+
+                // Listen for messages
+                ws.addEventListener("message", (event) => {
+                    handleMessage(event.data);
+                });
+
+                // Connection closed
+                ws.addEventListener("close", () => {
+                    console.log("WebSocket closed");
+                    updateConnectionStatus("disconnected");
+                    attemptReconnect();
+                });
+
+                // Connection error
+                ws.addEventListener("error", (error) => {
+                    console.error("WebSocket error:", error);
+                    updateConnectionStatus("error");
+                });
+            }
+
+            /**
+             * Handle incoming WebSocket messages
+             */
+            function handleMessage(data) {
+                try {
+                    const message = JSON.parse(data);
+
+                    switch (message.type) {
+                        case "history":
+                            // Received message history
+                            message.messages.forEach((msg) =>
+                                displayMessage(msg),
+                            );
+                            break;
+
+                        case "message":
+                            // Received a new chat message
+                            displayMessage(message);
+                            break;
+
+                        case "join":
+                            // User joined
+                            displaySystemMessage(
+                                `${message.username} joined the room`,
+                            );
+                            break;
+
+                        case "leave":
+                            // User left
+                            displaySystemMessage(
+                                `${message.username} left the room`,
+                            );
+                            break;
+
+                        case "presence":
+                            // Update user list
+                            updateUserList(message.users);
+                            break;
+
+                        default:
+                            console.warn("Unknown message type:", message.type);
+                    }
+                } catch (error) {
+                    console.error("Error parsing message:", error);
+                }
+            }
+
+            /**
+             * Display a chat message in the UI
+             */
+            function displayMessage(message) {
+                const messageEl = document.createElement("div");
+                messageEl.className = "message";
+
+                const isOwnMessage = message.userId === userId;
+                if (isOwnMessage) {
+                    messageEl.classList.add("own-message");
+                }
+
+                const timestamp = new Date(
+                    message.timestamp,
+                ).toLocaleTimeString();
+
+                messageEl.innerHTML = `
+          <div class="message-header">
+            <strong>${escapeHtml(message.username)}</strong>
+            <span class="message-time">${timestamp}</span>
+          </div>
+          <div class="message-content">${escapeHtml(message.content)}</div>
+        `;
+
+                messagesContainer.appendChild(messageEl);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            /**
+             * Display a system message (join/leave notifications)
+             */
+            function displaySystemMessage(text) {
+                const messageEl = document.createElement("div");
+                messageEl.className = "system-message";
+                messageEl.textContent = text;
+                messagesContainer.appendChild(messageEl);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+
+            /**
+             * Update the connection status indicator
+             */
+            function updateConnectionStatus(status) {
+                if (status === "connected") {
+                    statusIndicator.style.color = "#10b981";
+                    statusText.textContent = "Connected";
+                } else if (status === "disconnected") {
+                    statusIndicator.style.color = "#ef4444";
+                    statusText.textContent = "Disconnected";
+                } else if (status === "error") {
+                    statusIndicator.style.color = "#f59e0b";
+                    statusText.textContent = "Connection error";
+                } else {
+                    statusIndicator.style.color = "#6b7280";
+                    statusText.textContent = "Connecting...";
+                }
+            }
+
+            /**
+             * Update the user list
+             */
+            function updateUserList(users) {
+                userList.innerHTML = "";
+                users.forEach((user) => {
+                    const userEl = document.createElement("span");
+                    userEl.className = "user-badge";
+                    userEl.textContent = user.username;
+                    userList.appendChild(userEl);
+                });
+            }
+
+            /**
+             * Attempt to reconnect if connection is lost
+             */
+            function attemptReconnect() {
+                if (reconnectAttempts >= maxReconnectAttempts) {
+                    displaySystemMessage(
+                        "Failed to reconnect. Please refresh the page.",
+                    );
+                    return;
+                }
+
+                reconnectAttempts++;
+                const delay = Math.min(
+                    1000 * Math.pow(2, reconnectAttempts),
+                    10000,
+                );
+
+                displaySystemMessage(
+                    `Reconnecting in ${delay / 1000} seconds... (attempt ${reconnectAttempts}/${maxReconnectAttempts})`,
+                );
+
+                setTimeout(() => {
+                    connect();
+                }, delay);
+            }
+
+            /**
+             * Send a message
+             */
+            function sendMessage(content) {
+                if (!ws || ws.readyState !== WebSocket.OPEN) {
+                    displaySystemMessage("Cannot send message: not connected");
+                    return;
+                }
+
+                ws.send(
+                    JSON.stringify({
+                        type: "message",
+                        content: content.trim(),
+                    }),
+                );
+            }
+
+            /**
+             * Escape HTML to prevent XSS
+             */
+            function escapeHtml(text) {
+                const div = document.createElement("div");
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // Handle form submission
+            messageForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const content = messageInput.value.trim();
+                if (content) {
+                    sendMessage(content);
+                    messageInput.value = "";
+                }
+            });
+
+            // Prompt for username on page load
+            const savedUsername = localStorage.getItem("chat-username");
+            if (savedUsername) {
+                username = savedUsername;
+            } else {
+                const promptedUsername = prompt(
+                    "Enter your username:",
+                    defaultUsername,
+                );
+                if (promptedUsername && promptedUsername.trim()) {
+                    username = promptedUsername.trim();
+                    localStorage.setItem("chat-username", username);
+                }
+            }
+
+            // Connect on page load
+            connect();
+
+            // Clean up on page unload
+            window.addEventListener("beforeunload", () => {
+                if (ws) {
+                    ws.close();
+                }
+            });
+        </script>
+    </body>
+</html>
