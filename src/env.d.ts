@@ -4,13 +4,13 @@
 type DurableObjectNamespace = import('@cloudflare/workers-types').DurableObjectNamespace
 
 type ENV = {
-    ChatRoom: DurableObjectNamespace
+  ChatRoom: DurableObjectNamespace
 }
 
 type Runtime = import('@astrojs/cloudflare').Runtime<ENV>
 
 declare namespace App {
-    interface Locals extends Runtime {
-        // Add custom locals here
-    }
+  interface Locals extends Runtime {
+    // Add custom locals here
+  }
 }
