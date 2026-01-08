@@ -3,31 +3,26 @@
   "main": "dist/_worker.js/index.js",
   "name": "realtime-chat",
   "compatibility_date": "2025-12-04",
-  "compatibility_flags": [
-    "nodejs_compat",
-    "global_fetch_strictly_public"
-  ],
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "assets": {
     "binding": "ASSETS",
-    "directory": "./dist"
+    "directory": "./dist",
   },
   "observability": {
-    "enabled": true
+    "enabled": true,
   },
   "durable_objects": {
     "bindings": [
       {
         "name": "ChatRoom",
-        "class_name": "ChatRoom"
-      }
-    ]
+        "class_name": "ChatRoom",
+      },
+    ],
   },
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": [
-        "ChatRoom"
-      ]
-    }
-  ]
+      "new_sqlite_classes": ["ChatRoom"],
+    },
+  ],
 }
