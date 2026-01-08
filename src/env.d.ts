@@ -1,13 +1,4 @@
-/// <reference types="astro/client" />
-/// <reference types="@cloudflare/workers-types" />
-
-type DurableObjectNamespace = import('@cloudflare/workers-types').DurableObjectNamespace
-
-type ENV = {
-  ChatRoom: DurableObjectNamespace
-}
-
-type Runtime = import('@astrojs/cloudflare').Runtime<ENV>
+type Runtime = import("@astrojs/cloudflare").Runtime<Env>;
 
 declare namespace App {
   interface Locals extends Runtime {
