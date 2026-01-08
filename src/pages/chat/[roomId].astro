@@ -43,7 +43,7 @@ const defaultUsername = `User${Math.floor(Math.random() * 10000)}`;
       </form>
     </div>
 
-    <script define:vars={{ roomId, userId, defaultUsername }}>
+    <script is:inline define:vars={{ roomId, userId, defaultUsername }}>
       // WebSocket connection
       let ws = null;
       let reconnectAttempts = 0;
