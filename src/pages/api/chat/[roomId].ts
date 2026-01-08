@@ -1,15 +1,16 @@
 import type { APIRoute } from "astro";
+import { env } from "cloudflare:workers";
 
 /**
  * GET /api/chat/:roomId
  *
  * Handles WebSocket upgrade requests and connects clients to the chat room
  */
-export const GET: APIRoute = async ({ params, request, locals }) => {
+export const GET: APIRoute = async ({ params, request, locals: _locals }) => {
   const { roomId } = params;
   if (!roomId) return new Response("Room ID is required", { status: 400 });
   // Get the ChatRoom Durable Object namespace
-  const ChatRoomNamespace = locals.runtime.env.ChatRoom;
+  const ChatRoomNamespace = env.ChatRoom;
   if (!ChatRoomNamespace)
     return new Response("Chat room binding not found", { status: 500 });
   // Get a Durable Object ID for this room

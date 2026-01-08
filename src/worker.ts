@@ -1,6 +1,6 @@
 import { handle } from "@astrojs/cloudflare/handler";
-import type { SSRManifest } from "astro";
-import { App } from "astro/app";
+// import type { SSRManifest } from "astro";
+// import { App } from "astro/app";
 import { DurableObject } from "cloudflare:workers";
 
 interface SessionAttachment {
@@ -18,13 +18,13 @@ interface ChatMessage {
   timestamp: number;
 }
 
-class ChatRoom extends DurableObject<ENV> {
+export class ChatRoom extends DurableObject<Env> {
   // Map of WebSocket -> session data
   // When the DO hibernates, this gets reconstructed in the constructor
   private sessions: Map<WebSocket, SessionAttachment>;
   private messageHistory: ChatMessage[];
 
-  constructor(ctx: DurableObjectState, env: ENV) {
+  constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
 
     this.sessions = new Map();
@@ -162,8 +162,8 @@ class ChatRoom extends DurableObject<ENV> {
   async webSocketClose(
     ws: WebSocket,
     code: number,
-    reason: string,
-    wasClean: boolean,
+    // reason: string,
+    // wasClean: boolean,
   ): Promise<void> {
     // Get session data
     const session =
@@ -264,15 +264,23 @@ class ChatRoom extends DurableObject<ENV> {
   }
 }
 
-export function createExports(manifest: SSRManifest) {
-  const app = new App(manifest);
-  return {
-    default: {
-      async fetch(request, env, ctx) {
-        // @ts-expect-error - request is not typed correctly
-        return handle(manifest, app, request, env, ctx);
-      },
-    } satisfies ExportedHandler<ENV>,
-    ChatRoom,
-  };
-}
+// export function createExports(manifest: SSRManifest) {
+//   const app = new App(manifest);
+//   return {
+//     default: {
+//       async fetch(request, env, ctx) {
+//         // @ts-expect-error - request is not typed correctly
+//         return handle(manifest, app, request, env, ctx);
+//       },
+//     } satisfies ExportedHandler<ENV>,
+//     ChatRoom,
+//   };
+// }
+
+export default {
+  // @ts-expect-error - return type is off
+  async fetch(request, env, ctx) {
+    // @ts-expect-error - request is not typed correctly
+    return handle(request, env, ctx);
+  },
+} satisfies ExportedHandler<Env>;
