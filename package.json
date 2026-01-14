@@ -11,9 +11,9 @@
     "format:fix": "prettier --write ."
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
-    "@astrojs/cloudflare": "13.0.0-alpha.4",
-    "astro": "6.0.0-alpha.5",
+    "@astrojs/check": "0.9.6-beta.1",
+    "@astrojs/cloudflare": "13.0.0-beta.0",
+    "astro": "6.0.0-beta.1",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
     "wrangler": "^4.58.0"
