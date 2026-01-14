@@ -1,4 +1,6 @@
-import { handle } from "@astrojs/cloudflare/handler";
+// import { handle } from "@astrojs/cloudflare/handler";
+import handler from "@astrojs/cloudflare/entrypoints/server";
+
 // import type { SSRManifest } from "astro";
 // import { App } from "astro/app";
 import { DurableObject } from "cloudflare:workers";
@@ -277,10 +279,20 @@ export class ChatRoom extends DurableObject<Env> {
 //   };
 // }
 
+// export default {
+//   // @ts-expect-error - return type is off
+//   async fetch(request, env, ctx) {
+//     // @ts-expect-error - request is not typed correctly
+//     return handle(request, env, ctx);
+//   },
+// } satisfies ExportedHandler<Env>;
+
 export default {
-  // @ts-expect-error - return type is off
   async fetch(request, env, ctx) {
-    // @ts-expect-error - request is not typed correctly
-    return handle(request, env, ctx);
+    return handler.fetch(request, env, ctx);
+  },
+  async queue(batch, _env) {
+    let messages = JSON.stringify(batch.messages);
+    console.log(`consumed from our queue: ${messages}`);
   },
 } satisfies ExportedHandler<Env>;
