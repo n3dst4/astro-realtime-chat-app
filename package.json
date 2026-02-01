@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "realtime-chat",
+  "name": "astro-realtime-chat-app",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
