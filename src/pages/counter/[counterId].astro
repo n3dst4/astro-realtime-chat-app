@@ -8,9 +8,45 @@ if (counterId === undefined) {
   throw new Error("Counter ID is required");
 }
 
-const counterDOId = env.Counter.idFromName(counterId);
-const counterDO = env.Counter.get(counterDOId);
+const counterDO = env.Counter.getByName(counterId);
 const counterValue = await counterDO.getCounterValue();
 ---
-<p>{counterId}</p>
-<h1>Counter Value is {counterValue}</h1>
+<p id="counter-id" data-counter-id={counterId}>Counter name: {counterId}</p>
+<h1>Counter Value is <span id="counter-value">{counterValue}</span></h1>
+
+<button id="increment">Increment</button>
+<button id="decrement">Decrement</button>
+<script  >
+  const counterId = document.getElementById("counter-id")?.dataset.counterId;
+  const incrementButton = document.getElementById('increment');
+  incrementButton?.addEventListener('click', async () => {
+    // POST to /counter/api/{counterId}/increment
+    const response = await fetch(`/counter/api/${counterId}/increment`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to increment counter: ${response.statusText}`);
+    }
+    const newValue = await response.text();
+    const span = document.querySelector('#counter-value');
+    if (span) {
+      span.textContent = newValue;
+    }
+  });
+  const decrementButton = document.getElementById('decrement');
+
+  decrementButton?.addEventListener('click', async () => {
+    // POST to /counter/api/{counterId}/increment
+    const response = await fetch(`/counter/api/${counterId}/decrement`, {
+      method: 'POST',
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to decrement counter: ${response.statusText}`);
+    }
+    const newValue = await response.text();
+    const span = document.querySelector('#counter-value');
+    if (span) {
+      span.textContent = newValue;
+    }
+  });
+</script>
