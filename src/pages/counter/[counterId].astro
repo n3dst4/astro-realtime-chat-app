@@ -1,0 +1,16 @@
+---
+import {env} from "cloudflare:workers";
+const {counterId} = Astro.params;
+
+export const prerender = false;
+
+if (counterId === undefined) {
+  throw new Error("Counter ID is required");
+}
+
+const counterDOId = env.Counter.idFromName(counterId);
+const counterDO = env.Counter.get(counterDOId);
+const counterValue = await counterDO.getCounterValue();
+---
+<p>{counterId}</p>
+<h1>Counter Value is {counterValue}</h1>
