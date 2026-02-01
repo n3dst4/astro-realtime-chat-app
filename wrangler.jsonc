@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "main": "./src/worker.ts",
+  "main": "./src/workers/worker.ts",
   "name": "astro-realtime-chat-app",
   "compatibility_date": "2025-12-04",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],

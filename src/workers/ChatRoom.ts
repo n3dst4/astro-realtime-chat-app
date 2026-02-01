@@ -1,8 +1,3 @@
-// import { handle } from "@astrojs/cloudflare/handler";
-import handler from "@astrojs/cloudflare/entrypoints/server";
-
-// import type { SSRManifest } from "astro";
-// import { App } from "astro/app";
 import { DurableObject } from "cloudflare:workers";
 
 interface SessionAttachment {
@@ -265,34 +260,3 @@ export class ChatRoom extends DurableObject<Env> {
     await this.ctx.storage.setAlarm(Date.now() + 60 * 60 * 1000);
   }
 }
-
-// export function createExports(manifest: SSRManifest) {
-//   const app = new App(manifest);
-//   return {
-//     default: {
-//       async fetch(request, env, ctx) {
-//         // @ts-expect-error - request is not typed correctly
-//         return handle(manifest, app, request, env, ctx);
-//       },
-//     } satisfies ExportedHandler<ENV>,
-//     ChatRoom,
-//   };
-// }
-
-// export default {
-//   // @ts-expect-error - return type is off
-//   async fetch(request, env, ctx) {
-//     // @ts-expect-error - request is not typed correctly
-//     return handle(request, env, ctx);
-//   },
-// } satisfies ExportedHandler<Env>;
-
-export default {
-  async fetch(request, env, ctx) {
-    return handler.fetch(request, env, ctx);
-  },
-  async queue(batch, _env) {
-    let messages = JSON.stringify(batch.messages);
-    console.log(`consumed from our queue: ${messages}`);
-  },
-} satisfies ExportedHandler<Env>;
