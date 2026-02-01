@@ -8,11 +8,13 @@
     "astro": "astro",
     "deploy": "wrangler deploy",
     "format:check": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "cloudflare-types": "wrangler types src/worker-configuration.d.ts && pnpm run format:fix"
   },
   "dependencies": {
     "@astrojs/check": "0.9.7-beta.1",
     "@astrojs/cloudflare": "13.0.0-beta.3",
+    "@types/node": "^25.1.0",
     "astro": "6.0.0-beta.6",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",

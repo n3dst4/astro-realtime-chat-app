@@ -17,6 +17,10 @@
         "name": "ChatRoom",
         "class_name": "ChatRoom",
       },
+      {
+        "name": "Counter",
+        "class_name": "Counter",
+      },
     ],
   },
   "migrations": [
