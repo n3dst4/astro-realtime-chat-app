@@ -80,34 +80,13 @@ const {counterId} = Astro.params;
 
   const incrementButton = document.getElementById('increment');
   incrementButton?.addEventListener('click', async () => {
-    // POST to /counter/api/{counterId}/increment
-    const response = await fetch(`/counter/api/${counterId}/increment`, {
-      method: 'POST',
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to increment counter: ${response.statusText}`);
-    }
-    const newValue = await response.text();
-    const span = document.querySelector('#counter-value');
-    if (span) {
-      span.textContent = newValue;
-    }
+    ws?.send(JSON.stringify({type: "increment"}))
   });
   const decrementButton = document.getElementById('decrement');
 
   decrementButton?.addEventListener('click', async () => {
-    // POST to /counter/api/{counterId}/increment
-    const response = await fetch(`/counter/api/${counterId}/decrement`, {
-      method: 'POST',
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to decrement counter: ${response.statusText}`);
-    }
-    const newValue = await response.text();
-    const span = document.querySelector('#counter-value');
-    if (span) {
-      span.textContent = newValue;
-    }
+    ws?.send(JSON.stringify({type: "decrement"}))
+
   });
   const refreshButton = document.getElementById('refresh');
 

@@ -8,7 +8,6 @@ function assertNumber(value: any): asserts value is number {
 
 export class Counter extends DurableObject {
   sessions: WebSocket[] = [];
-  value = 0;
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
@@ -29,10 +28,10 @@ export class Counter extends DurableObject {
     );
 
     // Load message history from storage on initialization
-    this.ctx.blockConcurrencyWhile(async () => {
-      const stored = await this.ctx.storage.get<number>("value");
-      if (stored) this.value = stored;
-    });
+    // this.ctx.blockConcurrencyWhile(async () => {
+    //   const stored = await this.ctx.storage.get<number>("value");
+    //   if (stored) this.value = stored;
+    // });
   }
 
   async getCounterValue() {
@@ -48,6 +47,8 @@ export class Counter extends DurableObject {
     // "input gates" will automatically protect against unwanted concurrency.
     // Read-modify-write is safe.
     await this.ctx.storage.put("value", value);
+    console.log("new value is ", value);
+    this.broadcastValue();
     return value;
   }
 
@@ -56,6 +57,7 @@ export class Counter extends DurableObject {
     assertNumber(value);
     value -= amount;
     await this.ctx.storage.put("value", value);
+    this.broadcastValue();
     return value;
   }
 
@@ -90,30 +92,8 @@ export class Counter extends DurableObject {
     // Generate a unique session ID
     const id = crypto.randomUUID();
 
-    // Create session attachment data
-    // const attachment: SessionAttachment = { id, userId, username };
-
-    // Serialize the attachment to the WebSocket
-    // This data persists across hibernation cycles
-    // server.serializeAttachment(attachment);
-
-    // Add to active sessions
-    // this.sessions.set(server, attachment);
-
     // Send message history to the newly connected client
     this.sendValue(server);
-
-    // Broadcast join notification to all clients
-    // this.broadcast({
-    //   id: crypto.randomUUID(),
-    //   type: "join",
-    //   userId,
-    //   username,
-    //   timestamp: Date.now(),
-    // });
-
-    // Send current presence to the new user
-    // this.sendPresence(server);
 
     // Return the client WebSocket in the response
     // return new Response("splat", { status: 200 });
@@ -123,17 +103,62 @@ export class Counter extends DurableObject {
     });
   }
 
+  /**
+   * Handle incoming WebSocket messages (Hibernation API)
+   * Called when a message is received, even after hibernation
+   */
+  override async webSocketMessage(
+    ws: WebSocket,
+    message: ArrayBuffer | string,
+  ): Promise<void> {
+    // Get session data from the map (or deserialize if just woken)
+    try {
+      const parsed = JSON.parse(message as string);
+      if (parsed.type === "increment") {
+        this.increment();
+      }
+      if (parsed.type === "decrement") {
+        this.decrement();
+      }
+    } catch (error) {
+      console.error("Error handling message:", error);
+    }
+  }
+
+  /**
+   * Handle WebSocket close events (Hibernation API)
+   * Called when a client disconnects
+   */
+  override async webSocketClose(
+    ws: WebSocket,
+    code: number,
+    // reason: string,
+    // wasClean: boolean,
+  ): Promise<void> {
+    // Close the WebSocket
+    ws.close(code, "Durable Object is closing WebSocket");
+  }
+
+  /**
+   * Handle WebSocket errors (Hibernation API)
+   */
+  override async webSocketError(ws: WebSocket, error: unknown): Promise<void> {
+    console.error("WebSocket error:", error);
+    // Treat errors as disconnections
+    await this.webSocketClose(ws, 1011); //, "WebSocket error", false);
+  }
+
   broadcastValue() {
     for (const server of this.ctx.getWebSockets()) {
       this.sendValue(server);
     }
   }
 
-  sendValue(server: WebSocket) {
+  async sendValue(server: WebSocket) {
     server.send(
       JSON.stringify({
         type: "value",
-        payload: this.value,
+        payload: await this.ctx.storage.get("value"),
       }),
     );
   }
