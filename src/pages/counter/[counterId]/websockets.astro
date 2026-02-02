@@ -8,7 +8,7 @@ const {counterId} = Astro.params;
 <Layout>
 
 <meta id="counter-id" data-counter-id={counterId}></meta>
-<h1>WebsocketsCounter Value is <span id="counter-value">&mdash;</span></h1>
+<h1>Websockets! Counter Value is <span id="counter-value">&mdash;</span></h1>
 
 <p>Connection status: <span id="connection-status">Disconnected</span></p>
 
@@ -69,11 +69,12 @@ const {counterId} = Astro.params;
     }
   }
 
-  function handleMessage(event: MessageEvent) {
-    const newValue = event.data;
+  function handleMessage(data: any) {
+    console.log("Received value", data);
     const span = document.querySelector('#counter-value');
-    if (span) {
-      span.textContent = newValue;
+    const {type, payload} = JSON.parse(data);
+    if (span && type==="value") {
+      span.textContent = payload;
     }
   }
 

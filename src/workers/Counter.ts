@@ -133,7 +133,7 @@ export class Counter extends DurableObject {
     server.send(
       JSON.stringify({
         type: "value",
-        value: this.value,
+        payload: this.value,
       }),
     );
   }
