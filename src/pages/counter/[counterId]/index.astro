@@ -1,68 +1,14 @@
 ---
-import {env} from "cloudflare:workers";
+import Layout from "../../../layouts/Layout.astro";
+
 const {counterId} = Astro.params;
-
-export const prerender = false;
-
-if (counterId === undefined) {
-  throw new Error("Counter ID is required");
-}
-
-const counterDO = env.Counter.getByName(counterId);
-const counterValue = await counterDO.getCounterValue();
 ---
-<p id="counter-id" data-counter-id={counterId}>Counter name: {counterId}</p>
-<h1>Counter Value is <span id="counter-value">{counterValue}</span></h1>
+<Layout>
 
-<button id="increment">Increment</button>
-<button id="decrement">Decrement</button>
-<button id="refresh">Refresh</button>
-<script>
-  const counterId = document.getElementById("counter-id")?.dataset.counterId;
-  const incrementButton = document.getElementById('increment');
-  incrementButton?.addEventListener('click', async () => {
-    // POST to /counter/api/{counterId}/increment
-    const response = await fetch(`/counter/api/${counterId}/increment`, {
-      method: 'POST',
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to increment counter: ${response.statusText}`);
-    }
-    const newValue = await response.text();
-    const span = document.querySelector('#counter-value');
-    if (span) {
-      span.textContent = newValue;
-    }
-  });
-  const decrementButton = document.getElementById('decrement');
 
-  decrementButton?.addEventListener('click', async () => {
-    // POST to /counter/api/{counterId}/increment
-    const response = await fetch(`/counter/api/${counterId}/decrement`, {
-      method: 'POST',
-    });
-    if (!response.ok) {
-      throw new Error(`Failed to decrement counter: ${response.statusText}`);
-    }
-    const newValue = await response.text();
-    const span = document.querySelector('#counter-value');
-    if (span) {
-      span.textContent = newValue;
-    }
-  });
-  const refreshButton = document.getElementById('refresh');
+<p>
+  <a href={`${counterId}/api-calls`}>API Calls</a>
+  <a href={`${counterId}/websockets`}>WebSockets</a>
+</p>
 
-  refreshButton?.addEventListener('click', async () => {
-    // POST to /counter/api/{counterId}/increment
-    const response = await fetch(`/counter/api/${counterId}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch counter: ${response.statusText}`);
-    }
-    const newValue = await response.text();
-    const span = document.querySelector('#counter-value');
-    if (span) {
-      span.textContent = newValue;
-    }
-  });
-
-</script>
+</Layout>

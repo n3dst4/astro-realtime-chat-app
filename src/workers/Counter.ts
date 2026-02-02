@@ -106,6 +106,8 @@ export class Counter extends DurableObject {
     // this.sendPresence(server);
 
     // Return the client WebSocket in the response
+    // return new Response("splat", { status: 200 });
+    console.log("Ready to return websocket");
     return new Response(null, {
       status: 101,
       webSocket: client,
