@@ -13,5 +13,5 @@ export const GET: APIRoute = async ({ params, request, locals: _locals }) => {
   const durableObjectId = CounterNamespace.idFromName(counterId);
   // Get a stub (reference) to the Durable Object
   const durableObjectStub = CounterNamespace.get(durableObjectId);
-  return durableObjectStub.fetchWS(request);
+  return durableObjectStub.fetch(request);
 };

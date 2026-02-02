@@ -62,8 +62,18 @@ export class Counter extends DurableObject {
   /**
    * Handle HTTP requests to this Durable Object
    * This is called when a client wants to establish a WebSocket connection
+   * This MUST be called `fetch`: it's the original API for interacting with
+   * Durable Objects and can handle returning a Response object. Calls to any
+   * other method go through RPC, which requires that all arguments and return
+   * values must be serializable.
+   *
+   * Official docs:
+   * https://developers.cloudflare.com/durable-objects/best-practices/create-durable-object-stubs-and-send-requests/#invoking-the-fetch-handler
+   *
+   * Blog post says the same thing but slower and louder:
+   * https://flaredup.substack.com/i/161450113/synchronous-calls-with-fetch-and-rpc
    */
-  async fetchWS(request: Request): Promise<Response> {
+  async fetch(request: Request): Promise<Response> {
     const upgradeHeader = request.headers.get("Upgrade");
     if (upgradeHeader !== "websocket") {
       return new Response("Expected WebSocket upgrade", { status: 426 });
@@ -107,7 +117,6 @@ export class Counter extends DurableObject {
 
     // Return the client WebSocket in the response
     // return new Response("splat", { status: 200 });
-    console.log("Ready to return websocket");
     return new Response(null, {
       status: 101,
       webSocket: client,
