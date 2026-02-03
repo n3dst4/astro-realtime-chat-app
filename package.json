@@ -17,6 +17,7 @@
     "@types/node": "^25.1.0",
     "astro": "6.0.0-beta.6",
     "prettier": "^3.7.4",
+    "prettier-plugin-astro": "^0.14.1",
     "typescript": "^5.9.3",
     "wrangler": "^4.61.1"
   }
