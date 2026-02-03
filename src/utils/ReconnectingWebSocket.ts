@@ -4,27 +4,60 @@ function noop() {}
  * Configuration options for the ReconnectingWebSocket class.
  */
 type Options = {
-  /** Maximum number of reconnection attempts before giving up */
+  /**
+   * Maximum number of reconnection attempts before giving up
+   * @default Infinity
+   */
   maxRetries: number;
-  /** WebSocket subprotocols to use - can be a single protocol string or array of protocols */
+  /**
+   * WebSocket subprotocols to use - can be a single protocol string or array of protocols
+   * @default []
+   */
   protocols: string | string[];
-  /** Delay in milliseconds between reconnection attempts */
+  /**
+   * Delay in milliseconds between reconnection attempts
+   * @default 1000
+   */
   retryDelay: number;
-  /** Callback function triggered when a message is received from the WebSocket */
+  /**
+   * Callback function triggered when a message is received from the WebSocket
+   * @default noop
+   */
   onmessage: (event: MessageEvent) => void;
-  /** Callback function triggered when the WebSocket connection is opened */
+  /**
+   * Callback function triggered when the WebSocket connection is opened
+   * @default noop
+   */
   onopen: (event: Event) => void;
-  /** Callback function triggered when the WebSocket connection is closed */
+  /**
+   * Callback function triggered when the WebSocket connection is closed
+   * @default noop
+   */
   onclose: (event: CloseEvent) => void;
-  /** Callback function triggered when a WebSocket error occurs */
+  /**
+   * Callback function triggered when a WebSocket error occurs
+   * @default noop
+   */
   onerror: (event: Event) => void;
-  /** Callback function triggered when a reconnection attempt is made */
+  /**
+   * Callback function triggered when a reconnection attempt is made
+   * @default noop
+   */
   onreconnect: (event: Event) => void;
-  /** Callback function triggered when the maximum number of retries is reached */
+  /**
+   * Callback function triggered when the maximum number of retries is reached
+   * @default noop
+   */
   onmaxretries: (event: Event) => void;
-  /** call/response pair for keepalives */
+  /**
+   * Call/response pair for keepalives
+   * @default ["ping", "pong"]
+   */
   keepalivePair: [string, string];
-  /** interval in milliseconds for keepalive messages (0=no keepalives) */
+  /**
+   * Interval in milliseconds for keepalive messages (0=no keepalives)
+   * @default 0
+   */
   keepaliveInterval: number;
 };
 
@@ -66,7 +99,12 @@ export class ReconnectingWebSocket {
 
   open() {
     this.websocket = new WebSocket(this.url, this.options.protocols);
-    this.websocket.onmessage = this.options.onmessage;
+    this.websocket.addEventListener("message", (event) => {
+      if (event.data === this.options.keepalivePair[1]) {
+        return;
+      }
+      this.options.onmessage(event);
+    });
 
     if (this.options.keepaliveInterval > 0) {
       this.keepaliveTimer = setInterval(() => {
@@ -94,8 +132,8 @@ export class ReconnectingWebSocket {
   }
 
   reconnect(event: Event) {
-    clearInterval(this.retryTimer);
-    this.retryTimer = undefined;
+    clearInterval(this.keepaliveTimer);
+    this.keepaliveTimer = undefined;
     if (this.retryCount < this.options.maxRetries) {
       if (this.retryTimer) {
         return;

@@ -49,7 +49,7 @@ const {counterId} = Astro.params;
       onerror: (error) => {
         updateConnectionStatus("error");
       },
-      keepaliveInterval: 30000
+      keepaliveInterval: 30_000
     });
   }
 
