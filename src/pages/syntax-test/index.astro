@@ -1,14 +1,14 @@
 ---
-import Wrapper from "../../components/wrapper.astro"
+import Wrapper from "../../components/wrapper.astro";
 import Layout from "../../layouts/Layout.astro";
 const items = [
-  {title: "One", published: true},
-  {title: "Poop", published: false},
-  {title: "Two", published: true},
-  {title: "Three", published: true},
-  {title: "Wee", published: false},
-  {title: "Four", published: true},
-]
+  { title: "One", published: true },
+  { title: "Poop", published: false },
+  { title: "Two", published: true },
+  { title: "Three", published: true },
+  { title: "Wee", published: false },
+  { title: "Four", published: true },
+];
 
 // doesn't work - markup expressions aren't valid in preamble
 // function wrap(thing: any) {
@@ -17,23 +17,21 @@ const items = [
 ---
 
 <Layout>
+  <h1>Astro Syntax Test</h1>
 
-<h1>Astro Syntax Test</h1>
+  {
+    items.map(({ title, published }) => {
+      // you *can* use markup expressions in code inside the component body, like this
+      function wrap(thing: any) {
+        return <Wrapper>{thing}</Wrapper>;
+      }
 
-{
-items.map(({title, published}) => {
-  // you *can* use markup expressions in code inside the component body, like this
-  function wrap(thing: any) {
-    return <Wrapper>{thing}</Wrapper>
+      return published ? <h2>{title}</h2> : wrap(<i>(redacted)</i>);
+    })
   }
-
-  return published ? <h2>{title}</h2> : wrap(<i>(redacted)</i>)
-})
-}
-<!-- {
+  <!-- {
   items.map(({title, published}) => (
     published ? <h2>{title}</h2> : "(redacted)"
   ))
 } -->
-
 </Layout>

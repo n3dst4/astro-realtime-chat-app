@@ -1,14 +1,12 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 
-const {counterId} = Astro.params;
+const { counterId } = Astro.params;
 ---
+
 <Layout>
-
-
-<p>
-  <a href={`${counterId}/api-calls`}>API Calls</a>
-  <a href={`${counterId}/websockets`}>WebSockets</a>
-</p>
-
+  <p>
+    <a href={`${counterId}/api-calls`}>API Calls</a>
+    <a href={`${counterId}/websockets`}>WebSockets</a>
+  </p>
 </Layout>

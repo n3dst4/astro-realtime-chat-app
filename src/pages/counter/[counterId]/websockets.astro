@@ -1,13 +1,11 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 
-import {env} from "cloudflare:workers";
-const {counterId} = Astro.params;
+import { env } from "cloudflare:workers";
+const { counterId } = Astro.params;
 ---
 
-<Layout>
-
-<meta id="counter-id" data-counter-id={counterId}></meta>
+<Layout> <meta id="counter-id" data-counter-id={counterId} /></Layout>
 <h1>Websockets! Counter Value is <span id="counter-value">&mdash;</span></h1>
 
 <p>Connection status: <span id="connection-status">Disconnected</span></p>
@@ -15,15 +13,11 @@ const {counterId} = Astro.params;
 <button id="increment">Increment</button>
 <button id="decrement">Decrement</button>
 
-</Layout>
-
-
 <script>
-  import {ReconnectingWebSocket} from "../../../utils/ReconnectingWebSocket"
+  import { ReconnectingWebSocket } from "../../../utils/ReconnectingWebSocket";
 
-
-  let ws: ReconnectingWebSocket|null = null;
-  let connected: "connected"|"disconnected"|"error" = "disconnected";
+  let ws: ReconnectingWebSocket | null = null;
+  let connected: "connected" | "disconnected" | "error" = "disconnected";
 
   const counterId = document.getElementById("counter-id")?.dataset.counterId;
 
@@ -49,16 +43,19 @@ const {counterId} = Astro.params;
       onerror: (error) => {
         updateConnectionStatus("error");
       },
-      keepaliveInterval: 30_000
+      keepaliveInterval: 30_000,
     });
   }
 
   connect();
 
-  function updateConnectionStatus(status: "connected"|"disconnected"|"error") {
-    const statusElement = document.getElementById('connection-status');
+  function updateConnectionStatus(
+    status: "connected" | "disconnected" | "error",
+  ) {
+    const statusElement = document.getElementById("connection-status");
     if (statusElement) {
-      statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+      statusElement.textContent =
+        status.charAt(0).toUpperCase() + status.slice(1);
     }
   }
 
@@ -67,36 +64,34 @@ const {counterId} = Astro.params;
     if (data === "pong") {
       return;
     }
-    const span = document.querySelector('#counter-value');
-    const {type, payload} = JSON.parse(data);
-    if (span && type==="value") {
+    const span = document.querySelector("#counter-value");
+    const { type, payload } = JSON.parse(data);
+    if (span && type === "value") {
       span.textContent = payload;
     }
   }
 
-  const incrementButton = document.getElementById('increment');
-  incrementButton?.addEventListener('click', async () => {
-    ws?.send(JSON.stringify({type: "increment"}))
+  const incrementButton = document.getElementById("increment");
+  incrementButton?.addEventListener("click", async () => {
+    ws?.send(JSON.stringify({ type: "increment" }));
   });
-  const decrementButton = document.getElementById('decrement');
+  const decrementButton = document.getElementById("decrement");
 
-  decrementButton?.addEventListener('click', async () => {
-    ws?.send(JSON.stringify({type: "decrement"}))
-
+  decrementButton?.addEventListener("click", async () => {
+    ws?.send(JSON.stringify({ type: "decrement" }));
   });
-  const refreshButton = document.getElementById('refresh');
+  const refreshButton = document.getElementById("refresh");
 
-  refreshButton?.addEventListener('click', async () => {
+  refreshButton?.addEventListener("click", async () => {
     // POST to /counter/api/{counterId}/increment
     const response = await fetch(`/counter/api/${counterId}`);
     if (!response.ok) {
       throw new Error(`Failed to fetch counter: ${response.statusText}`);
     }
     const newValue = await response.text();
-    const span = document.querySelector('#counter-value');
+    const span = document.querySelector("#counter-value");
     if (span) {
       span.textContent = newValue;
     }
   });
-
 </script>
