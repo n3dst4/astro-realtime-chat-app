@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
 
+export const prerender = false;
 /**
  * GET /api/chat/:roomId
  *
