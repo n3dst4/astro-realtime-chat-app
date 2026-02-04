@@ -2,13 +2,13 @@
 import Layout from "../../../layouts/Layout.astro";
 export { getStaticPaths } from "./_getStaticPaths";
 
-const { counterId } = Astro.params;
+// const { counterId } = Astro.params;
 ---
 
 <Layout>
   <p>
-    <a href={`${counterId}/api-calls`}>API Calls</a>
-    <a href={`${counterId}/websockets`}>WebSockets</a>
-    <a href={`${counterId}/react`}>React</a>
+    <a href="api-calls">API Calls</a>
+    <a href="websockets">WebSockets</a>
+    <a href="react">React</a>
   </p>
 </Layout>
