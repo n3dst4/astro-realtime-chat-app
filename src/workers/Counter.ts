@@ -36,7 +36,7 @@ export class Counter extends DurableObject {
 
   async getCounterValue() {
     let value = (await this.ctx.storage.get("value")) || 0;
-    return value;
+    return Number(value);
   }
 
   async increment(amount = 1) {

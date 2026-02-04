@@ -1,23 +1,22 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 
-import { env } from "cloudflare:workers";
 const { counterId } = Astro.params;
 ---
 
-<Layout> <meta id="counter-id" data-counter-id={counterId} /></Layout>
-<h1>Websockets! Counter Value is <span id="counter-value">&mdash;</span></h1>
+<Layout>
+  <meta id="counter-id" data-counter-id={counterId} />
+  <h1>Websockets! Counter Value is <span id="counter-value">&mdash;</span></h1>
 
-<p>Connection status: <span id="connection-status">Disconnected</span></p>
+  <p>Connection status: <span id="connection-status">Disconnected</span></p>
 
-<button id="increment">Increment</button>
-<button id="decrement">Decrement</button>
-
+  <button id="increment">Increment</button>
+  <button id="decrement">Decrement</button>
+</Layout>
 <script>
   import { ReconnectingWebSocket } from "../../../utils/ReconnectingWebSocket";
 
   let ws: ReconnectingWebSocket | null = null;
-  let connected: "connected" | "disconnected" | "error" = "disconnected";
 
   const counterId = document.getElementById("counter-id")?.dataset.counterId;
 

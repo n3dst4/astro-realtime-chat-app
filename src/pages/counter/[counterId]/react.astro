@@ -1,0 +1,19 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { ReactCounter } from "./ReactCounter";
+import { env } from "cloudflare:workers";
+export const prerender = false;
+
+const { counterId } = Astro.params;
+const counterValue = await env.Counter.getByName(
+  counterId ?? "",
+).getCounterValue();
+---
+
+<Layout>
+  <ReactCounter
+    client:load
+    counterId={counterId ?? ""}
+    initialCounterValue={counterValue}
+  />
+</Layout>
