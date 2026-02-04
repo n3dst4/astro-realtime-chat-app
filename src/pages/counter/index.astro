@@ -1,0 +1,15 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getStaticPaths } from "./[counterId]/_getStaticPaths";
+const paths = getStaticPaths();
+---
+
+<Layout>
+  <h1>Counters</h1>
+
+  {
+    paths.map(({ params }) => (
+      <a href={`./${params.counterId}/`}>{params.counterId}</a>
+    ))
+  }
+</Layout>

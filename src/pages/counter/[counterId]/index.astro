@@ -2,10 +2,11 @@
 import Layout from "../../../layouts/Layout.astro";
 export { getStaticPaths } from "./_getStaticPaths";
 
-// const { counterId } = Astro.params;
+const { counterId } = Astro.params;
 ---
 
 <Layout>
+  <h1>{counterId}</h1>
   <p>
     <a href="api-calls">API Calls</a>
     <a href="websockets">WebSockets</a>

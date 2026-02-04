@@ -1,5 +1,10 @@
 {
-  "plugins": ["prettier-plugin-astro"],
+  "plugins": [
+    "prettier-plugin-astro",
+    "prettier-plugin-classnames",
+    "prettier-plugin-tailwindcss",
+    "prettier-plugin-merge"
+  ],
   "overrides": [
     {
       "files": "*.astro",

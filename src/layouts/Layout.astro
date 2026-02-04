@@ -1,5 +1,13 @@
 ---
+import "../styles/global.css";
+const url = new URL(Astro.request.url);
+const parentUrl =
+  url.pathname === "/"
+    ? null
+    : (url.pathname.replace(/\/$/, "").split("/").slice(0, -1).join("/") ||
+        "") + "/";
 
+const { class: className } = Astro.props;
 ---
 
 <html lang="en">
@@ -11,10 +19,16 @@
     <title>Astro</title>
   </head>
   <body>
-    <header>
-      <a href="/">Home</a>
+    <header class="flex gap-4 bg-gray-200 p-6">
+      <a
+        class="[[href]]:text-blue-700 [[href]]:hover:underline"
+        href={parentUrl}>Up</a
+      >
+      <a class="text-blue-700 hover:underline" href="/">Home</a>
       <hr />
     </header>
-    <slot />
+    <main class={`prose p-6 ${className}`}>
+      <slot />
+    </main>
   </body>
 </html>
