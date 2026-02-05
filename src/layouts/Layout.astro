@@ -28,7 +28,7 @@ const { class: className } = Astro.props;
       <a class="text-blue-700 hover:underline" href="/">Home</a>
       <hr />
     </header>
-    <main class={`prose p-6 ${className}`}>
+    <main class={`prose p-6 ${className} lg:prose-lg lg:w-9/12`}>
       <slot />
     </main>
   </body>
