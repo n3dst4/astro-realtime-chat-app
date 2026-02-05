@@ -9,7 +9,9 @@ const paths = getStaticPaths();
 
   {
     paths.map(({ params }) => (
-      <a href={`./${params.counterId}/`}>{params.counterId}</a>
+      <a class="block p-2 text-blue-500" href={`./${params.counterId}/`}>
+        {params.counterId}
+      </a>
     ))
   }
 </Layout>

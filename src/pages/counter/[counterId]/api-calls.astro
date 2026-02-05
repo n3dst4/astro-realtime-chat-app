@@ -1,5 +1,6 @@
 ---
 import { env } from "cloudflare:workers";
+import Button from "../../../components/Button.astro";
 import Layout from "../../../layouts/Layout.astro";
 
 const { counterId } = Astro.params;
@@ -18,9 +19,9 @@ const counterValue = await counterDO.getCounterValue();
   <p id="counter-id" data-counter-id={counterId}>Counter name: {counterId}</p>
   <h1>Counter Value is <span id="counter-value">{counterValue}</span></h1>
 
-  <button id="increment">Increment</button>
-  <button id="decrement">Decrement</button>
-  <button id="refresh">Refresh</button>
+  <Button id="increment">Increment</Button>
+  <Button id="decrement">Decrement</Button>
+  <Button id="refresh">Refresh</Button>
 </Layout>
 
 <script>

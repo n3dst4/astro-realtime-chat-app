@@ -1,0 +1,13 @@
+---
+export type Props = {
+  id: string;
+  children: any;
+};
+
+const { id } = Astro.props;
+---
+
+<button
+  class="m-1 cursor-pointer bg-gray-200 px-3 shadow-md hover:bg-gray-300"
+  id={id}><slot /></button
+>

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "../../../components/Button.tsx";
 import { ReconnectingWebSocket } from "../../../utils/ReconnectingWebSocket";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type ReactCounterProps = {
   counterId: string;
@@ -66,8 +67,8 @@ export const ReactCounter = ({
       <h1>React + Websockets! Counter Value is {counterValue}</h1>
       <p>Connection status: {connectionStatus}</p>
 
-      <button onClick={handleIncrement}>Increment</button>
-      <button onClick={handleDecrement}>Decrement</button>
+      <Button onClick={handleIncrement}>Increment</Button>
+      <Button onClick={handleDecrement}>Decrement</Button>
     </>
   );
 };

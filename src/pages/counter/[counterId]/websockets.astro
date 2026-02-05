@@ -1,5 +1,7 @@
 ---
+import Button from "../../../components/Button.astro";
 import Layout from "../../../layouts/Layout.astro";
+
 export { getStaticPaths } from "./_getStaticPaths";
 
 const { counterId } = Astro.params;
@@ -11,8 +13,8 @@ const { counterId } = Astro.params;
 
   <p>Connection status: <span id="connection-status">Disconnected</span></p>
 
-  <button id="increment">Increment</button>
-  <button id="decrement">Decrement</button>
+  <Button id="increment">Increment</Button>
+  <Button id="decrement">Decrement</Button>
 </Layout>
 <script>
   import { ReconnectingWebSocket } from "../../../utils/ReconnectingWebSocket";
