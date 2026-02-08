@@ -1,0 +1,35 @@
+---
+import { env } from "cloudflare:workers";
+import Layout from "../../layouts/Layout.astro";
+
+export const prerender = false;
+
+const { results } = await env.todos
+  .prepare("SELECT * FROM Customers WHERE CompanyName = ?")
+  .bind("Bs Beverages")
+  .run();
+---
+
+<Layout>
+  <h1>Customers</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Customer ID</th>
+        <th>Company Name</th>
+        <th>Contact Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        results.map((customer) => (
+          <tr>
+            <td>{customer["CustomerId"]}</td>
+            <td>{customer["CompanyName"]}</td>
+            <td>{customer["ContactName"]}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</Layout>
