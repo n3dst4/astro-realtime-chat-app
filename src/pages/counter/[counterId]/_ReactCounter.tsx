@@ -38,10 +38,10 @@ export const ReactCounter = ({
           setCounterValue(data.payload);
         }
       },
-      onclose: (event) => {
+      onclose: () => {
         setConnectionStatus("disconnected");
       },
-      onerror: (error) => {
+      onerror: () => {
         setConnectionStatus("error");
       },
       keepaliveInterval: 30_000,
@@ -64,7 +64,7 @@ export const ReactCounter = ({
 
   return (
     <>
-      <h1>React + Websockets! Counter Value is {counterValue}</h1>
+      <p>Counter Value is {counterValue}</p>
       <p>Connection status: {connectionStatus}</p>
 
       <Button onClick={handleIncrement}>Increment</Button>

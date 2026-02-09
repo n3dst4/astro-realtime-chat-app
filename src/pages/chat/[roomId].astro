@@ -11,10 +11,8 @@ const userId = crypto.randomUUID();
 const defaultUsername = `User${Math.floor(Math.random() * 10000)}`;
 ---
 
-<Layout>
+<Layout title={`Chat Room: ${roomId}`}>
   <div id="app">
-    <h1>Chat Room: {roomId}</h1>
-
     <div id="connection-status">
       <span id="status-indicator">●</span>
       <span id="status-text">Connecting...</span>

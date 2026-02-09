@@ -9,6 +9,13 @@ const parentUrl =
         "") + "/";
 
 const { class: className } = Astro.props;
+
+type Props = {
+  class?: string;
+  title: string;
+};
+
+const { title } = Astro.props;
 ---
 
 <html lang="en">
@@ -17,7 +24,7 @@ const { class: className } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro</title>
+    <title>{title} | ARCA</title>
   </head>
   <body>
     <header class="flex gap-4 bg-gray-200 p-6">
@@ -29,6 +36,7 @@ const { class: className } = Astro.props;
       <hr />
     </header>
     <main class={`prose p-6 ${className} lg:prose-lg lg:w-9/12`}>
+      <h1>{title}</h1>
       <slot />
     </main>
   </body>

@@ -15,9 +15,9 @@ const counterDO = env.Counter.getByName(counterId);
 const counterValue = await counterDO.getCounterValue();
 ---
 
-<Layout>
+<Layout title={`Counter ${counterId}`}>
   <p id="counter-id" data-counter-id={counterId}>Counter name: {counterId}</p>
-  <h1>Counter Value is <span id="counter-value">{counterValue}</span></h1>
+  <p>Counter Value is <span id="counter-value">{counterValue}</span></p>
 
   <Button id="increment">Increment</Button>
   <Button id="decrement">Decrement</Button>

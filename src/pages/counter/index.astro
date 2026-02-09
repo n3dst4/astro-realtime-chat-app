@@ -4,9 +4,7 @@ import { getStaticPaths } from "./[counterId]/_getStaticPaths";
 const paths = getStaticPaths();
 ---
 
-<Layout>
-  <h1>Counters</h1>
-
+<Layout title="Counters">
   {
     paths.map(({ params }) => (
       <a class="block p-2 text-blue-500" href={`./${params.counterId}/`}>

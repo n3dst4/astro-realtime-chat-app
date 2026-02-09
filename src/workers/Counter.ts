@@ -89,9 +89,6 @@ export class Counter extends DurableObject {
     // keeping the WebSocket connection open
     this.ctx.acceptWebSocket(server);
 
-    // Generate a unique session ID
-    const id = crypto.randomUUID();
-
     // Send message history to the newly connected client
     this.sendValue(server);
 
@@ -108,7 +105,7 @@ export class Counter extends DurableObject {
    * Called when a message is received, even after hibernation
    */
   override async webSocketMessage(
-    ws: WebSocket,
+    _ws: WebSocket,
     message: ArrayBuffer | string,
   ): Promise<void> {
     // Get session data from the map (or deserialize if just woken)

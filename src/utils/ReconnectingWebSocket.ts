@@ -112,9 +112,9 @@ export class ReconnectingWebSocket {
       }, this.options.keepaliveInterval);
     }
 
-    this.websocket.addEventListener("open", (e: Event) => {
+    this.websocket.addEventListener("open", (event: Event) => {
       log("WebSocket opened", event);
-      this.options.onopen(e);
+      this.options.onopen(event);
       this.retryCount = 0;
     });
 

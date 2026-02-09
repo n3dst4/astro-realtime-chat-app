@@ -1,5 +1,5 @@
 type ButtonProps = React.PropsWithChildren<{
-  id: string;
+  id?: string;
   children: any;
   onClick?: () => void;
 }>;

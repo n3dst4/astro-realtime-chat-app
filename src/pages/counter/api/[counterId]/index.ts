@@ -3,8 +3,8 @@ import { env } from "cloudflare:workers";
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ params, request, locals: _locals }) => {
-  const { counterId } = params;
+export const GET: APIRoute = async ({ params: { counterId } }) => {
+  // const { counterId } = params;
   if (!counterId) return new Response("Room ID is required", { status: 400 });
   // Get the ChatRoom Durable Object namespace
   const CounterNamespace = env.Counter;

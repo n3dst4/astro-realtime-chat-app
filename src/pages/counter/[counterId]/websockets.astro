@@ -7,9 +7,9 @@ export { getStaticPaths } from "./_getStaticPaths";
 const { counterId } = Astro.params;
 ---
 
-<Layout>
+<Layout title="Websockets">
   <meta id="counter-id" data-counter-id={counterId} />
-  <h1>Websockets! Counter Value is <span id="counter-value">&mdash;</span></h1>
+  <p>Counter Value is <em id="counter-value">&mdash;</em></p>
 
   <p>Connection status: <span id="connection-status">Disconnected</span></p>
 
@@ -39,10 +39,10 @@ const { counterId } = Astro.params;
       onmessage: (event) => {
         handleMessage(event.data);
       },
-      onclose: (event) => {
+      onclose: () => {
         updateConnectionStatus("disconnected");
       },
-      onerror: (error) => {
+      onerror: () => {
         updateConnectionStatus("error");
       },
       keepaliveInterval: 30_000,

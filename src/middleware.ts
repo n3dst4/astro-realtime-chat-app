@@ -1,6 +1,6 @@
 import { defineMiddleware, sequence } from "astro:middleware";
 
-const addPTerryHeader = defineMiddleware(async (context, next) => {
+const addPTerryHeader = defineMiddleware(async (_context, next) => {
   const response = await next();
   if (response.status === 101) {
     console.log("websocket - stepping back");

@@ -5,8 +5,7 @@ export { getStaticPaths } from "./_getStaticPaths";
 const { counterId } = Astro.params;
 ---
 
-<Layout>
-  <h1>{counterId}</h1>
+<Layout title={`Counter: ${counterId}`}>
   <p>
     <a class="block p-3 text-blue-500" href="api-calls">API Calls</a>
     <a class="block p-3 text-blue-500" href="websockets">WebSockets</a>
