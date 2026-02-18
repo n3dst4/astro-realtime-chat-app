@@ -1,8 +1,11 @@
 ---
 import { env } from "cloudflare:workers";
+import { drizzle } from "drizzle-orm/d1";
 import Layout from "../../layouts/Layout.astro";
 
 export const prerender = false;
+
+const db = drizzle(env.todos);
 
 const { results } = await env.todos
   .prepare("SELECT * FROM Customers WHERE CompanyName = ?")
@@ -12,9 +15,9 @@ const { results } = await env.todos
 
 <Layout title="Customers">
   <p>
-    <a href="drizzle">Drizzle</a>
+    <a href="sql">SQL</a>
   </p>
   <p>
-    <a href="sql">SQL</a>
+    <a href="drizzle">Drizzle</a>
   </p>
 </Layout>
