@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@astrojs/check": "0.9.7-beta.1",
-    "@astrojs/cloudflare": "13.0.0-beta.6",
+    "@astrojs/cloudflare": "13.0.0-beta.8",
     "@astrojs/react": "5.0.0-beta.3",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
@@ -21,7 +21,7 @@
     "@types/node": "^25.2.2",
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
-    "astro": "6.0.0-beta.10",
+    "astro": "6.0.0-beta.13",
     "dotenv": "^17.2.4",
     "drizzle-kit": "^0.31.9",
     "drizzle-orm": "^0.45.1",
@@ -36,6 +36,6 @@
     "react-dom": "^19.2.4",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3",
-    "wrangler": "^4.63.0"
+    "wrangler": "^4.66.0"
   }
 }
