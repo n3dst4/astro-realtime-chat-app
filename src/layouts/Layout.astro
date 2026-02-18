@@ -26,16 +26,18 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title} | ARCA</title>
   </head>
-  <body>
-    <header class="flex gap-4 bg-gray-200 p-6">
-      <a
-        class="[[href]]:text-blue-700 [[href]]:hover:underline"
-        href={parentUrl}>Up</a
-      >
-      <a class="text-blue-700 hover:underline" href="/">Home</a>
+  <body class="bg-stone-50 dark:bg-stone-950">
+    <header
+      class="red flex gap-4 bg-stone-200 p-6 text-stone-600 dark:bg-stone-900 dark:text-stone-100"
+    >
+      <a class="link" href={parentUrl}>Up</a>
+      <a class="link" href="/">Home</a>
       <hr />
     </header>
-    <main class={`prose p-6 ${className} lg:prose-lg lg:w-9/12`}>
+    <main
+      class={`prose p-6 ${className} lg:prose-lg lg:w-9/12 dark:prose-invert
+        prose-stone prose-a:text-sky-600 dark:prose-a:text-sky-200`}
+    >
       <h1>{title}</h1>
       <slot />
     </main>

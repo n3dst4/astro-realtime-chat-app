@@ -1,2 +1,46 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+@theme {
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+}
+
+@layer components {
+  .link {
+    &[href] {
+      &:hover {
+        text-decoration: underline;
+      }
+      color: var(--color-sky-600);
+      @variant dark {
+        color: var(--color-sky-200);
+      }
+    }
+  }
+
+  .btn {
+    /*m-1 cursor-pointer bg-gray-200 px-3 shadow-md hover:bg-gray-300*/
+    cursor: pointer;
+    padding: 0 var(--spacing-3);
+    transition: background-color 0.1s ease-in-out;
+    border-radius: var(--radius-md);
+
+    background-color: var(--color-stone-200);
+    color: var(--color-stone-950);
+    box-shadow: var(--shadow-md);
+    &:hover {
+      background-color: var(--color-stone-300);
+    }
+    @variant dark {
+      background-color: var(--color-stone-700);
+      color: var(--color-stone-50);
+      box-shadow: var(--shadow-md);
+      &:hover {
+        background-color: var(--color-stone-300);
+      }
+    }
+  }
+}

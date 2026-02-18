@@ -7,9 +7,11 @@ const paths = getStaticPaths();
 <Layout title="Counters">
   {
     paths.map(({ params }) => (
-      <a class="block p-2 text-blue-500" href={`./${params.counterId}/`}>
-        {params.counterId}
-      </a>
+      <p>
+        <a class="link" href={`./${params.counterId}/`}>
+          {params.counterId}
+        </a>
+      </p>
     ))
   }
 </Layout>

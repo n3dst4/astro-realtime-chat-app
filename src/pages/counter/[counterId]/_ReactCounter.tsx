@@ -66,9 +66,12 @@ export const ReactCounter = ({
     <>
       <p>Counter Value is {counterValue}</p>
       <p>Connection status: {connectionStatus}</p>
-
-      <Button onClick={handleIncrement}>Increment</Button>
-      <Button onClick={handleDecrement}>Decrement</Button>
+      <button className="btn" onClick={handleIncrement}>
+        Increment
+      </button>{" "}
+      <button className="btn" onClick={handleDecrement}>
+        Decrement
+      </button>
     </>
   );
 };
