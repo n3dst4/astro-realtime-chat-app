@@ -15,8 +15,8 @@
     "db:migrate:prod": "wrangler d1 migrations apply todos --remote",
     "db:migrate:preview": "wrangler d1 migrations apply --env preview todos-preview --remote",
     "db:studio:local": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio",
-    "db:studio:preview": "source .drizzle.env && DB_ID='b7a13c53-a008-474b-8986-813e414477b1' drizzle-kit studio",
-    "db:studio:prod": "source .drizzle.env && DB_ID='a0f7d176-26be-4bde-ae3b-d71768d46c7c' drizzle-kit studio"
+    "db:studio:preview": "DB_ID='b7a13c53-a008-474b-8986-813e414477b1' drizzle-kit studio",
+    "db:studio:prod": "DB_ID='a0f7d176-26be-4bde-ae3b-d71768d46c7c' drizzle-kit studio"
   },
   "dependencies": {
     "@astrojs/check": "0.9.7-beta.1",
