@@ -4,8 +4,6 @@ export const prerender = false;
 
 const { roomId } = Astro.params;
 
-if (!roomId) return Astro.redirect("/");
-
 // Generate a random user ID and username (in production, use authentication)
 const userId = crypto.randomUUID();
 const defaultUsername = `User${Math.floor(Math.random() * 10000)}`;
