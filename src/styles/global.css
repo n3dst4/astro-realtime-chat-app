@@ -1,5 +1,11 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark,
+    cupcake;
+}
 
 @theme {
   --spacing-1: 0.25rem;
@@ -8,9 +14,21 @@
   --spacing-4: 1rem;
 }
 
+@utility link {
+  @variant dark {
+    color: oklch(from var(--color-primary) 80% c h);
+  }
+}
+
+@utility link-secondary {
+  @variant dark {
+    color: oklch(from var(--color-secondary) 80% c h);
+  }
+}
+
 @layer components {
   .link {
-    &[href] {
+    /*&[href] {
       &:hover {
         text-decoration: underline;
       }
@@ -18,11 +36,11 @@
       @variant dark {
         color: var(--color-sky-200);
       }
-    }
+    }*/
+    /*@apply link-hover;*/
   }
 
-  .btn {
-    /*m-1 cursor-pointer bg-gray-200 px-3 shadow-md hover:bg-gray-300*/
+  /*.btn {
     cursor: pointer;
     padding: 0 var(--spacing-3);
     transition: background-color 0.1s ease-in-out;
@@ -42,5 +60,5 @@
         background-color: var(--color-stone-600);
       }
     }
-  }
+  }*/
 }

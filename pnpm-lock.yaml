@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  wrangler: ^4.63.0
+  wrangler: ^4.66.0
   '@astrojs/cloudflare': 13.0.0-beta.8
   astro: 6.0.0-beta.13
 
@@ -43,6 +43,9 @@ importers:
       astro:
         specifier: 6.0.0-beta.13
         version: 6.0.0-beta.13(@types/node@25.2.2)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.57.1)(typescript@5.9.3)(yaml@2.8.2)
+      daisyui:
+        specifier: ^5.5.18
+        version: 5.5.18
       dotenv:
         specifier: ^17.2.4
         version: 17.2.4
@@ -101,7 +104,7 @@ packages:
     resolution: {integrity: sha512-qfsdVKm2BWRd2HU4zoP7D2hq7CsQi79KX4TuMzIuK9JwGRwNqWKFacKzQCxz8qRZnyUJU6MyCnAP3SbFwXQ4Dw==}
     peerDependencies:
       astro: 6.0.0-beta.13
-      wrangler: ^4.63.0
+      wrangler: ^4.66.0
 
   '@astrojs/compiler@2.13.1':
     resolution: {integrity: sha512-f3FN83d2G/v32ipNClRKgYv30onQlMZX1vCeZMjPsMMPl1mDpmbl0+N5BYo4S/ofzqJyS5hvwacEo0CCVDn/Qg==}
@@ -260,7 +263,7 @@ packages:
     resolution: {integrity: sha512-0i6L33AboDiNI/QYYwcfWeXHonQozTEPIqzFmvV8zqzgfjOijGMg08YQMxuJlkaVu6oPG/6umrSVawbDGY++vw==}
     peerDependencies:
       vite: ^6.1.0 || ^7.0.0
-      wrangler: ^4.63.0
+      wrangler: ^4.66.0
 
   '@cloudflare/workerd-darwin-64@1.20260217.0':
     resolution: {integrity: sha512-t1KRT0j4gwLntixMoNujv/UaS89Q7+MPRhkklaSup5tNhl3zBZOIlasBUSir69eXetqLZu8sypx3i7zE395XXA==}
@@ -1465,6 +1468,9 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  daisyui@5.5.18:
+    resolution: {integrity: sha512-VVzjpOitMGB6DWIBeRSapbjdOevFqyzpk9u5Um6a4tyId3JFrU5pbtF0vgjXDth76mJZbueN/j9Ok03SPrh/og==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -4143,6 +4149,8 @@ snapshots:
       css-tree: 2.2.1
 
   csstype@3.2.3: {}
+
+  daisyui@5.5.18: {}
 
   debug@4.4.3:
     dependencies:

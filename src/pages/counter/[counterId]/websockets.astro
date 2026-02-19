@@ -4,6 +4,8 @@ import Layout from "../../../layouts/Layout.astro";
 export { getStaticPaths } from "./_getStaticPaths";
 
 const { counterId } = Astro.params;
+
+export const prerender = false;
 ---
 
 <Layout title="Websockets">
@@ -12,8 +14,8 @@ const { counterId } = Astro.params;
 
   <p>Connection status: <span id="connection-status">Disconnected</span></p>
 
-  <button class="btn" id="increment">Increment</button>
-  <button class="btn" id="decrement">Decrement</button>
+  <button class="btn btn-primary" id="increment">Increment</button>
+  <button class="btn btn-primary" id="decrement">Decrement</button>
 </Layout>
 <script>
   import { ReconnectingWebSocket } from "../../../utils/ReconnectingWebSocket";

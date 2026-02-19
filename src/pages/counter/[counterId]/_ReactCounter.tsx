@@ -66,10 +66,10 @@ export const ReactCounter = ({
     <>
       <p>Counter Value is {counterValue}</p>
       <p>Connection status: {connectionStatus}</p>
-      <button className="btn" onClick={handleIncrement}>
+      <button className="btn btn-primary" onClick={handleIncrement}>
         Increment
       </button>{" "}
-      <button className="btn" onClick={handleDecrement}>
+      <button className="btn btn-primary" onClick={handleDecrement}>
         Decrement
       </button>
     </>
