@@ -39,7 +39,7 @@
       color: var(--color-stone-50);
       box-shadow: var(--shadow-md);
       &:hover {
-        background-color: var(--color-stone-300);
+        background-color: var(--color-stone-600);
       }
     }
   }

@@ -1,7 +1,12 @@
 ---
+import { env } from "cloudflare:workers";
 import Layout from "../../layouts/Layout.astro";
 import { getStaticPaths } from "./[counterId]/_getStaticPaths";
 const paths = getStaticPaths();
+
+const Counter = env.Counter;
+
+export const prerender = false;
 ---
 
 <Layout title="Counters">
@@ -14,4 +19,31 @@ const paths = getStaticPaths();
       </p>
     ))
   }
+  <hr />
+  <h2>Custom counter</h2>
+  <form id="custom">
+    <input placeholder="Name" name="name" />
+    <button type="submit" class="btn">Go</button>
+  </form>
 </Layout>
+
+<script>
+  const form = document.getElementById("custom");
+  form?.addEventListener("submit", async (event) => {
+    if (!(form instanceof HTMLFormElement)) {
+      return;
+    }
+    event.preventDefault();
+    const nameInput = form.elements.namedItem("name");
+    if (!(nameInput instanceof HTMLInputElement)) {
+      return;
+    }
+    const customName = nameInput.value;
+    if (!/^\w+$/.test(customName)) {
+      return;
+    }
+    // go to counter
+    console.log(`Going to counter: ${customName}`);
+    window.location.href = `./${customName}/`;
+  });
+</script>
