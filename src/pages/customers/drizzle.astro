@@ -1,23 +1,41 @@
 ---
 import { env } from "cloudflare:workers";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
+import { customersTable } from "../../db/schema";
 import Layout from "../../layouts/Layout.astro";
 
 export const prerender = false;
+const companyName = Astro.url.searchParams.get("companyName") ?? "";
 
 const db = drizzle(env.todos);
 
-const { results } = await env.todos
-  .prepare("SELECT * FROM Customers WHERE CompanyName = ?")
-  .bind("Bs Beverages")
-  .run();
+const results = await db
+  .select()
+  .from(customersTable)
+  .where(eq(customersTable.CompanyName, companyName))
+  .orderBy(customersTable.ContactName);
 ---
 
-<Layout title="Customers">
-  <p>
-    <a href="sql">SQL</a>
-  </p>
-  <p>
-    <a href="drizzle">Drizzle</a>
-  </p>
+<Layout title={`${companyName} (Drizzle version)`}>
+  <table>
+    <thead>
+      <tr>
+        <th>Customer ID</th>
+        <th>Company Name</th>
+        <th>Contact Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        results.map((customer) => (
+          <tr>
+            <td>{customer["CustomerId"]}</td>
+            <td>{customer["CompanyName"]}</td>
+            <td>{customer["ContactName"]}</td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
 </Layout>

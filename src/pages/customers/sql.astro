@@ -4,13 +4,15 @@ import Layout from "../../layouts/Layout.astro";
 
 export const prerender = false;
 
+const companyName = Astro.url.searchParams.get("companyName");
+
 const { results } = await env.todos
   .prepare("SELECT * FROM Customers WHERE CompanyName = ?")
-  .bind("Bs Beverages")
+  .bind(companyName)
   .run();
 ---
 
-<Layout title="Customers">
+<Layout title={`${companyName} (SQL version)`}>
   <table>
     <thead>
       <tr>
