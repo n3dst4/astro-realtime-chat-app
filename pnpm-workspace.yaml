@@ -2,3 +2,5 @@ overrides:
   wrangler: "$wrangler"
   "@astrojs/cloudflare": "$@astrojs/cloudflare"
   astro: "$astro"
+onlyBuiltDependencies:
+  - better-sqlite3

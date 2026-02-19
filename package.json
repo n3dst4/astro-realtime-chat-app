@@ -9,7 +9,14 @@
     "deploy": "pnpm run build && wrangler deploy",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
-    "cloudflare-types": "wrangler types src/worker-configuration.d.ts && pnpm run format:fix"
+    "cloudflare-types": "wrangler types src/worker-configuration.d.ts && pnpm run format:fix",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:local": "wrangler d1 migrations apply todos --local",
+    "db:migrate:prod": "wrangler d1 migrations apply todos --remote",
+    "db:migrate:preview": "wrangler d1 migrations apply --env preview todos-preview --remote",
+    "db:studio:local": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio",
+    "db:studio:preview": "source .drizzle.env && DB_ID='b7a13c53-a008-474b-8986-813e414477b1' drizzle-kit studio",
+    "db:studio:prod": "source .drizzle.env && DB_ID='a0f7d176-26be-4bde-ae3b-d71768d46c7c' drizzle-kit studio"
   },
   "dependencies": {
     "@astrojs/check": "0.9.7-beta.1",
@@ -22,6 +29,7 @@
     "@types/react": "^19.2.13",
     "@types/react-dom": "^19.2.3",
     "astro": "6.0.0-beta.13",
+    "better-sqlite3": "^12.6.2",
     "daisyui": "^5.5.18",
     "dotenv": "^17.2.4",
     "drizzle-kit": "^0.31.9",

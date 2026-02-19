@@ -42,6 +42,18 @@
       "binding": "todos",
       "database_name": "todos",
       "database_id": "a0f7d176-26be-4bde-ae3b-d71768d46c7c",
+      "migrations_dir": "./drizzle",
     },
   ],
+  "env": {
+    "preview": {
+      "d1_databases": [
+        {
+          "binding": "todos",
+          "database_name": "todos-preview",
+          "database_id": "b7a13c53-a008-474b-8986-813e414477b1",
+        },
+      ],
+    },
+  },
 }
