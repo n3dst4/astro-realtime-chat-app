@@ -4,6 +4,7 @@ export const customersTable = sqliteTable("Customers", {
   CustomerId: int().primaryKey(),
   CompanyName: text().notNull(),
   ContactName: text().notNull(),
+  ContactEmail: text().default(""),
 });
 
 export const linkShare = sqliteTable("linkShare", {
