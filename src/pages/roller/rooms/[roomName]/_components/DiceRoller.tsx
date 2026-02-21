@@ -34,7 +34,7 @@ export const DiceRoller = ({ roomName }: DiceRollerProps) => {
       onmessage: (event) => {
         const data = JSON.parse(event.data);
         if (data.type && data.type === "messages") {
-          setMessages((old) => [...old, ...data.payload.messages]);
+          setMessages((old) => [...old, ...data.payload.messages].slice(-10));
         }
       },
       onclose: () => {
@@ -71,11 +71,19 @@ export const DiceRoller = ({ roomName }: DiceRollerProps) => {
         ></span>
       </p>
       {messages.map((message) => (
-        <div>
-          {message.created_time} ({message.user}): {message.formula} &mdash;&gt;{" "}
-          {message.result}{" "}
-        </div>
+        <article className="chat chat-start">
+          <header className="chat-header text-sm">
+            <span>({message.user})</span>
+            <time className="opacity-70" dateTime={message.created_time}>
+              {new Date(message.created_time).toLocaleString()}
+            </time>
+          </header>
+          <div className="chat-bubble text-base">{message.result}</div>
+        </article>
       ))}
+      {messages.length === 0 && (
+        <div className="font-italic">No messages yet</div>
+      )}
       <form onSubmit={handleSubmit}>
         <input
           value={formula}
