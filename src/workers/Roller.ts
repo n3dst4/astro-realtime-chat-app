@@ -91,7 +91,7 @@ export class Roller extends DurableObject {
         .select()
         .from(Messages)
         .orderBy(desc(Messages.created_time))
-        .limit(100)
+        .limit(10)
         .execute()
     ).toReversed();
 
