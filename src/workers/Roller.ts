@@ -2,6 +2,7 @@ import { Messages } from "../db/roller-schema";
 import * as dbSchema from "../db/roller-schema";
 import migrations from "../durable-object-migrations/roller/migrations";
 import { DurableObject } from "cloudflare:workers";
+import { desc } from "drizzle-orm";
 import { drizzle, DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlite";
 import { migrate } from "drizzle-orm/durable-sqlite/migrator";
 import { createSelectSchema } from "drizzle-orm/zod";
@@ -84,6 +85,17 @@ export class Roller extends DurableObject {
     // keeping the WebSocket connection open
     this.ctx.acceptWebSocket(server);
 
+    const latest = (
+      await this.db
+        .select()
+        .from(Messages)
+        .orderBy(desc(Messages.created_time))
+        .limit(100)
+        .execute()
+    ).toReversed();
+
+    this.sendMessages(server, latest);
+
     // Return the client WebSocket in the response
     // return new Response("splat", { status: 200 });
     return new Response(null, {
@@ -100,7 +112,14 @@ export class Roller extends DurableObject {
     _ws: WebSocket,
     message: ArrayBuffer | string,
   ): Promise<void> {
-    //
+    try {
+      const parsed = JSON.parse(message as string);
+      if (parsed.type === "formula") {
+        await this.runFormula(parsed.payload.formula);
+      }
+    } catch (error) {
+      console.error("Error handling message:", error);
+    }
   }
 
   /**
@@ -126,17 +145,33 @@ export class Roller extends DurableObject {
     await this.webSocketClose(ws, 1011); //, "WebSocket error", false);
   }
 
-  broadcastValue() {
+  async runFormula(formula: string) {
+    const rollerMessage: RollerMessage = {
+      created_time: Date.now(),
+      formula,
+      id: crypto.randomUUID(),
+      result: "[results go here]",
+      total: 10,
+      user: "(anon)",
+    };
+    await this.db.insert(Messages).values(rollerMessage);
+    console.log("inserting into Messages", rollerMessage);
+    this.broadcastMessage(rollerMessage);
+  }
+
+  broadcastMessage(message: RollerMessage) {
     for (const server of this.ctx.getWebSockets()) {
-      this.sendValue(server);
+      this.sendMessages(server, [message]);
     }
   }
 
-  async sendValue(server: WebSocket) {
+  async sendMessages(server: WebSocket, messages: RollerMessage[]) {
     server.send(
       JSON.stringify({
-        type: "value",
-        payload: await this.ctx.storage.get("value"),
+        type: "messages",
+        payload: {
+          messages,
+        },
       }),
     );
   }

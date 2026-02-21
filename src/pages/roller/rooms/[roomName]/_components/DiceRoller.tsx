@@ -53,10 +53,13 @@ export const DiceRoller = ({ roomName }: DiceRollerProps) => {
     };
   }, [roomName]);
 
-  const handleSubmit = useCallback((event: SubmitEvent) => {
-    event.preventDefault();
-    websocketRef.current?.json({ type: "formula", payload: { formula } });
-  }, []);
+  const handleSubmit = useCallback(
+    (event: SubmitEvent) => {
+      event.preventDefault();
+      websocketRef.current?.json({ type: "formula", payload: { formula } });
+    },
+    [formula],
+  );
 
   return (
     <>
