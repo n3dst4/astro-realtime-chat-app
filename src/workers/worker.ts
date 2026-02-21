@@ -2,6 +2,7 @@ import handler from "@astrojs/cloudflare/entrypoints/server";
 
 export { ChatRoom } from "./ChatRoom";
 export { Counter } from "./Counter";
+export { Roller } from "./Roller";
 
 export default {
   async fetch(request, env, ctx) {

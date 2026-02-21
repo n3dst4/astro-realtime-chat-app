@@ -25,6 +25,10 @@
         "name": "Counter",
         "class_name": "Counter",
       },
+      {
+        "name": "Roller",
+        "class_name": "Roller",
+      },
     ],
   },
   "migrations": [
@@ -35,6 +39,10 @@
     {
       "tag": "v2",
       "new_sqlite_classes": ["Counter"],
+    },
+    {
+      "tag": "v3",
+      "new_sqlite_classes": ["Roller"],
     },
   ],
   "d1_databases": [
