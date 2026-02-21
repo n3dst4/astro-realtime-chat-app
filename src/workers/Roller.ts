@@ -1,6 +1,7 @@
 import { Messages } from "../db/roller-schema";
 import * as dbSchema from "../db/roller-schema";
 import migrations from "../durable-object-migrations/roller/migrations";
+import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { DurableObject } from "cloudflare:workers";
 import { desc } from "drizzle-orm";
 import { drizzle, DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlite";
@@ -146,12 +147,14 @@ export class Roller extends DurableObject {
   }
 
   async runFormula(formula: string) {
+    const roll = new DiceRoll(formula);
+
     const rollerMessage: RollerMessage = {
       created_time: Date.now(),
       formula,
       id: crypto.randomUUID(),
-      result: "[results go here]",
-      total: 10,
+      result: roll.output,
+      total: roll.total,
       user: "(anon)",
     };
     await this.db.insert(Messages).values(rollerMessage);

@@ -23,6 +23,7 @@
     "@astrojs/check": "0.9.7-beta.1",
     "@astrojs/cloudflare": "13.0.0-beta.8",
     "@astrojs/react": "5.0.0-beta.3",
+    "@dice-roller/rpg-dice-roller": "^5.5.1",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "@trivago/prettier-plugin-sort-imports": "^6.0.2",
