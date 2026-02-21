@@ -1,0 +1,15 @@
+---
+const roomName = Astro.url.searchParams.get("roomName");
+---
+
+<template id="roomName" data-room-name={roomName}></template>
+
+<script>
+  const roomName = document.getElementById("roomName")?.dataset["roomName"];
+  console.log("Found roomName:", roomName);
+  if (roomName) {
+    window.location.href = `./rooms/${roomName}`;
+  } else {
+    window.location.href = `./`;
+  }
+</script>

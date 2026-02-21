@@ -1,10 +1,7 @@
 ---
-import { env } from "cloudflare:workers";
 import Layout from "../../layouts/Layout.astro";
 import { getStaticPaths } from "./[counterId]/_getStaticPaths";
 const paths = getStaticPaths();
-
-const Counter = env.Counter;
 
 export const prerender = false;
 ---

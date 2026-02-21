@@ -1,0 +1,31 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout title="Dice Roller">
+  <form id="roomForm" class="card bg-base-100 w-200" action="./goToRoom">
+    <label class="input input-primary mb-2 w-200">
+      <span class="label">Room name</span>
+      <input name="roomName" />
+    </label>
+    <button class="btn btn-primary">Go</button>
+  </form>
+</Layout>
+
+<script>
+  function init() {
+    const form = document.getElementById("roomForm");
+    if (!(form instanceof HTMLFormElement)) {
+      return;
+    }
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const nameInput = form?.elements.namedItem("roomName");
+      if (!(nameInput instanceof HTMLInputElement) || !nameInput.value) {
+        return;
+      }
+      window.location.href = `./rooms/${nameInput.value}`;
+    });
+  }
+  init();
+</script>

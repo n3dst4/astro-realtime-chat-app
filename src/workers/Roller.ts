@@ -17,11 +17,11 @@ type SessionAttachment = z.infer<typeof sessionAttachmentSchema>;
 
 const messageSchema = createSelectSchema(Messages);
 
-type Message = z.infer<typeof messageSchema>;
+export type RollerMessage = z.infer<typeof messageSchema>;
 
 export class Roller extends DurableObject {
   private sessions: Map<WebSocket, SessionAttachment>;
-  private messages: Message[] = [];
+  private messages: RollerMessage[] = [];
   private readonly db: DrizzleSqliteDODatabase<typeof dbSchema>;
 
   constructor(ctx: DurableObjectState, env: Env) {

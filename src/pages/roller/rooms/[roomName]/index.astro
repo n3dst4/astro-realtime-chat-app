@@ -1,0 +1,10 @@
+---
+import Layout from "../../../../layouts/Layout.astro";
+import { DiceRoller } from "./_components/DiceRoller";
+export const prerender = false;
+const roomName = Astro.params["roomName"];
+---
+
+<Layout title="Dice Roller">
+  <DiceRoller client:only roomName={roomName ?? ""} />
+</Layout>
