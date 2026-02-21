@@ -42,7 +42,7 @@
       "binding": "todos",
       "database_name": "todos",
       "database_id": "a0f7d176-26be-4bde-ae3b-d71768d46c7c",
-      "migrations_dir": "./drizzle",
+      "migrations_dir": "./migrations",
     },
   ],
   "env": {
