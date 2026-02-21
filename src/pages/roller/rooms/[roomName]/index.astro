@@ -5,6 +5,6 @@ export const prerender = false;
 const roomName = Astro.params["roomName"];
 ---
 
-<Layout title="Dice Roller">
+<Layout title={`Dice Roller (${roomName})`}>
   <DiceRoller client:only roomName={roomName ?? ""} />
 </Layout>

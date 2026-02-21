@@ -25,7 +25,7 @@ export const DiceRoller = ({ roomName }: DiceRollerProps) => {
     // Build WebSocket URL
     const wsUrl = `../ws/?roomName=${roomName}`;
 
-    return;
+    // return;
     // Create WebSocket connection
     const ws = new ReconnectingWebSocket(wsUrl, {
       onopen: () => {
@@ -61,10 +61,11 @@ export const DiceRoller = ({ roomName }: DiceRollerProps) => {
   return (
     <>
       <p>
-        Dice roller {roomName}
-        <span className="ml4 inline-block h-4 w-4 rounded-full bg-red-500">
-          x2
-        </span>
+        Connection status:
+        <span
+          data-connection-status={connectionStatus}
+          className="ml-4 inline-block h-3 w-3 rounded-full bg-red-500 align-baseline data-[connection-status=connected]:bg-green-500"
+        ></span>
       </p>
       {messages.map((message) => (
         <div>
