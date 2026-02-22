@@ -1,7 +1,8 @@
 import { ReconnectingWebSocket } from "../../../../../utils/ReconnectingWebSocket";
 import {
-  webSocketMessageSchema,
+  webSocketServerMessageSchema,
   type RollerMessage,
+  type WebSocketClientMessage,
 } from "../../../../../workers/types";
 import { Message } from "./Message";
 import { useSmartScroll } from "./useSmartScroll";
@@ -37,9 +38,15 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
         setConnectionStatus("connected");
       },
       onmessage: (event) => {
-        const incomingWebsocketMessage = webSocketMessageSchema.safeParse(
-          JSON.parse(event.data),
-        );
+        let blob: any;
+        try {
+          blob = JSON.parse(event.data);
+        } catch (e: any) {
+          console.error("Error parsing WebSocket message:", e);
+          return;
+        }
+        const incomingWebsocketMessage =
+          webSocketServerMessageSchema.safeParse(blob);
         if (!incomingWebsocketMessage.success) {
           console.error(
             "unknown incoming websocket message",
@@ -73,7 +80,11 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
   const handleSubmit = useCallback(
     (event: SubmitEvent) => {
       event.preventDefault();
-      websocketRef.current?.json({ type: "formula", payload: { formula } });
+      const msg: WebSocketClientMessage = {
+        type: "chat",
+        payload: { formula, text: "", userId: "xxx123", username: "Anon" },
+      };
+      websocketRef.current?.json(msg);
     },
     [formula],
   );
@@ -105,7 +116,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
           {messages.map((message) => (
             <Message
               key={message.id}
-              user={message.user}
+              user={message.username}
               timeStamp={message.created_time}
             >
               {message.result}

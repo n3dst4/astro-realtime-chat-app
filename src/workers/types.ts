@@ -14,7 +14,7 @@ export const rollerMessageSchema = createSelectSchema(Messages);
 
 export type RollerMessage = z.infer<typeof rollerMessageSchema>;
 
-export const webSocketMessageSchema = z.discriminatedUnion("type", [
+export const webSocketServerMessageSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("message"),
     payload: z.object({ message: rollerMessageSchema }),
@@ -25,4 +25,22 @@ export const webSocketMessageSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
-export type WebSocketMessage = z.infer<typeof webSocketMessageSchema>;
+export type WebSocketServerMessage = z.infer<
+  typeof webSocketServerMessageSchema
+>;
+
+export const webSocketClientMessageSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("chat"),
+    payload: z.object({
+      formula: z.string().nullable(),
+      text: z.string().nullable(),
+      username: z.string(),
+      userId: z.string(),
+    }),
+  }),
+]);
+
+export type WebSocketClientMessage = z.infer<
+  typeof webSocketClientMessageSchema
+>;

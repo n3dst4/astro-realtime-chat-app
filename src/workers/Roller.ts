@@ -3,9 +3,10 @@ import * as dbSchema from "../db/roller-schema";
 import migrations from "../durable-object-migrations/roller/migrations";
 import {
   sessionAttachmentSchema,
+  webSocketClientMessageSchema,
   type RollerMessage,
   type SessionAttachment,
-  type WebSocketMessage,
+  type WebSocketServerMessage,
 } from "./types";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { DurableObject } from "cloudflare:workers";
@@ -97,9 +98,21 @@ export class Roller extends DurableObject {
     message: ArrayBuffer | string,
   ): Promise<void> {
     try {
-      const parsed = JSON.parse(message as string);
-      if (parsed.type === "formula") {
-        await this.runFormula(parsed.payload.formula);
+      const parsed = webSocketClientMessageSchema.safeParse(
+        JSON.parse(message as string),
+      );
+      if (!parsed.success) {
+        console.error("Invalid message format:", parsed.error);
+        return;
+      }
+      const data = parsed.data;
+      if (data.type === "chat") {
+        await this.runFormula(
+          data.payload.formula,
+          data.payload.text,
+          data.payload.username,
+          data.payload.userId,
+        );
       }
     } catch (error) {
       console.error("Error handling message:", error);
@@ -129,16 +142,23 @@ export class Roller extends DurableObject {
     await this.webSocketClose(ws, 1011); //, "WebSocket error", false);
   }
 
-  async runFormula(formula: string) {
-    const roll = new DiceRoll(formula);
+  async runFormula(
+    formula: string | null,
+    text: string | null,
+    username: string,
+    userId: string,
+  ) {
+    const roll = formula ? new DiceRoll(formula) : null;
 
     const rollerMessage: RollerMessage = {
       created_time: Date.now(),
       formula,
       id: crypto.randomUUID(),
-      result: roll.output,
-      total: roll.total,
-      user: "(anon)",
+      result: roll?.output ?? null,
+      total: roll?.total ?? null,
+      text,
+      username,
+      userId,
     };
     await this.db.insert(Messages).values(rollerMessage);
     console.log("inserting into Messages", rollerMessage);
@@ -151,7 +171,7 @@ export class Roller extends DurableObject {
     }
   }
 
-  async send(server: WebSocket, websocketMessage: WebSocketMessage) {
+  async send(server: WebSocket, websocketMessage: WebSocketServerMessage) {
     server.send(JSON.stringify(websocketMessage));
   }
 
