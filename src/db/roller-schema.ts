@@ -4,7 +4,7 @@ export const Messages = sqliteTable("Messages", {
   id: text()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  user: text().notNull(),
+  username: text().notNull(),
   created_time: int().notNull(),
   formula: text().notNull(),
   result: text().notNull(),

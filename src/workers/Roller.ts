@@ -159,7 +159,7 @@ export class Roller extends DurableObject {
       // text,
       // username,
       // userId,
-      user: username,
+      username,
     };
     await this.db.insert(Messages).values(rollerMessage);
     console.log("inserting into Messages", rollerMessage);
