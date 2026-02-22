@@ -8,12 +8,14 @@ type MessageProps = PropsWithChildren<{
 
 export const Message = memo(({ user, timeStamp, children }: MessageProps) => {
   return (
-    <article className="chat chat-start">
-      <header className="chat-header text-sm">
-        <span>{user}</span>
+    <article className="mb-2">
+      <header className="text-sm">
+        <span className="mr-4">{user}</span>
         <TimeDisplay timeStamp={timeStamp} />
       </header>
-      <div className="chat-bubble text-base">{children}</div>
+      <div className="w-fit rounded-2xl bg-pink-300 px-4 pt-1 text-base dark:bg-pink-900">
+        {children}
+      </div>
     </article>
   );
 });
