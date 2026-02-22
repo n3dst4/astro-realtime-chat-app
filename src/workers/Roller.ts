@@ -1,38 +1,17 @@
 import { Messages } from "../db/roller-schema";
 import * as dbSchema from "../db/roller-schema";
 import migrations from "../durable-object-migrations/roller/migrations";
+import {
+  sessionAttachmentSchema,
+  type RollerMessage,
+  type SessionAttachment,
+  type WebSocketMessage,
+} from "./types";
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { DurableObject } from "cloudflare:workers";
 import { desc } from "drizzle-orm";
 import { drizzle, DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlite";
 import { migrate } from "drizzle-orm/durable-sqlite/migrator";
-import { createSelectSchema } from "drizzle-orm/zod";
-import { z } from "zod/v4";
-
-const sessionAttachmentSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-  username: z.string().min(1).max(100),
-});
-
-type SessionAttachment = z.infer<typeof sessionAttachmentSchema>;
-
-const rollerMessageSchema = createSelectSchema(Messages);
-
-export type RollerMessage = z.infer<typeof rollerMessageSchema>;
-
-export const webSocketMessageSchema = z.discriminatedUnion("type", [
-  z.object({
-    type: z.literal("message"),
-    payload: z.object({ message: rollerMessageSchema }),
-  }),
-  z.object({
-    type: z.literal("catchup"),
-    payload: z.object({ messages: z.array(rollerMessageSchema) }),
-  }),
-]);
-
-type WebSocketMessage = z.infer<typeof webSocketMessageSchema>;
 
 export class Roller extends DurableObject {
   private sessions: Map<WebSocket, SessionAttachment>;
