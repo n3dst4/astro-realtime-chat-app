@@ -73,8 +73,13 @@ export const DiceRoller = ({ roomName }: DiceRollerProps) => {
       {messages.map((message) => (
         <article className="chat chat-start">
           <header className="chat-header text-sm">
-            <span>({message.user})</span>
-            <time className="opacity-70" dateTime={message.created_time}>
+            <span>{message.user}</span>
+            <time
+              className="opacity-70"
+              dateTime={new Date(message.created_time)
+                .toISOString()
+                .slice(0, 19)}
+            >
               {new Date(message.created_time).toLocaleString()}
             </time>
           </header>
