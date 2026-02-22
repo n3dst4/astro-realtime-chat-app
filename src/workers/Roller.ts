@@ -152,13 +152,14 @@ export class Roller extends DurableObject {
 
     const rollerMessage: RollerMessage = {
       created_time: Date.now(),
-      formula,
+      formula: formula ?? "no formula",
       id: crypto.randomUUID(),
-      result: roll?.output ?? null,
-      total: roll?.total ?? null,
-      text,
-      username,
-      userId,
+      result: roll?.output ?? "no result",
+      total: roll?.total ?? 0,
+      // text,
+      // username,
+      // userId,
+      user: username,
     };
     await this.db.insert(Messages).values(rollerMessage);
     console.log("inserting into Messages", rollerMessage);

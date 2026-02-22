@@ -116,7 +116,8 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
           {messages.map((message) => (
             <Message
               key={message.id}
-              user={message.username}
+              // user={message.username}
+              user={message.user}
               timeStamp={message.created_time}
             >
               {message.result}
