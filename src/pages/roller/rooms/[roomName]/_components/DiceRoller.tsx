@@ -1,6 +1,8 @@
 import { ReconnectingWebSocket } from "../../../../../utils/ReconnectingWebSocket";
 import type { RollerMessage } from "../../../../../workers/Roller";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Message } from "./Message";
+import { TimeDisplay } from "./TimeDisplay";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { SubmitEvent } from "react";
 
 type DiceRollerProps = {
@@ -8,7 +10,7 @@ type DiceRollerProps = {
 };
 type ConnectionStatus = "connected" | "disconnected" | "error";
 
-export const DiceRoller = ({ roomName }: DiceRollerProps) => {
+export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
   const [connectionStatus, setConnectionStatus] =
     useState<ConnectionStatus>("disconnected");
 
@@ -71,20 +73,13 @@ export const DiceRoller = ({ roomName }: DiceRollerProps) => {
         ></span>
       </p>
       {messages.map((message) => (
-        <article className="chat chat-start">
-          <header className="chat-header text-sm">
-            <span>{message.user}</span>
-            <time
-              className="opacity-70"
-              dateTime={new Date(message.created_time)
-                .toISOString()
-                .slice(0, 19)}
-            >
-              {new Date(message.created_time).toLocaleString()}
-            </time>
-          </header>
-          <div className="chat-bubble text-base">{message.result}</div>
-        </article>
+        <Message
+          key={message.id}
+          user={message.user}
+          timeStamp={message.created_time}
+        >
+          {message.result}
+        </Message>
       ))}
       {messages.length === 0 && (
         <div className="font-italic">No messages yet</div>
@@ -100,4 +95,4 @@ export const DiceRoller = ({ roomName }: DiceRollerProps) => {
       </form>
     </>
   );
-};
+});
