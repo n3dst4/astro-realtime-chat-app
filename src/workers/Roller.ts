@@ -45,7 +45,11 @@ export class Roller extends DurableObject {
 
     this.ctx.blockConcurrencyWhile(async () => {
       // migrate the db
-      await migrate(this.db, migrations);
+      try {
+        await migrate(this.db, migrations);
+      } catch (e: any) {
+        console.error("FAILED MIGRATION", e);
+      }
       // load message history from storage
       this.messages = this.db.select().from(dbSchema.Messages).limit(100).all();
     });
@@ -158,7 +162,7 @@ export class Roller extends DurableObject {
       total: roll?.total ?? 0,
       // text,
       // username,
-      // userId,
+      userId,
       username,
     };
     await this.db.insert(Messages).values(rollerMessage);
