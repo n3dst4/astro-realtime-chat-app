@@ -4,17 +4,9 @@ import {
   type RollerMessage,
 } from "../../../../../workers/types";
 import { Message } from "./Message";
-import {
-  memo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useSmartScroll } from "./useSmartScroll";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { SubmitEvent } from "react";
-
-const SCROLL_THRESHOLD = 100; // pixels from bottom to consider "near bottom"
 
 type DiceRollerProps = {
   roomName: string;
@@ -29,50 +21,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
 
   const [formula, setFormula] = useState("");
 
-  const [hasNewMessages, setHasNewMessages] = useState(false);
-
   const websocketRef = useRef<ReconnectingWebSocket>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const isNearBottomRef = useRef(true);
-
-  // Check if user is near the bottom of the scroll container
-  const checkIfNearBottom = useCallback(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return true;
-
-    const { scrollTop, scrollHeight, clientHeight } = container;
-    const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
-    return distanceFromBottom <= SCROLL_THRESHOLD;
-  }, []);
-
-  // Track scroll position to update isNearBottomRef
-  const handleScroll = useCallback(() => {
-    const nearBottom = checkIfNearBottom();
-    isNearBottomRef.current = nearBottom;
-
-    // Clear new messages indicator when user scrolls to bottom
-    if (nearBottom && hasNewMessages) {
-      setHasNewMessages(false);
-    }
-  }, [checkIfNearBottom, hasNewMessages]);
-
-  // Scroll to bottom and clear indicator
-  const scrollToBottom = useCallback(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    setHasNewMessages(false);
-  }, []);
-
-  // Handle auto-scrolling when messages change
-  useLayoutEffect(() => {
-    if (isNearBottomRef.current) {
-      // User was near bottom, auto-scroll to show new messages
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    } else if (messages.length > 0) {
-      // User is scrolled up, show new messages indicator
-      setHasNewMessages(true);
-    }
-  }, [messages]);
 
   useEffect(() => {
     // const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -128,6 +77,14 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
     },
     [formula],
   );
+
+  const {
+    scrollContainerRef,
+    handleScroll,
+    scrollToBottom,
+    hasNewMessages,
+    bottomRef,
+  } = useSmartScroll({ messages });
 
   return (
     <div className="flex h-full w-full flex-col">
