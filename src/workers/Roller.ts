@@ -17,9 +17,22 @@ const sessionAttachmentSchema = z.object({
 
 type SessionAttachment = z.infer<typeof sessionAttachmentSchema>;
 
-const messageSchema = createSelectSchema(Messages);
+const rollerMessageSchema = createSelectSchema(Messages);
 
-export type RollerMessage = z.infer<typeof messageSchema>;
+export type RollerMessage = z.infer<typeof rollerMessageSchema>;
+
+export const webSocketMessageSchema = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("message"),
+    payload: z.object({ message: rollerMessageSchema }),
+  }),
+  z.object({
+    type: z.literal("catchup"),
+    payload: z.object({ messages: z.array(rollerMessageSchema) }),
+  }),
+]);
+
+type WebSocketMessage = z.infer<typeof webSocketMessageSchema>;
 
 export class Roller extends DurableObject {
   private sessions: Map<WebSocket, SessionAttachment>;
@@ -86,16 +99,7 @@ export class Roller extends DurableObject {
     // keeping the WebSocket connection open
     this.ctx.acceptWebSocket(server);
 
-    const latest = (
-      await this.db
-        .select()
-        .from(Messages)
-        .orderBy(desc(Messages.created_time))
-        .limit(10)
-        .execute()
-    ).toReversed();
-
-    this.sendMessages(server, latest);
+    this.sendCatchUp(server);
 
     // Return the client WebSocket in the response
     // return new Response("splat", { status: 200 });
@@ -164,18 +168,38 @@ export class Roller extends DurableObject {
 
   broadcastMessage(message: RollerMessage) {
     for (const server of this.ctx.getWebSockets()) {
-      this.sendMessages(server, [message]);
+      this.sendMessage(server, message);
     }
   }
 
-  async sendMessages(server: WebSocket, messages: RollerMessage[]) {
-    server.send(
-      JSON.stringify({
-        type: "messages",
-        payload: {
-          messages,
-        },
-      }),
-    );
+  async send(server: WebSocket, websocketMessage: WebSocketMessage) {
+    server.send(JSON.stringify(websocketMessage));
+  }
+
+  async sendMessage(server: WebSocket, message: RollerMessage) {
+    this.send(server, {
+      type: "message",
+      payload: {
+        message,
+      },
+    });
+  }
+
+  async sendCatchUp(server: WebSocket) {
+    const messages = (
+      await this.db
+        .select()
+        .from(Messages)
+        .orderBy(desc(Messages.created_time))
+        .limit(100)
+        .execute()
+    ).toReversed();
+
+    this.send(server, {
+      type: "catchup",
+      payload: {
+        messages,
+      },
+    });
   }
 }
