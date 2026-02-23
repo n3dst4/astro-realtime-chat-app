@@ -23,16 +23,37 @@ function parseRolls(rolls: string): StructuredRolls | null {
   }
 }
 
-function DieChip({ die }: { die: RollResultItem }) {
+function isDicePool(group: RollResultsGroup): boolean {
+  return group.rolls.some(
+    (r) =>
+      r.modifiers.includes("target-success") ||
+      r.modifiers.includes("target-failure"),
+  );
+}
+
+function DieChip({
+  die,
+  dicePool = false,
+}: {
+  die: RollResultItem;
+  dicePool?: boolean;
+}) {
   const isDropped = !die.useInTotal;
   const isExploded = die.modifiers.includes("explode");
   const isCritSuccess = die.modifiers.includes("critical-success");
   const isCritFail = die.modifiers.includes("critical-failure");
   const isRerolled = die.modifiers.includes("re-roll");
+  const isSuccess = die.modifiers.includes("target-success");
+  const isFailure = die.modifiers.includes("target-failure");
+  const isMiss = dicePool && !isSuccess && !isFailure && !isDropped;
 
   let extraClasses = "";
   if (isDropped) {
     extraClasses = "opacity-35 line-through decoration-2";
+  } else if (isSuccess) {
+    extraClasses = "text-success ring-2 ring-success/50";
+  } else if (isFailure) {
+    extraClasses = "text-error ring-2 ring-error/50";
   } else if (isCritSuccess) {
     extraClasses = "text-success ring-2 ring-success/50";
   } else if (isCritFail) {
@@ -41,21 +62,26 @@ function DieChip({ die }: { die: RollResultItem }) {
     extraClasses = "text-warning ring-2 ring-warning/50";
   } else if (isRerolled) {
     extraClasses = "opacity-50 line-through";
+  } else if (isMiss) {
+    extraClasses = "opacity-35";
   }
 
   return (
     <kbd className={`kbd kbd-sm tabular-nums ${extraClasses}`}>
       {die.value}
       {isExploded && <span className="text-warning ml-px">!</span>}
+      {isSuccess && <span className="text-success ml-px">*</span>}
+      {isFailure && <span className="text-error ml-px">_</span>}
     </kbd>
   );
 }
 
 function RollGroup({ group }: { group: RollResultsGroup }) {
+  const pool = isDicePool(group);
   return (
     <div className="flex flex-wrap gap-1">
       {group.rolls.map((die, i) => (
-        <DieChip key={i} die={die} />
+        <DieChip key={i} die={die} dicePool={pool} />
       ))}
     </div>
   );
@@ -112,6 +138,15 @@ function RollEntryNode({ entry }: { entry: RollEntry }) {
   return null;
 }
 
+function isPoolRoll(structured: StructuredRolls): boolean {
+  for (const entry of structured) {
+    if (typeof entry === "object" && entry.type === "roll-results") {
+      if (isDicePool(entry)) return true;
+    }
+  }
+  return false;
+}
+
 export const DiceRollResult = memo(
   ({ formula, rolls, total }: DiceRollResultProps) => {
     if (!formula || total === null) return null;
@@ -129,6 +164,8 @@ export const DiceRollResult = memo(
       );
     }
 
+    const pool = isPoolRoll(structured);
+
     return (
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 py-1">
         <span className="font-mono text-sm opacity-50">{formula}</span>
@@ -138,6 +175,11 @@ export const DiceRollResult = memo(
         ))}
         <span className="opacity-30">=</span>
         <span className="text-lg font-bold tabular-nums">{total}</span>
+        {pool && (
+          <span className="text-sm opacity-50">
+            {total === 1 ? "success" : "successes"}
+          </span>
+        )}
       </div>
     );
   },

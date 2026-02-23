@@ -10,8 +10,8 @@ export type RollResultItem = {
   value: number;
   initialValue: number;
   calculationValue: number;
-  modifierFlags: string; // e.g. "", "d", "!", "r"
-  modifiers: string[]; // e.g. [], ["drop"], ["explode"], ["critical-success"]
+  modifierFlags: string; // e.g. "", "d", "!", "r", "*", "_"
+  modifiers: string[]; // e.g. [], ["drop"], ["explode"], ["critical-success"], ["target-success"], ["target-failure"]
   useInTotal: boolean;
 };
 
