@@ -83,7 +83,12 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
       event.preventDefault();
       const msg: WebSocketClientMessage = {
         type: "chat",
-        payload: { formula, text: "", userId: "xxx123", username: "Anon" },
+        payload: {
+          formula: formula.toLowerCase(),
+          text: "",
+          userId: "xxx123",
+          username: "Anon",
+        },
       };
       websocketRef.current?.json(msg);
     },
