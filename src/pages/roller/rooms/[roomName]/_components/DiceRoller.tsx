@@ -86,14 +86,14 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
         type: "chat",
         payload: {
           formula: formula.toLowerCase(),
-          text: "",
+          text,
           userId: "xxx123",
           username: "Anon",
         },
       };
       websocketRef.current?.json(msg);
     },
-    [formula],
+    [formula, text],
   );
 
   const {
@@ -127,7 +127,8 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
               user={message.username}
               timeStamp={message.created_time}
             >
-              {message.result}
+              <p>{message.text}</p>
+              <p>{message.result}</p>
             </Message>
           ))}
           {messages.length === 0 && (
