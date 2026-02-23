@@ -21,9 +21,25 @@ export type RollResultsGroup = {
   value: number;
 };
 
-// A single element in the top-level rolls array
-// e.g. [RollResultsGroup, "+", RollResultsGroup, "+", 3]
-export type RollEntry = RollResultsGroup | string | number;
+// A result-group, produced by roll group notation like {3d8, 3d8}k1.
+// The outer group has isRollGroup: true and contains inner result-groups as children.
+// Inner groups (isRollGroup: false) each represent one sub-expression and carry
+// their own useInTotal / modifierFlags for drop/keep at the group level.
+export type ResultGroupItem = {
+  type: "result-group";
+  isRollGroup: boolean;
+  modifierFlags: string;
+  modifiers: string[];
+  useInTotal: boolean;
+  calculationValue: number;
+  value: number;
+  results: Array<RollResultsGroup | ResultGroupItem | string | number>;
+};
+
+// A single element in the top-level rolls array.
+// Regular roll:  [RollResultsGroup, "+", RollResultsGroup, "+", 3]
+// Roll group:    [ResultGroupItem(isRollGroup=true)]
+export type RollEntry = RollResultsGroup | ResultGroupItem | string | number;
 
 export type StructuredRolls = RollEntry[];
 
