@@ -50,7 +50,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
         if (!incomingWebsocketMessage.success) {
           console.error(
             "unknown incoming websocket message",
-            incomingWebsocketMessage,
+            incomingWebsocketMessage.error,
           );
           return;
         }
@@ -73,6 +73,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
     websocketRef.current = ws;
 
     return () => {
+      console.log("Closing websocket because effect re-ran");
       ws.close();
     };
   }, [roomName]);
