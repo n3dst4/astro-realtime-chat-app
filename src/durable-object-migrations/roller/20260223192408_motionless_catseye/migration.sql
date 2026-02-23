@@ -1,0 +1,1 @@
+ALTER TABLE `Messages` ADD `rolls` text;

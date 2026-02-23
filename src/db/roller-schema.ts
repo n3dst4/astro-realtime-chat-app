@@ -9,6 +9,7 @@ export const Messages = sqliteTable("Messages", {
   created_time: int().notNull(),
   formula: text(),
   result: text(),
+  rolls: text(),
   total: int(),
   text: text(),
 });

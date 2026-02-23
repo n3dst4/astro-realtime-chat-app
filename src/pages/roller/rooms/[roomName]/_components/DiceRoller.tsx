@@ -4,6 +4,7 @@ import {
   type RollerMessage,
   type WebSocketClientMessage,
 } from "../../../../../workers/types";
+import { DiceRollResult } from "./DiceRollResult";
 import { Message } from "./Message";
 import { useSmartScroll } from "./useSmartScroll";
 import { Dices, SendHorizontal } from "lucide-react";
@@ -128,8 +129,12 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
               user={message.username}
               timeStamp={message.created_time}
             >
-              <p>{message.text}</p>
-              <p>{message.result}</p>
+              {message.text && <p>{message.text}</p>}
+              <DiceRollResult
+                formula={message.formula}
+                rolls={message.rolls}
+                total={message.total}
+              />
             </Message>
           ))}
           {messages.length === 0 && (

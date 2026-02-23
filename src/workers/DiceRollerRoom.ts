@@ -168,11 +168,25 @@ export class DiceRollerRoom extends DurableObject {
   ) {
     const roll = formula ? new DiceRoll(formula) : null;
 
+    // Extract individual die face values from the output string (e.g. "3d6: [3, 2, 5] = 10")
+    // We parse the bracket groups rather than traversing roll.rolls to stay type-safe
+    // across the various result shapes the library can produce.
+    const rollValues: number[] = [];
+    if (roll?.output) {
+      for (const match of roll.output.matchAll(/\[([^\]]+)\]/g)) {
+        for (const part of match[1].split(/,\s*/)) {
+          const n = parseInt(part.trim(), 10);
+          if (!isNaN(n)) rollValues.push(n);
+        }
+      }
+    }
+
     const rollerMessage: RollerMessage = {
       created_time: Date.now(),
       formula: formula ?? "no formula",
       id: crypto.randomUUID(),
       result: roll?.output ?? null,
+      rolls: rollValues.length > 0 ? JSON.stringify(rollValues) : null,
       total: roll?.total ?? null,
       text,
       // username,
