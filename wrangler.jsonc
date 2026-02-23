@@ -29,8 +29,8 @@
         "class_name": "Counter",
       },
       {
-        "name": "Roller",
-        "class_name": "Roller",
+        "name": "DiceRollerRoom",
+        "class_name": "DiceRollerRoom",
       },
     ],
   },
@@ -46,6 +46,16 @@
     {
       "tag": "v3",
       "new_sqlite_classes": ["Roller"],
+    },
+    {
+      "tag": "v4", // Migration identifier. This should be unique for each migration entry
+      "renamed_classes": [
+        // Array of rename directives
+        {
+          "from": "Roller",
+          "to": "DiceRollerRoom",
+        },
+      ],
     },
   ],
   "d1_databases": [

@@ -7,7 +7,7 @@ export const GET: APIRoute = async ({ url, request, locals: _locals }) => {
   const roomName = url.searchParams.get("roomName");
   if (!roomName) return new Response("Room name is required", { status: 400 });
   // Get the ChatRoom Durable Object namespace
-  const RollerNamespace = env.Roller;
+  const RollerNamespace = env.DiceRollerRoom;
   if (!RollerNamespace)
     return new Response("Roller binding not found", { status: 500 });
   // Get a Durable Object ID for this room

@@ -2,7 +2,7 @@ import handler from "@astrojs/cloudflare/entrypoints/server";
 
 export { ChatRoom } from "./ChatRoom";
 export { Counter } from "./Counter";
-export { Roller } from "./Roller";
+export { DiceRollerRoom } from "./DiceRollerRoom";
 
 const log = console.log.bind(console, "[worker]");
 

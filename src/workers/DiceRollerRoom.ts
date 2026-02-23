@@ -14,7 +14,10 @@ import { desc } from "drizzle-orm";
 import { drizzle, DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlite";
 import { migrate } from "drizzle-orm/durable-sqlite/migrator";
 
-export class Roller extends DurableObject {
+const log = console.log.bind(console, "[Roller DO]");
+const error = console.error.bind(console, "[Roller DO]");
+
+export class DiceRollerRoom extends DurableObject {
   private sessions: Map<WebSocket, SessionAttachment>;
   private messages: RollerMessage[] = [];
   private readonly db: DrizzleSqliteDODatabase<typeof dbSchema>;
@@ -43,12 +46,23 @@ export class Roller extends DurableObject {
 
     this.db = drizzle(ctx.storage, { schema: dbSchema });
 
+    const tableNames = Object.keys(dbSchema);
+    const query = `SELECT sql FROM sqlite_master WHERE name IN (${new Array(tableNames.length).fill("?").join(", ")})`;
+    log(query, tableNames);
+    const printedSchema = ctx.storage.sql
+      .exec(query, ...tableNames)
+      .toArray()
+      .map((row) => row.sql)
+      .join("\n");
+    log("DB schema:", printedSchema);
+
     this.ctx.blockConcurrencyWhile(async () => {
       // migrate the db
       try {
+        log("attempting migration");
         await migrate(this.db, migrations);
       } catch (e: any) {
-        console.error("FAILED MIGRATION", e);
+        error("FAILED MIGRATION", e);
       }
       // load message history from storage
       this.messages = this.db.select().from(dbSchema.Messages).limit(100).all();
@@ -160,7 +174,7 @@ export class Roller extends DurableObject {
       id: crypto.randomUUID(),
       result: roll?.output ?? "no result",
       total: roll?.total ?? 0,
-      // text,
+      text,
       // username,
       userId,
       username,
