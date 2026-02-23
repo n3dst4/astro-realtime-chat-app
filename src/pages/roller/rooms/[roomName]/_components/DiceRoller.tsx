@@ -21,6 +21,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
   const [messages, setMessages] = useState<RollerMessage[]>([]);
 
   const [formula, setFormula] = useState("");
+  const [text, setText] = useState("");
 
   const websocketRef = useRef<ReconnectingWebSocket>(null);
 
@@ -143,18 +144,20 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
           </button>
         )}
       </div>
-      <form
-        className="bg-base-200 join flex w-full flex-row p-4 pt-0 shadow-lg"
-        onSubmit={handleSubmit}
-      >
+      <form onSubmit={handleSubmit}>
         <input
-          className="input join-item input-primary flex-1 shadow-lg"
+          className=""
           value={formula}
           onChange={(e) => setFormula(e.target.value)}
           placeholder='Enter a dice formula, e.g. "3d6"'
         />
-        <div className="validator-hint hidden">Enter valid email address</div>
-        <button className="btn btn-primary join-item">Send</button>
+        <input
+          className=""
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Chat message"
+        />
+        <button className="">Send</button>
       </form>
     </div>
   );
