@@ -36,6 +36,7 @@
     "dotenv": "^17.2.4",
     "drizzle-kit": "1.0.0-beta.15-859cf75",
     "drizzle-orm": "1.0.0-beta.15-859cf75",
+    "lucide-react": "^0.575.0",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.11",

@@ -6,6 +6,7 @@ import {
 } from "../../../../../workers/types";
 import { Message } from "./Message";
 import { useSmartScroll } from "./useSmartScroll";
+import { Dices, SendHorizontal } from "lucide-react";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { SubmitEvent } from "react";
 
@@ -157,11 +158,20 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
             className="bg-base-100 placeholder:text-base-content/40 min-w-0 flex-1 px-4 py-2 outline-none"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Chat message"
+            placeholder={formula.trim() ? "Annotation" : "Chat message"}
           />
         </div>
         <button className="btn btn-primary h-auto self-stretch rounded-none rounded-r-xl px-6">
-          Send
+          <span className="relative flex h-[22px] w-[22px] items-center justify-center">
+            <SendHorizontal
+              size={22}
+              className={`absolute transition-opacity duration-300 ${formula.trim() ? "opacity-0" : "opacity-100"}`}
+            />
+            <Dices
+              size={22}
+              className={`absolute transition-opacity duration-300 ${formula.trim() ? "opacity-100" : "opacity-0"}`}
+            />
+          </span>
         </button>
       </form>
     </div>
