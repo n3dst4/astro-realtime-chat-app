@@ -2,6 +2,31 @@ import { Messages } from "../db/roller-schema";
 import { createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod/v4";
 
+// Structured types for the `rolls` JSON column, matching the shape of
+// DiceRoll.toJSON().rolls from @dice-roller/rpg-dice-roller
+
+export type RollResultItem = {
+  type: "result";
+  value: number;
+  initialValue: number;
+  calculationValue: number;
+  modifierFlags: string; // e.g. "", "d", "!", "r"
+  modifiers: string[]; // e.g. [], ["drop"], ["explode"], ["critical-success"]
+  useInTotal: boolean;
+};
+
+export type RollResultsGroup = {
+  type: "roll-results";
+  rolls: RollResultItem[];
+  value: number;
+};
+
+// A single element in the top-level rolls array
+// e.g. [RollResultsGroup, "+", RollResultsGroup, "+", 3]
+export type RollEntry = RollResultsGroup | string | number;
+
+export type StructuredRolls = RollEntry[];
+
 export const sessionAttachmentSchema = z.object({
   id: z.string().uuid(),
   userId: z.string().uuid(),
