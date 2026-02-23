@@ -162,7 +162,9 @@ export class ReconnectingWebSocket {
 
   close(code?: number, reason?: string) {
     clearTimeout(this.retryTimer);
+    clearInterval(this.keepaliveTimer);
     this.retryTimer = undefined;
+    this.keepaliveTimer = undefined;
     this.websocket.close(code, reason);
   }
 }
