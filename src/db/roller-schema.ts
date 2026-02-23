@@ -7,7 +7,8 @@ export const Messages = sqliteTable("Messages", {
   username: text().notNull(),
   userId: text().notNull(),
   created_time: int().notNull(),
-  formula: text().notNull(),
-  result: text().notNull(),
-  total: int().notNull(),
+  formula: text(),
+  result: text(),
+  total: int(),
+  text: text(),
 });

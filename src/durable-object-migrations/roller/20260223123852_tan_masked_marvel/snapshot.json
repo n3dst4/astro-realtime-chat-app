@@ -1,0 +1,94 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "362ed310-29bb-4197-86af-6d2a43bf65c0",
+  "prevIds": [
+    "d38023f9-b94d-4809-af46-6d4500257b03"
+  ],
+  "ddl": [
+    {
+      "name": "Messages",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "Messages"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "username",
+      "entityType": "columns",
+      "table": "Messages"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "userId",
+      "entityType": "columns",
+      "table": "Messages"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "created_time",
+      "entityType": "columns",
+      "table": "Messages"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "formula",
+      "entityType": "columns",
+      "table": "Messages"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "result",
+      "entityType": "columns",
+      "table": "Messages"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "total",
+      "entityType": "columns",
+      "table": "Messages"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "Messages_pk",
+      "table": "Messages",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}
