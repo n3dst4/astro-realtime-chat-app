@@ -5,27 +5,61 @@ import { z } from "zod/v4";
 // Structured types for the `rolls` JSON column, matching the shape of
 // DiceRoll.toJSON().rolls from @dice-roller/rpg-dice-roller
 
-export type RollResult = {
-  type: "result";
-  value: number;
-  initialValue: number;
-  calculationValue: number;
-  modifierFlags: string; // e.g. "", "d", "!", "r", "*", "_"
-  modifiers: string[]; // e.g. [], ["drop"], ["explode"], ["critical-success"], ["target-success"], ["target-failure"]
-  useInTotal: boolean;
-};
+export const rollResultSchema = z.object({
+  type: z.literal("result"),
+  value: z.number(),
+  initialValue: z.number(),
+  calculationValue: z.number(),
+  // e.g. "", "d", "!", "r", "*", "_"
+  modifierFlags: z.string(),
+  // e.g. [], ["drop"], ["explode"], ["critical-success"], ["target-success"], ["target-failure"]
+  modifiers: z.array(z.string()),
+  useInTotal: z.boolean(),
+});
 
-export type RollResults = {
-  type: "roll-results";
-  rolls: RollResult[];
-  value: number;
-};
+/**
+ * Represents the result of an individual die roll
+ */
+export type RollResult = z.infer<typeof rollResultSchema>;
 
-// A result-group, produced by roll group notation like {3d8, 3d8}k1.
-// The outer group has isRollGroup: true and contains inner result-groups as children.
-// Inner groups (isRollGroup: false) each represent one sub-expression and carry
-// their own useInTotal / modifierFlags for drop/keep at the group level.
+/**
+ * Represents a group of rolled dice, such as the 3 dice in a `3d6`
+ */
+export const rollResultsSchema = z.object({
+  type: z.literal("roll-results"),
+  rolls: z.array(rollResultSchema),
+  value: z.number(),
+});
+
+/**
+ * Represents a group of rolled dice, such as the 3 dice in a `3d6`
+ */
+export type RollResults = z.infer<typeof rollResultsSchema>;
+
+export const resultGroupSchema: z.ZodSchema<ResultGroup> = z.lazy(() =>
+  z.object({
+    type: z.literal("result-group"),
+    isRollGroup: z.boolean(),
+    modifierFlags: z.string(),
+    modifiers: z.array(z.string()),
+    useInTotal: z.boolean(),
+    calculationValue: z.number(),
+    value: z.number(),
+    results: z.array(
+      z.union([rollResultsSchema, resultGroupSchema, z.string(), z.number()]),
+    ),
+  }),
+);
+
+/**
+ * A result-group, produced by roll group notation like {3d8, 3d8}k1.
+ * The outer group has isRollGroup: true and contains inner result-groups as children.
+ * Inner groups (isRollGroup: false) each represent one sub-expression and carry
+ * their own useInTotal / modifierFlags for drop/keep at the group level.
+ */
 export type ResultGroup = {
+  // note we have to define this by hand rather than using z.infer to break a
+  // circular dependency.
   type: "result-group";
   isRollGroup: boolean;
   modifierFlags: string;
@@ -36,12 +70,23 @@ export type ResultGroup = {
   results: Array<RollResults | ResultGroup | string | number>;
 };
 
-// A single element in the top-level rolls array.
-// Regular roll:  [RollResultsGroup, "+", RollResultsGroup, "+", 3]
-// Roll group:    [ResultGroupItem(isRollGroup=true)]
-export type RollEntry = RollResults | ResultGroup | string | number;
+export const rollEntrySchema = z.union([
+  rollResultsSchema,
+  resultGroupSchema,
+  z.string(),
+  z.number(),
+]);
 
-export type StructuredRolls = RollEntry[];
+/**
+ * A single element in the top-level rolls array.
+ * Regular roll:  [RollResultsGroup, "+", RollResultsGroup, "+", 3]
+ * Roll group:    [ResultGroupItem(isRollGroup=true)]
+ */
+export type RollEntry = z.infer<typeof rollEntrySchema>;
+
+export const structuredRollsSchema = z.array(rollEntrySchema);
+
+export type StructuredRolls = z.infer<typeof structuredRollsSchema>;
 
 export const sessionAttachmentSchema = z.object({
   id: z.uuid(),
