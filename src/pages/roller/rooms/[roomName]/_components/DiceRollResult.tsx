@@ -1,9 +1,10 @@
-import type {
-  ResultGroup,
-  RollEntry,
-  RollResult,
-  RollResults,
-  StructuredRolls,
+import {
+  structuredRollsSchema,
+  type ResultGroup,
+  type RollEntry,
+  type RollResult,
+  type RollResults,
+  type StructuredRolls,
 } from "../../../../../workers/types";
 import { memo } from "react";
 
@@ -15,9 +16,7 @@ type DiceRollResultProps = {
 
 function parseRolls(rolls: string): StructuredRolls | null {
   try {
-    const parsed = JSON.parse(rolls);
-    if (Array.isArray(parsed)) return parsed as StructuredRolls;
-    return null;
+    return structuredRollsSchema.parse(JSON.parse(rolls));
   } catch {
     return null;
   }
