@@ -1,8 +1,8 @@
 import type {
-  ResultGroupItem,
+  ResultGroup,
   RollEntry,
-  RollResultItem,
-  RollResultsGroup,
+  RollResult,
+  RollResults,
   StructuredRolls,
 } from "../../../../../workers/types";
 import { memo } from "react";
@@ -23,7 +23,7 @@ function parseRolls(rolls: string): StructuredRolls | null {
   }
 }
 
-function isDicePool(group: RollResultsGroup): boolean {
+function isDicePool(group: RollResults): boolean {
   return group.rolls.some(
     (r) =>
       r.modifiers.includes("target-success") ||
@@ -35,7 +35,7 @@ function DieChip({
   die,
   dicePool = false,
 }: {
-  die: RollResultItem;
+  die: RollResult;
   dicePool?: boolean;
 }) {
   const isDropped = !die.useInTotal;
@@ -85,7 +85,7 @@ function DieChip({
   );
 }
 
-function RollGroup({ group }: { group: RollResultsGroup }) {
+function RollGroup({ group }: { group: RollResults }) {
   const pool = isDicePool(group);
   return (
     <div className="flex flex-wrap gap-1">
@@ -96,7 +96,7 @@ function RollGroup({ group }: { group: RollResultsGroup }) {
   );
 }
 
-function SubExpression({ group }: { group: ResultGroupItem }) {
+function SubExpression({ group }: { group: ResultGroup }) {
   const isDropped = !group.useInTotal;
   return (
     <div
@@ -114,7 +114,7 @@ function SubExpression({ group }: { group: ResultGroupItem }) {
   );
 }
 
-function RollGroupContainer({ group }: { group: ResultGroupItem }) {
+function RollGroupContainer({ group }: { group: ResultGroup }) {
   return (
     <div className="flex flex-wrap gap-2">
       {group.results.map((entry, i) => {

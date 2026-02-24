@@ -5,7 +5,7 @@ import { z } from "zod/v4";
 // Structured types for the `rolls` JSON column, matching the shape of
 // DiceRoll.toJSON().rolls from @dice-roller/rpg-dice-roller
 
-export type RollResultItem = {
+export type RollResult = {
   type: "result";
   value: number;
   initialValue: number;
@@ -15,9 +15,9 @@ export type RollResultItem = {
   useInTotal: boolean;
 };
 
-export type RollResultsGroup = {
+export type RollResults = {
   type: "roll-results";
-  rolls: RollResultItem[];
+  rolls: RollResult[];
   value: number;
 };
 
@@ -25,7 +25,7 @@ export type RollResultsGroup = {
 // The outer group has isRollGroup: true and contains inner result-groups as children.
 // Inner groups (isRollGroup: false) each represent one sub-expression and carry
 // their own useInTotal / modifierFlags for drop/keep at the group level.
-export type ResultGroupItem = {
+export type ResultGroup = {
   type: "result-group";
   isRollGroup: boolean;
   modifierFlags: string;
@@ -33,13 +33,13 @@ export type ResultGroupItem = {
   useInTotal: boolean;
   calculationValue: number;
   value: number;
-  results: Array<RollResultsGroup | ResultGroupItem | string | number>;
+  results: Array<RollResults | ResultGroup | string | number>;
 };
 
 // A single element in the top-level rolls array.
 // Regular roll:  [RollResultsGroup, "+", RollResultsGroup, "+", 3]
 // Roll group:    [ResultGroupItem(isRollGroup=true)]
-export type RollEntry = RollResultsGroup | ResultGroupItem | string | number;
+export type RollEntry = RollResults | ResultGroup | string | number;
 
 export type StructuredRolls = RollEntry[];
 

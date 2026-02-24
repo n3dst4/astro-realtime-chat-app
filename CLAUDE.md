@@ -55,25 +55,25 @@ Stored as `JSON.stringify(roll.toJSON().rolls)` — the structured output from t
 The top-level array contains `RollEntry` items:
 
 ```
-type RollEntry = RollResultsGroup | ResultGroupItem | string | number
+type RollEntry = RollResults | ResultGroup | string | number
 ```
 
 - **`string`** — an operator: `"+"`, `"-"`, `"*"`, `"/"`
 - **`number`** — a literal modifier, e.g. the `3` in `2d6+3`
-- **`RollResultsGroup`** (`type: "roll-results"`) — a group of dice, e.g. all 3 dice from `3d6`
-- **`ResultGroupItem`** (`type: "result-group"`) — produced by roll group notation `{...}`
+- **`RollResults`** (`type: "roll-results"`) — a group of dice, e.g. all 3 dice from `3d6`
+- **`ResultGroup`** (`type: "result-group"`) — produced by roll group notation `{...}`
 
-#### `RollResultsGroup`
+#### `RollResults`
 
 ```ts
 {
   type: "roll-results",
-  rolls: RollResultItem[],
+  rolls: RollResult[],
   value: number   // subtotal for this group
 }
 ```
 
-#### `RollResultItem` (a single die)
+#### `RollResult` (a single die)
 
 ```ts
 {
@@ -87,7 +87,7 @@ type RollEntry = RollResultsGroup | ResultGroupItem | string | number
 }
 ```
 
-#### `ResultGroupItem` (roll groups `{...}`)
+#### `ResultGroup` (roll groups `{...}`)
 
 ```ts
 {
@@ -98,7 +98,7 @@ type RollEntry = RollResultsGroup | ResultGroupItem | string | number
   useInTotal: boolean,    // false if this sub-expression was dropped
   calculationValue: number,
   value: number,          // subtotal for this sub-expression
-  results: Array<RollResultsGroup | ResultGroupItem | string | number>
+  results: Array<RollResults | ResultGroup | string | number>
 }
 ```
 
@@ -106,7 +106,7 @@ The outer `result-group` (`isRollGroup: true`) contains inner `result-group` chi
 
 ---
 
-## `RollResultItem` modifier combinations
+## `RollResult` modifier combinations
 
 | `modifiers` | `modifierFlags` | `calculationValue` | Meaning |
 |---|---|---|---|
@@ -125,7 +125,7 @@ The outer `result-group` (`isRollGroup: true`) contains inner `result-group` chi
 - `target-failure` (explicit `f<=1`) → subtracts from count (`calculationValue: -1`)
 - `critical-failure` in pool context (bare `cf`) → just flagged, `calculationValue: 0`
 
-**Detecting a dice pool roll:** any `RollResultsGroup` containing at least one die with `"target-success"` or `"target-failure"` in its modifiers.
+**Detecting a dice pool roll:** any `RollResults` containing at least one die with `"target-success"` or `"target-failure"` in its modifiers.
 
 ---
 
