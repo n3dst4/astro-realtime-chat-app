@@ -44,8 +44,8 @@ export type RollEntry = RollResultsGroup | ResultGroupItem | string | number;
 export type StructuredRolls = RollEntry[];
 
 export const sessionAttachmentSchema = z.object({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
+  id: z.uuid(),
+  userId: z.uuid(),
   username: z.string().min(1).max(100),
 });
 

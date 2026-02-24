@@ -10,8 +10,8 @@ if (counterId === undefined) {
   throw new Error("Counter ID is required");
 }
 
-const counterDO = env.Counter.getByName(counterId);
-const counterValue = await counterDO.getCounterValue();
+const counterDO = env.Counter?.getByName(counterId);
+const counterValue = (await counterDO?.getCounterValue()) ?? 0;
 ---
 
 <Layout title={`Counter ${counterId}`}>

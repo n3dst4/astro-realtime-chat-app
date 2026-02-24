@@ -5,9 +5,8 @@ import { ReactCounter } from "./_ReactCounter";
 export const prerender = false;
 
 const { counterId } = Astro.params;
-const counterValue = await env.Counter.getByName(
-  counterId ?? "",
-).getCounterValue();
+const counterValue =
+  (await env.Counter?.getByName(counterId ?? "").getCounterValue()) ?? 0;
 ---
 
 <Layout title="React!">

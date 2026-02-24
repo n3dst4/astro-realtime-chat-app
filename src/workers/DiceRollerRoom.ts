@@ -19,7 +19,6 @@ const error = console.error.bind(console, "[Roller DO]");
 
 export class DiceRollerRoom extends DurableObject {
   private sessions: Map<WebSocket, SessionAttachment>;
-  private messages: RollerMessage[] = [];
   private readonly db: DrizzleSqliteDODatabase<typeof dbSchema>;
 
   constructor(ctx: DurableObjectState, env: Env) {
@@ -64,8 +63,6 @@ export class DiceRollerRoom extends DurableObject {
       } catch (e: any) {
         error("FAILED MIGRATION", e);
       }
-      // load message history from storage
-      this.messages = this.db.select().from(dbSchema.Messages).limit(100).all();
     });
   }
 
