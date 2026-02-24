@@ -113,7 +113,8 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
         <span
           data-connection-status={connectionStatus}
           aria-description={connectionStatus}
-          className="ml-4 inline-block h-3 w-3 rounded-full bg-red-500 align-baseline data-[connection-status=connected]:bg-green-500"
+          className="ml-4 inline-block h-3 w-3 rounded-full bg-red-500
+            align-baseline data-[connection-status=connected]:bg-green-500"
         ></span>
       </header>
       <div className="relative flex-1 basis-0">
@@ -145,7 +146,8 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
         {hasNewMessages && (
           <button
             onClick={scrollToBottom}
-            className="btn btn-primary btn-sm absolute bottom-4 left-1/2 -translate-x-1/2 shadow-lg"
+            className="btn btn-primary btn-sm absolute bottom-4 left-1/2
+              -translate-x-1/2 shadow-lg"
           >
             ↓ New messages
           </button>

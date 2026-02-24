@@ -1,10 +1,10 @@
 {
   "plugins": [
     "prettier-plugin-astro",
-    "prettier-plugin-classnames",
     "@trivago/prettier-plugin-sort-imports",
     "prettier-plugin-astro-organize-imports",
     "prettier-plugin-tailwindcss",
+    "prettier-plugin-classnames",
     "prettier-plugin-merge"
   ],
   "overrides": [

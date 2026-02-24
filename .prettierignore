@@ -1,0 +1,5 @@
+migrations
+src/durable-object-migrations
+pnpm-lock.yaml
+CLAUDE.md
+src/worker-configuration.d.ts
