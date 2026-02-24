@@ -44,8 +44,7 @@ export const DiceForm = memo(
             rounded-r-xl px-6"
         >
           <span
-            className="relative flex h-[22px] w-[22px] items-center
-              justify-center"
+            className="relative flex h-5.5 w-5.5 items-center justify-center"
           >
             <SendHorizontal
               size={22}
