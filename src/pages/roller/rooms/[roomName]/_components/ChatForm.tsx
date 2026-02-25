@@ -1,7 +1,7 @@
 import { Dices, SendHorizontal } from "lucide-react";
 import { memo, type SubmitEvent } from "react";
 
-type DiceFormProps = {
+type ChatFormProps = {
   formula: string;
   text: string;
   onFormulaChange: (value: string) => void;
@@ -9,14 +9,14 @@ type DiceFormProps = {
   onSubmit: (event: SubmitEvent) => void;
 };
 
-export const DiceForm = memo(
+export const ChatForm = memo(
   ({
     formula,
     text,
     onFormulaChange,
     onTextChange,
     onSubmit,
-  }: DiceFormProps) => {
+  }: ChatFormProps) => {
     return (
       <form onSubmit={onSubmit} className="flex flex-row flex-wrap p-4">
         <div
@@ -31,12 +31,19 @@ export const DiceForm = memo(
             onChange={(e) => onFormulaChange(e.target.value)}
             placeholder='Dice formula, e.g. "3d6"'
           />
-          <input
+          <textarea
+            rows={1}
             className="bg-base-100 placeholder:text-base-content/40 min-w-0
               flex-1 px-4 py-2 outline-none"
             value={text}
             onChange={(e) => onTextChange(e.target.value)}
             placeholder={formula.trim() ? "Annotation" : "Chat message"}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                e.currentTarget.form?.requestSubmit();
+              }
+            }}
           />
         </div>
         <button
@@ -63,4 +70,4 @@ export const DiceForm = memo(
   },
 );
 
-DiceForm.displayName = "DiceForm";
+ChatForm.displayName = "DiceForm";

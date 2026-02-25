@@ -26,9 +26,9 @@ export const ShowMoreDialog = ({ html }: ShowMoreDialogProps) => {
         id={dialogId}
         closedby="any"
         className="animate-fadeout open:animate-fadein backdrop:animate-fadeout
-          open:backdrop:animate-fadein absolute m-auto max-w-200 flex-col
-          rounded-lg bg-pink-300 px-4 pt-1 text-base shadow-lg
-          [transition:display_300s_allow-discrete,overlay_300ms_allow-discrete]
+          open:backdrop:animate-fadein absolute m-auto max-w-200 min-w-1/2
+          flex-col rounded-lg bg-pink-300 px-4 pt-1 text-base shadow-lg
+          [transition:display_300ms_allow-discrete,overlay_300ms_allow-discrete]
           backdrop:bg-black/50 backdrop:backdrop-blur-sm open:flex
           dark:bg-pink-900"
       >

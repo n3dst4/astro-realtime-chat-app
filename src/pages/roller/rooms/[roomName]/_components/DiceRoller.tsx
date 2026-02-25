@@ -5,7 +5,7 @@ import {
   type WebSocketClientMessage,
 } from "../../../../../workers/types";
 import { ChatBubble } from "./ChatBubble";
-import { DiceForm } from "./DiceForm";
+import { ChatForm } from "./ChatForm";
 import { useSmartScroll } from "./useSmartScroll";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { SubmitEvent } from "react";
@@ -140,7 +140,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
           </button>
         )}
       </div>
-      <DiceForm
+      <ChatForm
         formula={formula}
         text={text}
         onFormulaChange={setFormula}

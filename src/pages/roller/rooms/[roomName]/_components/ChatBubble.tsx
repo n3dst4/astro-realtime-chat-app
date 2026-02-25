@@ -59,7 +59,7 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
             <p
               dangerouslySetInnerHTML={{ __html: html }}
               ref={textRef}
-              className="prose m-0 line-clamp-3 overflow-hidden p-0"
+              className="prose m-0 line-clamp-3 p-0"
             />
             {showShowMore && <ShowMoreDialog html={html} />}
           </>
