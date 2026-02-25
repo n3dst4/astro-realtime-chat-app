@@ -35,7 +35,7 @@ export function addPotatoHeader(request: Request, response: Response) {
     const response2 = new Response(response.body, response);
     response2.headers.set(
       "X-Are-The-Potato-People-Watching",
-      answers[Math.floor(Math.random() * 20)],
+      answers[Math.floor(Math.random() * answers.length)],
     );
     return response2;
   }
