@@ -4,9 +4,8 @@ import {
   type RollerMessage,
   type WebSocketClientMessage,
 } from "../../../../../workers/types";
+import { ChatBubble } from "./ChatBubble";
 import { DiceForm } from "./DiceForm";
-import { DiceRollResult } from "./DiceRollResult";
-import { ChatBubble } from "./Message";
 import { useSmartScroll } from "./useSmartScroll";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { SubmitEvent } from "react";
@@ -124,19 +123,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
           className="absolute inset-0 overflow-auto px-4"
         >
           {messages.map((message) => (
-            <ChatBubble
-              key={message.id}
-              // user={message.username}
-              user={message.username}
-              timeStamp={message.created_time}
-            >
-              {message.text && <p>{message.text}</p>}
-              <DiceRollResult
-                formula={message.formula}
-                rolls={message.rolls}
-                total={message.total}
-              />
-            </ChatBubble>
+            <ChatBubble key={message.id} message={message}></ChatBubble>
           ))}
           {messages.length === 0 && (
             <div className="font-italic">No messages yet</div>
