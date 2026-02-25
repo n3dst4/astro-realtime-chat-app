@@ -20,21 +20,22 @@ export const ChatForm = memo(
     return (
       <form onSubmit={onSubmit} className="flex flex-row flex-wrap p-4">
         <div
-          className="border-primary flex min-w-0 flex-1 flex-col overflow-hidden
-            rounded-l-xl border shadow-sm sm:flex-row"
+          className="border-primary flex min-w-0 flex-1 flex-row flex-wrap
+            overflow-hidden rounded-l-xl border shadow-sm"
         >
           <input
             className="bg-base-100 border-base-300
-              placeholder:text-base-content/40 min-w-0 flex-1 border-b px-4 py-2
-              outline-none sm:border-r sm:border-b-0"
+              placeholder:text-base-content/40 min-w-100 flex-1 border-b px-4
+              py-2 outline-none sm:border-r sm:border-b-0"
             value={formula}
             onChange={(e) => onFormulaChange(e.target.value)}
             placeholder='Dice formula, e.g. "3d6"'
           />
           <textarea
             rows={1}
-            className="bg-base-100 placeholder:text-base-content/40 min-w-0
-              flex-1 px-4 py-2 outline-none"
+            className="bg-base-100 placeholder:text-base-content/40
+              field-sizing-content max-h-[30vh] min-w-0 flex-1 resize-none
+              overflow-y-auto px-4 py-2 outline-none"
             value={text}
             onChange={(e) => onTextChange(e.target.value)}
             placeholder={formula.trim() ? "Annotation" : "Chat message"}
