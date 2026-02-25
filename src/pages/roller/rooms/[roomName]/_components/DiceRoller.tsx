@@ -106,7 +106,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
   } = useSmartScroll({ messages });
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="@container-[size] flex h-full w-full flex-col">
       <header className="bg-base-200 p-4">
         Connection status:
         <span

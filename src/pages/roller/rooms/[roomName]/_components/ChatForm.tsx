@@ -34,7 +34,7 @@ export const ChatForm = memo(
           <textarea
             rows={1}
             className="bg-base-100 placeholder:text-base-content/40
-              field-sizing-content max-h-[30vh] min-w-0 flex-1 resize-none
+              field-sizing-content max-h-[30cqh] min-w-0 flex-1 resize-none
               overflow-y-auto px-4 py-2 outline-none"
             value={text}
             onChange={(e) => onTextChange(e.target.value)}
