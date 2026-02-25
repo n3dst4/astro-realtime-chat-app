@@ -6,6 +6,7 @@ import {
 } from "../../../../../workers/types";
 import { ChatBubble } from "./ChatBubble";
 import { ChatForm } from "./ChatForm";
+import { UsernameDialog } from "./UsernameDialog";
 import { useSmartScroll } from "./useSmartScroll";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { SubmitEvent } from "react";
@@ -20,6 +21,12 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
     useState<ConnectionStatus>("disconnected");
 
   const [messages, setMessages] = useState<RollerMessage[]>([]);
+  const [username, setUsername] = useState<string>(
+    localStorage.getItem("username") ?? "",
+  );
+  const [userId, setUserId] = useState<string>(
+    localStorage.getItem("userId") ?? "",
+  );
 
   const [formula, setFormula] = useState("");
   const [text, setText] = useState("");
@@ -88,14 +95,22 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
         payload: {
           formula: formula.toLowerCase(),
           text,
-          userId: "xxx123",
-          username: "Anon",
+          userId,
+          username,
         },
       };
       websocketRef.current?.json(msg);
     },
     [formula, text],
   );
+
+  useEffect(() => {
+    if (userId === "") {
+      const newUserId = crypto.randomUUID();
+      localStorage.setItem("userId", newUserId);
+      setUserId(newUserId);
+    }
+  }, []);
 
   const {
     scrollContainerRef,
@@ -105,16 +120,36 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
     bottomRef,
   } = useSmartScroll({ messages });
 
+  const handleSetUsername = useCallback((newUsername: string) => {
+    setUsername(newUsername);
+    localStorage.setItem("username", newUsername);
+  }, []);
+
   return (
     <div className="@container-[size] flex h-full w-full flex-col">
-      <header className="bg-base-200 p-4">
-        Connection status:
-        <span
-          data-connection-status={connectionStatus}
-          aria-description={connectionStatus}
-          className="ml-4 inline-block h-3 w-3 rounded-full bg-red-500
-            align-baseline data-[connection-status=connected]:bg-green-500"
-        ></span>
+      <header className="bg-base-200 flex flex-row px-4">
+        <div className="flex-1" />
+        <UsernameDialog
+          initialUsername={username}
+          onSetUsername={handleSetUsername}
+        />
+        <div
+          className="text-middle ml-4 inline-flex h-(--size) flex-col
+            justify-center"
+        >
+          Connection status:
+        </div>
+        <div
+          className="text-middle inline-flex h-(--size) flex-col justify-center"
+        >
+          <span
+            data-connection-status={connectionStatus}
+            aria-description={connectionStatus}
+            className="text-middle ml-4 inline-block h-3 w-3 rounded-full
+              bg-red-500 align-baseline
+              data-[connection-status=connected]:bg-green-500"
+          ></span>
+        </div>
       </header>
       <div className="relative flex-1 basis-0">
         <div
