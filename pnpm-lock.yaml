@@ -85,6 +85,9 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.7.2
         version: 0.7.2(@trivago/prettier-plugin-sort-imports@6.0.2(prettier@3.8.1))(prettier-plugin-astro@0.14.1)(prettier-plugin-organize-imports@4.3.0(prettier@3.8.1)(typescript@5.9.3))(prettier@3.8.1)
+      quikdown:
+        specifier: ^1.1.1
+        version: 1.1.1
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -2506,6 +2509,9 @@ packages:
 
   pump@3.0.3:
     resolution: {integrity: sha512-todwxLMY7/heScKmntwQG8CXVkWUOdYxIvY2s0VWAAMh/nd8SoYiRaKjlr7+iCs984f2P8zvrfWcDDYVb73NfA==}
+
+  quikdown@1.1.1:
+    resolution: {integrity: sha512-mawqm/q+zC/orjb+b9XH/yHY0+QtC438ryTeFBtolVKtacKZCQk8Fa6s4K2kHTq4pvq/ikcgUW5lapRG4yM0ww==}
 
   radix3@1.1.2:
     resolution: {integrity: sha512-b484I/7b8rDEdSDKckSSBA8knMpcdsXudlE/LNL639wFoHKwLbEkQFZHWEYwDC0wa0FKUcCY+GAF73Z7wxNVFA==}
@@ -5645,6 +5651,8 @@ snapshots:
     dependencies:
       end-of-stream: 1.4.5
       once: 1.4.0
+
+  quikdown@1.1.1: {}
 
   radix3@1.1.2: {}
 

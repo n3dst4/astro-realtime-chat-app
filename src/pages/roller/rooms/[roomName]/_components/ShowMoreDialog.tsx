@@ -1,6 +1,7 @@
 import type { RollerMessage } from "../../../../../workers/types";
 import { X } from "lucide-react";
-import { useId } from "react";
+import quikdown from "quikdown";
+import { useId, useMemo } from "react";
 
 type ShowMoreDialogProps = {
   message: RollerMessage;
@@ -8,6 +9,10 @@ type ShowMoreDialogProps = {
 
 export const ShowMoreDialog = ({ message }: ShowMoreDialogProps) => {
   const dialogId = useId();
+
+  const html = useMemo(() => {
+    return quikdown(message.text, { inline_styles: false });
+  }, [message.text]);
 
   return (
     <>
@@ -28,7 +33,7 @@ export const ShowMoreDialog = ({ message }: ShowMoreDialogProps) => {
         closedby="any"
         className="animate-fadeout open:animate-fadein backdrop:animate-fadeout
           open:backdrop:animate-fadein absolute m-auto max-w-200 flex-col
-          rounded-lg bg-pink-300 px-4 pt-1 text-base
+          rounded-lg bg-pink-300 px-4 pt-1 text-base shadow-lg
           [transition:display_300s_allow-discrete,overlay_300ms_allow-discrete]
           backdrop:bg-black/50 backdrop:backdrop-blur-sm open:flex
           dark:bg-pink-900"
@@ -36,13 +41,17 @@ export const ShowMoreDialog = ({ message }: ShowMoreDialogProps) => {
         <nav className="flex flex-row justify-end">
           <button
             className="btn btn-ghost"
+            // @ts-expect-error invoker api not in react types yet
             commandfor={dialogId}
             command="close"
           >
             <X />
           </button>
         </nav>
-        <article className="flex-1 overflow-auto">{message.text}</article>
+        <article
+          className="prose flex-1 overflow-auto"
+          dangerouslySetInnerHTML={{ __html: html }}
+        ></article>
       </dialog>
     </>
   );

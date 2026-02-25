@@ -2,14 +2,7 @@ import type { RollerMessage } from "../../../../../workers/types";
 import { DiceRollResult } from "./DiceRollResult";
 import { ShowMoreDialog } from "./ShowMoreDialog";
 import { TimeDisplay } from "./TimeDisplay";
-import {
-  memo,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { memo, useLayoutEffect, useRef, useState } from "react";
 
 type ChatBubbleProps = {
   message: RollerMessage;
@@ -17,7 +10,7 @@ type ChatBubbleProps = {
 
 export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
   const textRef = useRef<HTMLParagraphElement>(null);
-  const [showMore, setShowMore] = useState(false);
+  // const [showMore, setShowMore] = useState(false);
   const [showShowMore, setShowShowMore] = useState(false);
 
   useLayoutEffect(() => {
