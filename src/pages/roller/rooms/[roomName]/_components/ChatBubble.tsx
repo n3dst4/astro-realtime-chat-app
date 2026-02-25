@@ -2,16 +2,31 @@ import type { RollerMessage } from "../../../../../workers/types";
 import { DiceRollResult } from "./DiceRollResult";
 import { ShowMoreDialog } from "./ShowMoreDialog";
 import { TimeDisplay } from "./TimeDisplay";
-import { memo, useLayoutEffect, useRef, useState } from "react";
+import quikdown from "quikdown";
+import { memo, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 type ChatBubbleProps = {
   message: RollerMessage;
 };
 
+export function addLinkTargets(html: string): string {
+  return html.replace(/<a\b([^>]*?)>/gi, (match, attrs) => {
+    // If a target is already set, leave it alone
+    if (/\btarget\s*=/i.test(attrs)) {
+      return match;
+    }
+    return `<a${attrs} target="_new">`;
+  });
+}
+
 export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
   const textRef = useRef<HTMLParagraphElement>(null);
   // const [showMore, setShowMore] = useState(false);
   const [showShowMore, setShowShowMore] = useState(false);
+
+  const html = useMemo(() => {
+    return addLinkTargets(quikdown(message.text, { inline_styles: false }));
+  }, [message.text]);
 
   useLayoutEffect(() => {
     function checkHeight() {
@@ -41,10 +56,12 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
       >
         {message.text && (
           <>
-            <p ref={textRef} className="m-0 line-clamp-3 overflow-hidden p-0">
-              {message.text}
-            </p>
-            {showShowMore && <ShowMoreDialog message={message} />}
+            <p
+              dangerouslySetInnerHTML={{ __html: html }}
+              ref={textRef}
+              className="prose m-0 line-clamp-3 overflow-hidden p-0"
+            />
+            {showShowMore && <ShowMoreDialog html={html} />}
           </>
         )}
         <DiceRollResult

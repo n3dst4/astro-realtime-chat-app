@@ -1,18 +1,12 @@
-import type { RollerMessage } from "../../../../../workers/types";
 import { X } from "lucide-react";
-import quikdown from "quikdown";
 import { useId, useMemo } from "react";
 
 type ShowMoreDialogProps = {
-  message: RollerMessage;
+  html: string;
 };
 
-export const ShowMoreDialog = ({ message }: ShowMoreDialogProps) => {
+export const ShowMoreDialog = ({ html }: ShowMoreDialogProps) => {
   const dialogId = useId();
-
-  const html = useMemo(() => {
-    return quikdown(message.text, { inline_styles: false });
-  }, [message.text]);
 
   return (
     <>
