@@ -1,0 +1,48 @@
+import type { RollerMessage } from "../../../../../workers/types";
+import { X } from "lucide-react";
+import { useId } from "react";
+
+type ShowMoreDialogProps = {
+  message: RollerMessage;
+};
+
+export const ShowMoreDialog = ({ message }: ShowMoreDialogProps) => {
+  const dialogId = useId();
+
+  return (
+    <>
+      <div className="text-center">
+        <button
+          // @ts-expect-error invoker api not in react types
+          command="show-modal"
+          commandfor={dialogId}
+          // onClick={() => setShowMore(true)}
+          className="btn btn-secondary btn-link relative -top-1 h-auto px-2 py-0
+            text-sm"
+        >
+          Show more
+        </button>
+      </div>
+      <dialog
+        id={dialogId}
+        closedby="any"
+        className="animate-fadeout open:animate-fadein backdrop:animate-fadeout
+          open:backdrop:animate-fadein dispay-none m-auto flex max-w-200
+          flex-col rounded-lg bg-pink-300 px-4 pt-1 text-base
+          [transition:display_300s_allow-discrete,overlay_300ms_allow-discrete]
+          backdrop:bg-black/50 backdrop:backdrop-blur-sm dark:bg-pink-900"
+      >
+        <nav className="flex flex-row justify-end">
+          <button
+            className="btn btn-ghost"
+            commandfor={dialogId}
+            command="close"
+          >
+            <X />
+          </button>
+        </nav>
+        <article className="flex-1 overflow-auto">{message.text}</article>
+      </dialog>
+    </>
+  );
+};

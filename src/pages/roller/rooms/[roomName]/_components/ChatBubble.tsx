@@ -1,5 +1,6 @@
 import type { RollerMessage } from "../../../../../workers/types";
 import { DiceRollResult } from "./DiceRollResult";
+import { ShowMoreDialog } from "./ShowMoreDialog";
 import { TimeDisplay } from "./TimeDisplay";
 import {
   memo,
@@ -18,7 +19,6 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
   const textRef = useRef<HTMLParagraphElement>(null);
   const [showMore, setShowMore] = useState(false);
   const [showShowMore, setShowShowMore] = useState(false);
-  const dialogId = useId();
 
   useLayoutEffect(() => {
     function checkHeight() {
@@ -43,37 +43,15 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
         <TimeDisplay timeStamp={message.created_time} />
       </header>
       <div
-        className="w-fit rounded-2xl bg-pink-300 px-4 pt-1 text-base
+        className="w-fit rounded-lg bg-pink-300 px-4 pt-1 text-base
           dark:bg-pink-900"
       >
         {message.text && (
           <>
-            <p ref={textRef} className="line-clamp-3 overflow-hidden">
+            <p ref={textRef} className="m-0 line-clamp-3 overflow-hidden p-0">
               {message.text}
             </p>
-            {showShowMore && (
-              <>
-                <div className="text-center">
-                  <button
-                    command="show-modal"
-                    commandfor={dialogId}
-                    // onClick={() => setShowMore(true)}
-                    className="btn btn-secondary btn-link h-auto px-2 py-0
-                      text-sm"
-                  >
-                    Show more
-                  </button>
-                </div>
-                <dialog
-                  id={dialogId}
-                  closedby="any"
-                  className="m-auto w-200 backdrop:bg-black/50
-                    backdrop:backdrop-blur-sm"
-                >
-                  {message.text}
-                </dialog>
-              </>
-            )}
+            {showShowMore && <ShowMoreDialog message={message} />}
           </>
         )}
         <DiceRollResult
