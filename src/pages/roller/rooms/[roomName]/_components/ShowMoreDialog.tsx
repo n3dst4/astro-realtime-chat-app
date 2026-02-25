@@ -27,10 +27,11 @@ export const ShowMoreDialog = ({ message }: ShowMoreDialogProps) => {
         id={dialogId}
         closedby="any"
         className="animate-fadeout open:animate-fadein backdrop:animate-fadeout
-          open:backdrop:animate-fadein dispay-none m-auto flex max-w-200
-          flex-col rounded-lg bg-pink-300 px-4 pt-1 text-base
+          open:backdrop:animate-fadein absolute m-auto max-w-200 flex-col
+          rounded-lg bg-pink-300 px-4 pt-1 text-base
           [transition:display_300s_allow-discrete,overlay_300ms_allow-discrete]
-          backdrop:bg-black/50 backdrop:backdrop-blur-sm dark:bg-pink-900"
+          backdrop:bg-black/50 backdrop:backdrop-blur-sm open:flex
+          dark:bg-pink-900"
       >
         <nav className="flex flex-row justify-end">
           <button
