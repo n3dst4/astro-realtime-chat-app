@@ -49,6 +49,7 @@ export const UsernameDialog = memo(
         >
           <h2 className="">Pick a username</h2>
           <form
+            className="join flex w-full flex-row flex-wrap"
             onSubmit={(e) => {
               e.preventDefault();
               onSetUsername(username);
@@ -58,10 +59,11 @@ export const UsernameDialog = memo(
             <input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="input input-primary"
+              className="input input-primary join-item flex-2 basis-auto"
             />
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary join-item flex-1 basis-auto"
+              type="button"
               onClick={(e) => {
                 e.preventDefault();
                 setUsername(generateRandomName);
@@ -69,7 +71,9 @@ export const UsernameDialog = memo(
             >
               Generate random
             </button>
-            <button className="btn btn-primary">Save</button>
+            <button className="btn btn-primary join-item flex-1 basis-auto">
+              Save username
+            </button>
           </form>
         </dialog>
       </>
