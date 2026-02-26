@@ -46,7 +46,10 @@ export class DiceRollerRoom extends DurableObject {
     this.db = drizzle(ctx.storage, { schema: dbSchema });
 
     const tableNames = Object.keys(dbSchema);
-    const query = `SELECT sql FROM sqlite_master WHERE name IN (${new Array(tableNames.length).fill("?").join(", ")})`;
+    const placeHolders = Array.from({ length: tableNames.length })
+      .fill("?")
+      .join(", ");
+    const query = `SELECT sql FROM sqlite_master WHERE name IN (${placeHolders})`;
     log(query, tableNames);
     const printedSchema = ctx.storage.sql
       .exec(query, ...tableNames)
