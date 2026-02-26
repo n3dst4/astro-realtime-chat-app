@@ -1,26 +1,17 @@
-import { ReconnectingWebSocket } from "../../../../../utils/ReconnectingWebSocket";
-import {
-  webSocketServerMessageSchema,
-  type RollerMessage,
-  type WebSocketClientMessage,
-} from "../../../../../workers/types";
+import { type WebSocketClientMessage } from "../../../../../workers/types";
 import { ChatBubble } from "./ChatBubble";
 import { ChatForm } from "./ChatForm";
 import { UsernameDialog } from "./UsernameDialog";
+import { useChatWebSocket } from "./useChatWebSocket";
 import { useSmartScroll } from "./useSmartScroll";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import type { SubmitEvent } from "react";
 
 type DiceRollerProps = {
   roomName: string;
 };
-type ConnectionStatus = "connected" | "disconnected" | "error";
 
 export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
-  const [connectionStatus, setConnectionStatus] =
-    useState<ConnectionStatus>("disconnected");
-
-  const [messages, setMessages] = useState<RollerMessage[]>([]);
   const [username, setUsername] = useState<string>(
     localStorage.getItem("username") ?? "",
   );
@@ -31,61 +22,9 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
   const [formula, setFormula] = useState("");
   const [text, setText] = useState("");
 
-  const websocketRef = useRef<ReconnectingWebSocket>(null);
-
-  useEffect(() => {
-    // const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    // const host = window.location.host;
-
-    // Build WebSocket URL
-    const wsUrl = `../ws/?roomName=${roomName}`;
-
-    // return;
-    // Create WebSocket connection
-    const ws = new ReconnectingWebSocket(wsUrl, {
-      onopen: () => {
-        setConnectionStatus("connected");
-      },
-      onmessage: (event) => {
-        let blob: any;
-        try {
-          blob = JSON.parse(event.data);
-        } catch (e: any) {
-          console.error("Error parsing WebSocket message:", e);
-          return;
-        }
-        const incomingWebsocketMessage =
-          webSocketServerMessageSchema.safeParse(blob);
-        if (!incomingWebsocketMessage.success) {
-          console.error(
-            "unknown incoming websocket message",
-            incomingWebsocketMessage.error,
-          );
-          return;
-        }
-        const data = incomingWebsocketMessage.data;
-        if (data.type === "message") {
-          setMessages((old) => [...old, data.payload.message].slice(-100));
-        } else if (data.type === "catchup") {
-          setMessages(data.payload.messages);
-        }
-      },
-      onclose: () => {
-        setConnectionStatus("disconnected");
-      },
-      onerror: () => {
-        setConnectionStatus("error");
-      },
-      keepaliveInterval: 30_000,
-    });
-
-    websocketRef.current = ws;
-
-    return () => {
-      console.log("Closing websocket because effect re-ran");
-      ws.close();
-    };
-  }, [roomName]);
+  const { connectionStatus, messages, sendJSON } = useChatWebSocket({
+    roomName,
+  });
 
   const handleSubmit = useCallback(
     (event: SubmitEvent) => {
@@ -99,7 +38,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
           username,
         },
       };
-      websocketRef.current?.json(msg);
+      sendJSON(msg);
     },
     [formula, text],
   );
