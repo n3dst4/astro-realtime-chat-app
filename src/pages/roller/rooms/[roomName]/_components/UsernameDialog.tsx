@@ -42,11 +42,10 @@ export const UsernameDialog = memo(
           closedby={initialUsername ? "any" : "none"}
           className="animate-fadeout open:animate-fadein
             backdrop:animate-fadeout open:backdrop:animate-fadein prose absolute
-            m-auto max-w-200 min-w-1/2 flex-col rounded-lg bg-pink-300 p-4 px-4
-            text-base shadow-lg
+            m-auto max-w-200 min-w-1/2 flex-col rounded-lg bg-(--user-colour)
+            p-4 px-4 text-base shadow-lg
             [transition:display_300ms_allow-discrete,overlay_300ms_allow-discrete]
-            backdrop:bg-black/50 backdrop:backdrop-blur-sm open:flex
-            dark:bg-pink-900"
+            backdrop:bg-black/50 backdrop:backdrop-blur-sm open:flex"
         >
           <h2 className="">Pick a username</h2>
           <form

@@ -2,6 +2,7 @@ import type { RollerMessage } from "../../../../../workers/types";
 import { DiceRollResult } from "./DiceRollResult";
 import { ShowMoreDialog } from "./ShowMoreDialog";
 import { TimeDisplay } from "./TimeDisplay";
+import { deriveHueFromUserId } from "./deriveHueFromUserId";
 import { useUserIdentityContext } from "./userIdentityContext";
 import quikdown from "quikdown";
 import { memo, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -21,6 +22,7 @@ export function addLinkTargets(html: string): string {
 }
 
 export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
+  const hue = deriveHueFromUserId(message.userId);
   const textRef = useRef<HTMLParagraphElement>(null);
   // const [showMore, setShowMore] = useState(false);
   const [showShowMore, setShowShowMore] = useState(false);
@@ -52,15 +54,21 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
   return (
     <article
       data-is-mine={message.userId === userId ? "" : undefined}
-      className="group mb-2 w-full data-is-mine:text-right"
+      className="group mb-2 w-full
+        [--user-colour:oklch(var(--bubble-light-l)_var(--bubble-light-c)_var(--user-hue))]
+        data-is-mine:text-right
+        dark:[--user-colour:oklch(var(--bubble-dark-l)_var(--bubble-dark-c)_var(--user-hue))]"
+      style={
+        { "--user-hue": hue } as React.CSSProperties & { "--user-hue": number }
+      }
     >
       <header className="text-sm">
         <span className="mr-4">{message.username}</span>
         <TimeDisplay timeStamp={message.created_time} />
       </header>
       <div
-        className="w-fit rounded-lg bg-pink-300 px-4 pt-1 text-base
-          group-data-is-mine:ml-auto dark:bg-pink-900"
+        className="w-fit rounded-lg bg-(--user-colour) px-4 pt-1 text-base
+          group-data-is-mine:ml-auto"
       >
         {message.text && (
           <>
