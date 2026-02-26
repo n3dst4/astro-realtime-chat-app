@@ -17,10 +17,15 @@ export default defineConfig({
     suspicious: "error",
   },
   rules: {
+    // not needed for modern React
     "react/react-in-jsx-scope": "off",
+    // nice sometimes but infuriating too often (e.g. `type` discriminators)
     "eslint/sort-keys": "off",
+    // who cares
     "eslint/func-style": "off",
+    // just no
     "react/jsx-max-depth": "off",
+    // oh get out
     "eslint/no-ternary": "off",
     // "eslint/sort-imports": [
     //   "error",
@@ -28,6 +33,7 @@ export default defineConfig({
     // ],
     "eslint/sort-imports": "off",
     "eslint/capitalized-comments": "off",
+    // yes, but some numbers are well-known
     "eslint/no-magic-numbers": [
       "error",
       { ignore: [-1, 0, 1, 2, 24, 60, 1000] },
