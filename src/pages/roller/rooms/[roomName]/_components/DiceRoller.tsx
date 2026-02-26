@@ -5,7 +5,7 @@ import { UsernameDialog } from "./UsernameDialog";
 import { useChatWebSocket } from "./useChatWebSocket";
 import { useSmartScroll } from "./useSmartScroll";
 import { useUserIdentity } from "./useUserIdentity";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback } from "react";
 
 type DiceRollerProps = {
   roomName: string;
@@ -96,3 +96,5 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
     </div>
   );
 });
+
+DiceRoller.displayName = "DiceRoller";
