@@ -73,3 +73,5 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
     </article>
   );
 });
+
+ChatBubble.displayName = "ChatBubble";

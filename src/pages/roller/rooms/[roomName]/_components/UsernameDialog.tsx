@@ -81,3 +81,5 @@ export const UsernameDialog = memo(
     );
   },
 );
+
+UsernameDialog.displayName = "UsernameDialog";

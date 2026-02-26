@@ -73,3 +73,5 @@ export const TimeDisplay = memo(({ timeStamp }: TimeDisplayProps) => {
     </button>
   );
 });
+
+TimeDisplay.displayName = "TimeDisplay";

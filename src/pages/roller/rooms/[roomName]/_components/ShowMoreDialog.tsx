@@ -1,11 +1,11 @@
 import { X } from "lucide-react";
-import { useId } from "react";
+import { memo, useId } from "react";
 
 type ShowMoreDialogProps = {
   html: string;
 };
 
-export const ShowMoreDialog = ({ html }: ShowMoreDialogProps) => {
+export const ShowMoreDialog = memo(({ html }: ShowMoreDialogProps) => {
   const dialogId = useId();
 
   return (
@@ -49,4 +49,6 @@ export const ShowMoreDialog = ({ html }: ShowMoreDialogProps) => {
       </dialog>
     </>
   );
-};
+});
+
+ShowMoreDialog.displayName = "ShowMoreDialog";

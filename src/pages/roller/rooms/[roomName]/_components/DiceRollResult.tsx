@@ -194,3 +194,5 @@ export const DiceRollResult = memo(
     );
   },
 );
+
+DiceRollResult.displayName = "DiceRollResult";
