@@ -6,6 +6,7 @@
     "build": "astro build",
     "preview": "pnpm run build && astro preview",
     "astro": "astro",
+    "types:check": "astro check",
     "deploy": "pnpm run build && wrangler deploy",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
