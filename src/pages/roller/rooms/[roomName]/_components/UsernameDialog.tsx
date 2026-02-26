@@ -39,7 +39,7 @@ export const UsernameDialog = memo(
         <dialog
           id={dialogId}
           ref={usernameDialogRef}
-          closedby="none"
+          closedby={initialUsername ? "any" : "none"}
           className="animate-fadeout open:animate-fadein
             backdrop:animate-fadeout open:backdrop:animate-fadein prose absolute
             m-auto max-w-200 min-w-1/2 flex-col rounded-lg bg-pink-300 p-4 px-4
@@ -75,6 +75,11 @@ export const UsernameDialog = memo(
             <button className="btn btn-primary join-item flex-1 basis-auto">
               Save username
             </button>
+            {initialUsername && (
+              <button className="btn btn-warning join-item flex-1 basis-auto">
+                Cancel
+              </button>
+            )}
           </form>
         </dialog>
       </>
