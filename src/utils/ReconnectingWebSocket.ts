@@ -138,7 +138,7 @@ export class ReconnectingWebSocket {
       if (this.retryTimer) {
         return;
       }
-      const delay = Math.pow(2, this.retryCount) * this.options.retryDelay;
+      const delay = 2 ** this.retryCount * this.options.retryDelay;
       this.retryCount += 1;
 
       log("Waiting to try again", delay);

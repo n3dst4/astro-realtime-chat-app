@@ -14,7 +14,7 @@ export const ChatForm = memo(({ onNewMessage }: ChatFormProps) => {
       event.preventDefault();
       onNewMessage({ formula, text });
     },
-    [formula, text],
+    [formula, text, onNewMessage],
   );
 
   return (

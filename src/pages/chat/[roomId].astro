@@ -211,7 +211,7 @@ const defaultUsername = `User${Math.floor(Math.random() * 10000)}`;
     }
 
     reconnectAttempts++;
-    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts), 10000);
+    const delay = Math.min(1000 * 2 ** reconnectAttempts, 10000);
 
     displaySystemMessage(
       `Reconnecting in ${delay / 1000} seconds... (attempt ${reconnectAttempts}/${maxReconnectAttempts})`,

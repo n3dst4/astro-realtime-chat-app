@@ -1,5 +1,5 @@
-import { Messages } from "../db/roller-schema";
 import * as dbSchema from "../db/roller-schema";
+import { Messages } from "../db/roller-schema";
 import migrations from "../durable-object-migrations/roller/migrations";
 import {
   sessionAttachmentSchema,
@@ -11,11 +11,11 @@ import {
 import { DiceRoll } from "@dice-roller/rpg-dice-roller";
 import { DurableObject } from "cloudflare:workers";
 import { desc } from "drizzle-orm";
-import { drizzle, DrizzleSqliteDODatabase } from "drizzle-orm/durable-sqlite";
+import { DrizzleSqliteDODatabase, drizzle } from "drizzle-orm/durable-sqlite";
 import { migrate } from "drizzle-orm/durable-sqlite/migrator";
 
 const log = console.log.bind(console, "[Roller DO]");
-const error = console.error.bind(console, "[Roller DO]");
+const logError = console.error.bind(console, "[Roller DO]");
 
 export class DiceRollerRoom extends DurableObject {
   private sessions: Map<WebSocket, SessionAttachment>;
@@ -64,7 +64,7 @@ export class DiceRollerRoom extends DurableObject {
         log("attempting migration");
         await migrate(this.db, migrations);
       } catch (e: any) {
-        error("FAILED MIGRATION", e);
+        logError("FAILED MIGRATION", e);
       }
     });
   }

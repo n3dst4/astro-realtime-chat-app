@@ -40,7 +40,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
       };
       sendJSON(msg);
     },
-    [], // this should be a linter warning!
+    [userIdentity, sendJSON], // this should be a linter warning!
   );
 
   return (

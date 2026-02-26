@@ -13,7 +13,7 @@ export const useUserIdentityStorage = () => {
       localStorage.setItem("userId", newUserId);
       setUserId(newUserId);
     }
-  }, []);
+  }, [userId]);
 
   const handleSetUsername = useCallback((newUsername: string) => {
     setUsername(newUsername);

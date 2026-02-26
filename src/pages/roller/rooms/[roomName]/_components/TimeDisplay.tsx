@@ -60,7 +60,9 @@ export const TimeDisplay = memo(({ timeStamp }: TimeDisplayProps) => {
   return (
     <button
       className="cursor-pointer"
-      onClick={() => setShowrelative((showRelative) => !showRelative)}
+      onClick={() =>
+        setShowrelative((currentShowRelative) => !currentShowRelative)
+      }
     >
       <time
         className={"opacity-70"}
