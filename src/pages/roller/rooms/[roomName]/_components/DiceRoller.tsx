@@ -4,31 +4,30 @@ import { ChatForm } from "./ChatForm";
 import { UsernameDialog } from "./UsernameDialog";
 import { useChatWebSocket } from "./useChatWebSocket";
 import { useSmartScroll } from "./useSmartScroll";
+import { useUserIdentity } from "./useUserIdentity";
 import { memo, useCallback, useEffect, useState } from "react";
-import type { SubmitEvent } from "react";
 
 type DiceRollerProps = {
   roomName: string;
 };
 
 export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
-  const [username, setUsername] = useState<string>(
-    localStorage.getItem("username") ?? "",
-  );
-  const [userId, setUserId] = useState<string>(
-    localStorage.getItem("userId") ?? "",
-  );
-
-  const [formula, setFormula] = useState("");
-  const [text, setText] = useState("");
-
   const { connectionStatus, messages, sendJSON } = useChatWebSocket({
     roomName,
   });
 
-  const handleSubmit = useCallback(
-    (event: SubmitEvent) => {
-      event.preventDefault();
+  const { userId, username, handleSetUsername } = useUserIdentity();
+
+  const {
+    scrollContainerRef,
+    handleScroll,
+    scrollToBottom,
+    hasNewMessages,
+    bottomRef,
+  } = useSmartScroll({ messages });
+
+  const handleNewMessage = useCallback(
+    ({ formula, text }: { formula: string; text: string }) => {
       const msg: WebSocketClientMessage = {
         type: "chat",
         payload: {
@@ -40,29 +39,8 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
       };
       sendJSON(msg);
     },
-    [formula, text],
+    [],
   );
-
-  useEffect(() => {
-    if (userId === "") {
-      const newUserId = crypto.randomUUID();
-      localStorage.setItem("userId", newUserId);
-      setUserId(newUserId);
-    }
-  }, []);
-
-  const {
-    scrollContainerRef,
-    handleScroll,
-    scrollToBottom,
-    hasNewMessages,
-    bottomRef,
-  } = useSmartScroll({ messages });
-
-  const handleSetUsername = useCallback((newUsername: string) => {
-    setUsername(newUsername);
-    localStorage.setItem("username", newUsername);
-  }, []);
 
   return (
     <div className="@container-[size] flex h-full w-full flex-col">
@@ -114,13 +92,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
           </button>
         )}
       </div>
-      <ChatForm
-        formula={formula}
-        text={text}
-        onFormulaChange={setFormula}
-        onTextChange={setText}
-        onSubmit={handleSubmit}
-      />
+      <ChatForm onNewMessage={handleNewMessage} />
     </div>
   );
 });
