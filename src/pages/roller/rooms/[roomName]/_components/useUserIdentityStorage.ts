@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-export const useUserIdentity = () => {
+export const useUserIdentityStorage = () => {
   const [username, setUsername] = useState<string>(
     localStorage.getItem("username") ?? "",
   );
@@ -20,5 +20,10 @@ export const useUserIdentity = () => {
     localStorage.setItem("username", newUsername);
   }, []);
 
-  return { username, userId, handleSetUsername };
+  const userIdentity = useMemo(
+    () => ({ username, userId }),
+    [username, userId],
+  );
+
+  return { userIdentity, handleSetUsername };
 };
