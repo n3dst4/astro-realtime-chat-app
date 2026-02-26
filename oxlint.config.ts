@@ -10,11 +10,16 @@ import { defineConfig } from "oxlint";
 // });
 
 export default defineConfig({
-  plugins: ["react", "typescript"],
+  plugins: ["react", "typescript", "react-perf", "promise", "jsx-a11y"],
   categories: {
+    // these are all mostly interesting
     correctness: "error",
-    style: "off",
     suspicious: "error",
+    perf: "error",
+    // wayyyy too much
+    style: "off",
+    restriction: "off",
+    pedantic: "off",
   },
   rules: {
     // not needed for modern React
@@ -36,7 +41,12 @@ export default defineConfig({
       "error",
       { ignore: [-1, 0, 1, 2, 24, 60, 1000] },
     ],
-    "oxc/approx-constant": "error",
+    // bobbins: new values as props to built-ins are fine
+    "react-perf/jsx-no-new-function-as-prop": "off",
+    // same as react-perf/jsx-no-new-function-as-prop
+    "react-perf/jsx-no-new-object-as-prop": "off",
+    // sometimes you gotta though
+    "react/no-array-index-key": "off",
   },
   settings: {
     "jsx-a11y": {

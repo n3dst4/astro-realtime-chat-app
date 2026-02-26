@@ -68,7 +68,7 @@ export class DiceRollerRoom extends DurableObject {
       try {
         log("attempting migration");
         await migrate(this.db, migrations);
-      } catch (e: any) {
+      } catch (e: unknown) {
         logError("FAILED MIGRATION", e);
       }
     });
@@ -88,7 +88,7 @@ export class DiceRollerRoom extends DurableObject {
    * Blog post says the same thing but slower and louder:
    * https://flaredup.substack.com/i/161450113/synchronous-calls-with-fetch-and-rpc
    */
-  async fetch(request: Request): Promise<Response> {
+  fetch(request: Request): Response {
     const upgradeHeader = request.headers.get("Upgrade");
     if (upgradeHeader !== "websocket") {
       return new Response("Expected WebSocket upgrade", { status: 426 });
@@ -172,7 +172,7 @@ export class DiceRollerRoom extends DurableObject {
     text: string | null,
     username: string,
     userId: string,
-  ) {
+  ): Promise<void> {
     const roll = formula ? new DiceRoll(formula) : null;
 
     // Store the full structured rolls from the library so the frontend can
@@ -196,18 +196,18 @@ export class DiceRollerRoom extends DurableObject {
     this.broadcastMessage(rollerMessage);
   }
 
-  broadcastMessage(message: RollerMessage) {
+  broadcastMessage(message: RollerMessage): void {
     for (const server of this.ctx.getWebSockets()) {
-      void this.sendMessage(server, message);
+      this.sendMessage(server, message);
     }
   }
 
-  async send(server: WebSocket, websocketMessage: WebSocketServerMessage) {
+  send(server: WebSocket, websocketMessage: WebSocketServerMessage): void {
     server.send(JSON.stringify(websocketMessage));
   }
 
-  async sendMessage(server: WebSocket, message: RollerMessage) {
-    void this.send(server, {
+  sendMessage(server: WebSocket, message: RollerMessage): void {
+    this.send(server, {
       type: "message",
       payload: {
         message,
@@ -215,7 +215,7 @@ export class DiceRollerRoom extends DurableObject {
     });
   }
 
-  async sendCatchUp(server: WebSocket) {
+  async sendCatchUp(server: WebSocket): Promise<void> {
     const messages = (
       await this.db
         .select()
@@ -225,7 +225,7 @@ export class DiceRollerRoom extends DurableObject {
         .execute()
     ).toReversed();
 
-    void this.send(server, {
+    this.send(server, {
       type: "catchup",
       payload: {
         messages,
