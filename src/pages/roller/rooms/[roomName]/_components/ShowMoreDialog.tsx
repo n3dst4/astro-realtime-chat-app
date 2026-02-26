@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useId, useMemo } from "react";
+import { useId } from "react";
 
 type ShowMoreDialogProps = {
   html: string;

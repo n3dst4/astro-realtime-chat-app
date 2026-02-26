@@ -29,6 +29,7 @@ export const UsernameDialog = memo(
         </div>
         <button
           className="btn btn-secondary btn-sm btn-link"
+          // @ts-expect-error invoker APIs not in react types
           command="show-modal"
           commandfor={dialogId}
         >
