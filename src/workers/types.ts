@@ -2,6 +2,8 @@ import { Messages } from "../db/roller-schema";
 import { createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod/v4";
 
+const USERNAME_MAX_LENGTH = 128;
+
 // Structured types for the `rolls` JSON column, matching the shape of
 // DiceRoll.toJSON().rolls from @dice-roller/rpg-dice-roller
 
@@ -91,7 +93,7 @@ export type StructuredRolls = z.infer<typeof structuredRollsSchema>;
 export const sessionAttachmentSchema = z.object({
   id: z.uuid(),
   userId: z.uuid(),
-  username: z.string().min(1).max(100),
+  username: z.string().min(1).max(USERNAME_MAX_LENGTH),
 });
 
 export type SessionAttachment = z.infer<typeof sessionAttachmentSchema>;

@@ -6,7 +6,8 @@ const { roomId } = Astro.params;
 
 // Generate a random user ID and username (in production, use authentication)
 const userId = crypto.randomUUID();
-const defaultUsername = `User${Math.floor(Math.random() * 10000)}`;
+const RANDOM_USERNAME_MULTPLIER = 10_1000;
+const defaultUsername = `User${Math.floor(Math.random() * RANDOM_USERNAME_MULTPLIER)}`;
 ---
 
 <Layout title={`Chat Room: ${roomId}`}>
@@ -37,6 +38,8 @@ const defaultUsername = `User${Math.floor(Math.random() * 10000)}`;
 </Layout>
 
 <script is:inline define:vars={{ roomId, userId, defaultUsername }}>
+  const BACKOFF_BASE_MS = 10_000;
+
   // WebSocket connection
   let ws = null;
   let reconnectAttempts = 0;
@@ -211,7 +214,7 @@ const defaultUsername = `User${Math.floor(Math.random() * 10000)}`;
     }
 
     reconnectAttempts++;
-    const delay = Math.min(1000 * 2 ** reconnectAttempts, 10000);
+    const delay = Math.min(1000 * 2 ** reconnectAttempts, BACKOFF_BASE_MS);
 
     displaySystemMessage(
       `Reconnecting in ${delay / 1000} seconds... (attempt ${reconnectAttempts}/${maxReconnectAttempts})`,

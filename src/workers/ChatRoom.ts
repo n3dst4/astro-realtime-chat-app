@@ -15,6 +15,9 @@ interface ChatMessage {
   timestamp: number;
 }
 
+const WEBSOCKET_INTERNAL_ERROR = 1101;
+const MESSAGE_HISTORY_MAX_LENGTH = 100;
+
 export class ChatRoom extends DurableObject<Env> {
   // Map of WebSocket -> session data
   // When the DO hibernates, this gets reconstructed in the constructor
@@ -140,8 +143,10 @@ export class ChatRoom extends DurableObject<Env> {
         // Add to history
         this.messageHistory.push(chatMessage);
         // Persist to storage (limit to last 100 messages)
-        if (this.messageHistory.length > 100)
-          this.messageHistory = this.messageHistory.slice(-100);
+        if (this.messageHistory.length > MESSAGE_HISTORY_MAX_LENGTH)
+          this.messageHistory = this.messageHistory.slice(
+            -MESSAGE_HISTORY_MAX_LENGTH,
+          );
         this.ctx.storage.put("messages", this.messageHistory);
 
         // Broadcast to all connected clients
@@ -191,7 +196,7 @@ export class ChatRoom extends DurableObject<Env> {
   async webSocketError(ws: WebSocket, error: unknown): Promise<void> {
     console.error("WebSocket error:", error);
     // Treat errors as disconnections
-    await this.webSocketClose(ws, 1011); //, "WebSocket error", false);
+    await this.webSocketClose(ws, WEBSOCKET_INTERNAL_ERROR); //, "WebSocket error", false);
   }
 
   /**

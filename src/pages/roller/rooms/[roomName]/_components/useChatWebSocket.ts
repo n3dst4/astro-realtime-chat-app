@@ -10,6 +10,8 @@ type UseChatWebSocketArgs = {
   roomName: string;
 };
 
+const MAX_HISTORY_BUFFER_LENGTH = 100;
+
 export const useChatWebSocket = ({ roomName }: UseChatWebSocketArgs) => {
   const [messages, setMessages] = useState<RollerMessage[]>([]);
 
@@ -47,7 +49,9 @@ export const useChatWebSocket = ({ roomName }: UseChatWebSocketArgs) => {
         }
         const data = incomingWebsocketMessage.data;
         if (data.type === "message") {
-          setMessages((old) => [...old, data.payload.message].slice(-100));
+          setMessages((old) =>
+            [...old, data.payload.message].slice(-MAX_HISTORY_BUFFER_LENGTH),
+          );
         } else if (data.type === "catchup") {
           setMessages(data.payload.messages);
         }

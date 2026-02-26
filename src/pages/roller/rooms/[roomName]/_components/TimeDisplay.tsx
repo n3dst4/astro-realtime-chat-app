@@ -4,6 +4,22 @@ type TimeDisplayProps = {
   timeStamp: number;
 };
 
+const ISO_CORE_PART_LENGTH = 19;
+const MS_PER_SECOND = 1000;
+
+const SECONDS_PER_MINUTE = 60;
+const MINUTES_PER_HOUR = 60;
+const HOURS_PER_DAY = 24;
+const DAYS_PER_WEEK = 7;
+const DAYS_PER_MONTH = 30;
+const DAYS_PER_YEAR = 365;
+
+const SECONDS_PER_HOUR = MINUTES_PER_HOUR * SECONDS_PER_MINUTE;
+const SECONDS_PER_DAY = HOURS_PER_DAY * SECONDS_PER_HOUR;
+const SECONDS_PER_WEEK = DAYS_PER_WEEK * SECONDS_PER_DAY;
+const SECONDS_PER_MONTH = DAYS_PER_MONTH * SECONDS_PER_DAY;
+const SECONDS_PER_YEAR = DAYS_PER_YEAR * SECONDS_PER_DAY;
+
 /**
  * Convert a date to a relative time string, such as
  * "a minute ago", "in 2 hours", "yesterday", "3 months ago", etc.
@@ -17,16 +33,16 @@ export function getRelativeTimeString(
   const timeMs = typeof date === "number" ? date : date.getTime();
 
   // Get the amount of seconds between the given date and now
-  const deltaSeconds = Math.round((timeMs - Date.now()) / 1000);
+  const deltaSeconds = Math.round((timeMs - Date.now()) / MS_PER_SECOND);
 
   // Array reprsenting one minute, hour, day, week, month, etc in seconds
   const cutoffs = [
-    60,
-    3600,
-    86400,
-    86400 * 7,
-    86400 * 30,
-    86400 * 365,
+    SECONDS_PER_MINUTE,
+    SECONDS_PER_HOUR,
+    SECONDS_PER_DAY,
+    SECONDS_PER_WEEK,
+    SECONDS_PER_MONTH,
+    SECONDS_PER_YEAR,
     Infinity,
   ];
 
@@ -66,7 +82,9 @@ export const TimeDisplay = memo(({ timeStamp }: TimeDisplayProps) => {
     >
       <time
         className={"opacity-70"}
-        dateTime={new Date(timeStamp).toISOString().slice(0, 19)}
+        dateTime={new Date(timeStamp)
+          .toISOString()
+          .slice(0, ISO_CORE_PART_LENGTH)}
       >
         {showRelative
           ? getRelativeTimeString(timeStamp)

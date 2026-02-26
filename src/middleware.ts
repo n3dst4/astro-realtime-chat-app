@@ -1,5 +1,7 @@
 import { defineMiddleware, sequence } from "astro:middleware";
 
+const HTTP_SWITCHING_PROTOCOLS = 101;
+
 const log = console.log.bind(console, "[middleware]");
 
 const answers = [
@@ -26,7 +28,7 @@ const answers = [
 ];
 
 export function addPotatoHeader(request: Request, response: Response) {
-  if (response.status === 101) {
+  if (response.status === HTTP_SWITCHING_PROTOCOLS) {
     log("websocket - stepping back");
     return response;
   } else {

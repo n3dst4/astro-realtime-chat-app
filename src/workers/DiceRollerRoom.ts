@@ -14,6 +14,9 @@ import { desc } from "drizzle-orm";
 import { DrizzleSqliteDODatabase, drizzle } from "drizzle-orm/durable-sqlite";
 import { migrate } from "drizzle-orm/durable-sqlite/migrator";
 
+const MESSAGE_CATCHUP_LENGTH = 100;
+const WEBSOCKET_INTERNAL_ERROR = 1101;
+
 const log = console.log.bind(console, "[Roller DO]");
 const logError = console.error.bind(console, "[Roller DO]");
 
@@ -157,7 +160,7 @@ export class DiceRollerRoom extends DurableObject {
   override async webSocketError(ws: WebSocket, error: unknown): Promise<void> {
     console.error("WebSocket error:", error);
     // Treat errors as disconnections
-    await this.webSocketClose(ws, 1011); //, "WebSocket error", false);
+    await this.webSocketClose(ws, WEBSOCKET_INTERNAL_ERROR); //, "WebSocket error", false);
   }
 
   async runFormula(
@@ -214,7 +217,7 @@ export class DiceRollerRoom extends DurableObject {
         .select()
         .from(Messages)
         .orderBy(desc(Messages.created_time))
-        .limit(100)
+        .limit(MESSAGE_CATCHUP_LENGTH)
         .execute()
     ).toReversed();
 

@@ -4,10 +4,12 @@ export { ChatRoom } from "./ChatRoom";
 export { Counter } from "./Counter";
 export { DiceRollerRoom } from "./DiceRollerRoom";
 
+const HTTP_SWITCHING_PROTOCOLS = 101;
+
 const log = console.log.bind(console, "[worker]");
 
 export function addPTerryHeader(request: Request, response: Response) {
-  if (response.status === 101) {
+  if (response.status === HTTP_SWITCHING_PROTOCOLS) {
     log("websocket - stepping back");
     return response;
   } else {

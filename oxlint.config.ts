@@ -22,12 +22,16 @@ export default defineConfig({
     "eslint/func-style": "off",
     "react/jsx-max-depth": "off",
     "eslint/no-ternary": "off",
-    "eslint/sort-imports": [
-      "error",
-      { memberSyntaxSortOrder: ["multiple", "all", "single", "none"] },
-    ],
+    // "eslint/sort-imports": [
+    //   "error",
+    //   { memberSyntaxSortOrder: ["multiple", "all", "single", "none"] },
+    // ],
+    "eslint/sort-imports": "off",
     "eslint/capitalized-comments": "off",
-    "eslint/no-magic-numbers": ["error", { ignore: [1, 60, 1000] }],
+    "eslint/no-magic-numbers": [
+      "error",
+      { ignore: [-1, 0, 1, 2, 24, 60, 1000] },
+    ],
   },
   settings: {
     "jsx-a11y": {
