@@ -18,7 +18,7 @@ interface ChatMessage {
 const WEBSOCKET_INTERNAL_ERROR = 1101;
 const MESSAGE_HISTORY_MAX_LENGTH = 100;
 
-export class ChatRoom extends DurableObject<Env> {
+export class ChatRoom extends DurableObject {
   // Map of WebSocket -> session data
   // When the DO hibernates, this gets reconstructed in the constructor
   private sessions: Map<WebSocket, SessionAttachment>;
@@ -33,7 +33,9 @@ export class ChatRoom extends DurableObject<Env> {
     // Restore hibernating WebSocket connections
     // When the DO wakes up, we need to restore session data from attachments
     this.ctx.getWebSockets().forEach((ws) => {
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertions
       const attachment = ws.deserializeAttachment() as SessionAttachment | null;
+
       if (attachment) {
         this.sessions.set(ws, attachment);
       }
@@ -46,7 +48,7 @@ export class ChatRoom extends DurableObject<Env> {
     );
 
     // Load message history from storage on initialization
-    this.ctx.blockConcurrencyWhile(async () => {
+    void this.ctx.blockConcurrencyWhile(async () => {
       const stored = await this.ctx.storage.get<ChatMessage[]>("messages");
       if (stored) this.messageHistory = stored;
     });
@@ -122,13 +124,21 @@ export class ChatRoom extends DurableObject<Env> {
     // Get session data from the map (or deserialize if just woken)
     let session = this.sessions.get(ws);
     if (!session) {
-      session = ws.deserializeAttachment() as SessionAttachment;
-      if (session) this.sessions.set(ws, session);
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertions
+      const attachment = ws.deserializeAttachment() as SessionAttachment | null;
+      if (attachment) {
+        session = attachment;
+        this.sessions.set(ws, session);
+      }
     }
     if (!session) return;
 
     try {
-      const parsed = JSON.parse(message as string);
+      const messageStr =
+        typeof message === "string"
+          ? message
+          : new TextDecoder().decode(message);
+      const parsed = JSON.parse(messageStr);
       if (parsed.type === "message" && parsed.content) {
         // Create a chat message
         const chatMessage: ChatMessage = {
@@ -147,7 +157,7 @@ export class ChatRoom extends DurableObject<Env> {
           this.messageHistory = this.messageHistory.slice(
             -MESSAGE_HISTORY_MAX_LENGTH,
           );
-        this.ctx.storage.put("messages", this.messageHistory);
+        await this.ctx.storage.put("messages", this.messageHistory);
 
         // Broadcast to all connected clients
         this.broadcast(chatMessage);
@@ -170,6 +180,7 @@ export class ChatRoom extends DurableObject<Env> {
     // Get session data
     const session =
       this.sessions.get(ws) ||
+      // oxlint-disable-next-line typescript-eslint/no-unsafe-type-assertions
       (ws.deserializeAttachment() as SessionAttachment | null);
 
     // Remove from sessions

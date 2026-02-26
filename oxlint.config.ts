@@ -10,7 +10,7 @@ import { defineConfig } from "oxlint";
 // });
 
 export default defineConfig({
-  plugins: ["react"],
+  plugins: ["react", "typescript"],
   categories: {
     correctness: "error",
     style: "off",
@@ -27,17 +27,16 @@ export default defineConfig({
     "react/jsx-max-depth": "off",
     // oh get out
     "eslint/no-ternary": "off",
-    // "eslint/sort-imports": [
-    //   "error",
-    //   { memberSyntaxSortOrder: ["multiple", "all", "single", "none"] },
-    // ],
+    // annoyingly, doesn't auto-fix (because dangerous I guess)
     "eslint/sort-imports": "off",
+    // you're not my english teacher
     "eslint/capitalized-comments": "off",
     // yes, but some numbers are well-known
     "eslint/no-magic-numbers": [
       "error",
       { ignore: [-1, 0, 1, 2, 24, 60, 1000] },
     ],
+    "oxc/approx-constant": "error",
   },
   settings: {
     "jsx-a11y": {

@@ -20,8 +20,8 @@ export default defineConfig(
         driver: "d1-http",
         dbCredentials: {
           databaseId: DB_ID!,
-          token: D1_TOKEN!,
-          accountId: CF_ACCOUNT_ID!,
+          token: D1_TOKEN,
+          accountId: CF_ACCOUNT_ID,
         },
       },
 );

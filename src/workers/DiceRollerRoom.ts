@@ -57,11 +57,13 @@ export class DiceRollerRoom extends DurableObject {
     const printedSchema = ctx.storage.sql
       .exec(query, ...tableNames)
       .toArray()
-      .map((row) => row.sql)
+      .map((row) =>
+        typeof row.sql === "string" ? row.sql : JSON.stringify(row.sql),
+      )
       .join("\n");
     log("DB schema:", printedSchema);
 
-    this.ctx.blockConcurrencyWhile(async () => {
+    void this.ctx.blockConcurrencyWhile(async () => {
       // migrate the db
       try {
         log("attempting migration");
@@ -100,7 +102,7 @@ export class DiceRollerRoom extends DurableObject {
     // keeping the WebSocket connection open
     this.ctx.acceptWebSocket(server);
 
-    this.sendCatchUp(server);
+    void this.sendCatchUp(server);
 
     // Return the client WebSocket in the response
     // return new Response("splat", { status: 200 });
@@ -120,7 +122,9 @@ export class DiceRollerRoom extends DurableObject {
   ): Promise<void> {
     try {
       const parsed = webSocketClientMessageSchema.safeParse(
-        JSON.parse(message as string),
+        typeof message === "string"
+          ? JSON.parse(message)
+          : JSON.parse(new TextDecoder().decode(message)),
       );
       if (!parsed.success) {
         console.error("Invalid message format:", parsed.error);
@@ -194,7 +198,7 @@ export class DiceRollerRoom extends DurableObject {
 
   broadcastMessage(message: RollerMessage) {
     for (const server of this.ctx.getWebSockets()) {
-      this.sendMessage(server, message);
+      void this.sendMessage(server, message);
     }
   }
 
@@ -203,7 +207,7 @@ export class DiceRollerRoom extends DurableObject {
   }
 
   async sendMessage(server: WebSocket, message: RollerMessage) {
-    this.send(server, {
+    void this.send(server, {
       type: "message",
       payload: {
         message,
@@ -221,7 +225,7 @@ export class DiceRollerRoom extends DurableObject {
         .execute()
     ).toReversed();
 
-    this.send(server, {
+    void this.send(server, {
       type: "catchup",
       payload: {
         messages,

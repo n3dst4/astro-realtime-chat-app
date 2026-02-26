@@ -92,7 +92,7 @@ export class Counter extends DurableObject {
     this.ctx.acceptWebSocket(server);
 
     // Send message history to the newly connected client
-    this.sendValue(server);
+    void this.sendValue(server);
 
     // Return the client WebSocket in the response
     // return new Response("splat", { status: 200 });
@@ -112,12 +112,16 @@ export class Counter extends DurableObject {
   ): Promise<void> {
     // Get session data from the map (or deserialize if just woken)
     try {
-      const parsed = JSON.parse(message as string);
+      const parsed = JSON.parse(
+        typeof message === "string"
+          ? message
+          : new TextDecoder().decode(message),
+      );
       if (parsed.type === "increment") {
-        this.increment();
+        void this.increment();
       }
       if (parsed.type === "decrement") {
-        this.decrement();
+        void this.decrement();
       }
     } catch (error) {
       console.error("Error handling message:", error);
@@ -149,7 +153,7 @@ export class Counter extends DurableObject {
 
   broadcastValue() {
     for (const server of this.ctx.getWebSockets()) {
-      this.sendValue(server);
+      void this.sendValue(server);
     }
   }
 

@@ -28,7 +28,9 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
   const { userId } = useUserIdentityContext();
 
   const html = useMemo(() => {
-    return addLinkTargets(quikdown(message.text, { inline_styles: false }));
+    return addLinkTargets(
+      quikdown(message.text ?? "", { inline_styles: false }),
+    );
   }, [message.text]);
 
   useLayoutEffect(() => {
@@ -41,7 +43,7 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
     }
     const resizeObserver = new ResizeObserver(checkHeight);
     if (textRef.current) {
-      resizeObserver.observe(textRef.current!);
+      resizeObserver.observe(textRef.current);
       checkHeight();
       return () => resizeObserver.disconnect();
     }
