@@ -2,6 +2,7 @@ import type { RollerMessage } from "../../../../../workers/types";
 import { DiceRollResult } from "./DiceRollResult";
 import { ShowMoreDialog } from "./ShowMoreDialog";
 import { TimeDisplay } from "./TimeDisplay";
+import { useUserIdentityContext } from "./userIdentityContext";
 import quikdown from "quikdown";
 import { memo, useLayoutEffect, useMemo, useRef, useState } from "react";
 
@@ -24,6 +25,8 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
   // const [showMore, setShowMore] = useState(false);
   const [showShowMore, setShowShowMore] = useState(false);
 
+  const { userId } = useUserIdentityContext();
+
   const html = useMemo(() => {
     return addLinkTargets(quikdown(message.text, { inline_styles: false }));
   }, [message.text]);
@@ -45,14 +48,17 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
   }, []);
 
   return (
-    <article className="mb-2">
+    <article
+      data-is-mine={message.userId === userId ? "" : undefined}
+      className="group mb-2 w-full data-is-mine:text-right"
+    >
       <header className="text-sm">
         <span className="mr-4">{message.username}</span>
         <TimeDisplay timeStamp={message.created_time} />
       </header>
       <div
         className="w-fit rounded-lg bg-pink-300 px-4 pt-1 text-base
-          dark:bg-pink-900"
+          group-data-is-mine:ml-auto dark:bg-pink-900"
       >
         {message.text && (
           <>
