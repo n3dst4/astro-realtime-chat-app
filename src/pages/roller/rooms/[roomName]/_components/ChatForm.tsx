@@ -1,5 +1,5 @@
 import { Dices, SendHorizontal } from "lucide-react";
-import { memo, useCallback, useState, type SubmitEvent } from "react";
+import { type SubmitEvent, memo, useCallback, useState } from "react";
 
 type ChatFormProps = {
   onNewMessage: (args: { formula: string; text: string }) => void;
