@@ -32,7 +32,7 @@ export const UsernameDialog = memo(
           command="show-modal"
           commandfor={dialogId}
         >
-          Edit
+          Change
         </button>
 
         <dialog
