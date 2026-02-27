@@ -66,7 +66,7 @@ export const UsernameDialog = memo(
               type="button"
               onClick={(e) => {
                 e.preventDefault();
-                setUsername(generateRandomName);
+                setUsername(generateRandomName());
               }}
             >
               Generate random
@@ -75,7 +75,13 @@ export const UsernameDialog = memo(
               Save username
             </button>
             {initialUsername && (
-              <button className="btn btn-warning join-item flex-1 basis-auto">
+              <button
+                type="button"
+                // @ts-expect-error invoker api not in react types yet
+                commandFor={dialogId}
+                command="close"
+                className="btn btn-warning join-item flex-1 basis-auto"
+              >
                 Cancel
               </button>
             )}
