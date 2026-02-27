@@ -3,6 +3,7 @@ import { DiceRollResult } from "./DiceRollResult";
 import { ShowMoreDialog } from "./ShowMoreDialog";
 import { TimeDisplay } from "./TimeDisplay";
 import { deriveHueFromUserId } from "./deriveHueFromUserId";
+import type { UserHueStyle } from "./types";
 import { useUserIdentityContext } from "./userIdentityContext";
 import quikdown from "quikdown";
 import { memo, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -58,9 +59,7 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
         [--user-colour:oklch(var(--bubble-light-l)_var(--bubble-light-c)_var(--user-hue))]
         data-is-mine:text-right
         dark:[--user-colour:oklch(var(--bubble-dark-l)_var(--bubble-dark-c)_var(--user-hue))]"
-      style={
-        { "--user-hue": hue } as React.CSSProperties & { "--user-hue": number }
-      }
+      style={{ "--user-hue": hue } satisfies UserHueStyle as UserHueStyle}
     >
       <header className="text-sm">
         <span className="mr-4">{message.username}</span>

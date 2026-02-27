@@ -3,6 +3,7 @@ import { ChatBubble } from "./ChatBubble";
 import { ChatForm } from "./ChatForm";
 import { UsernameDialog } from "./UsernameDialog";
 import { deriveHueFromUserId } from "./deriveHueFromUserId";
+import type { UserHueStyle } from "./types";
 import { useChatWebSocket } from "./useChatWebSocket";
 import { useSmartScroll } from "./useSmartScroll";
 import { useUserIdentityStorage } from "./useUserIdentityStorage";
@@ -53,11 +54,7 @@ export const DiceRoller = memo(({ roomName }: DiceRollerProps) => {
           [--bubble-light-l:82%]
           [--user-colour:oklch(var(--bubble-light-l)_var(--bubble-light-c)_var(--user-hue))]
           dark:[--user-colour:oklch(var(--bubble-dark-l)_var(--bubble-dark-c)_var(--user-hue))]"
-        style={
-          { "--user-hue": hue } as React.CSSProperties & {
-            "--user-hue": number;
-          }
-        }
+        style={{ "--user-hue": hue } satisfies UserHueStyle as UserHueStyle}
       >
         <header className="bg-base-200 flex flex-row px-4">
           <div className="flex-1" />
