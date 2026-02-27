@@ -21,14 +21,6 @@
   "durable_objects": {
     "bindings": [
       {
-        "name": "ChatRoom",
-        "class_name": "ChatRoom",
-      },
-      {
-        "name": "Counter",
-        "class_name": "Counter",
-      },
-      {
         "name": "DiceRollerRoom",
         "class_name": "DiceRollerRoom",
       },
@@ -48,14 +40,17 @@
       "new_sqlite_classes": ["Roller"],
     },
     {
-      "tag": "v4", // Migration identifier. This should be unique for each migration entry
+      "tag": "v4",
       "renamed_classes": [
-        // Array of rename directives
         {
           "from": "Roller",
           "to": "DiceRollerRoom",
         },
       ],
+    },
+    {
+      "tag": "v5",
+      "deleted_classes": ["ChatRoom", "Counter"],
     },
   ],
   "d1_databases": [

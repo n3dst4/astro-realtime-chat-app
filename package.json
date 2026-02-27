@@ -12,7 +12,7 @@
     "format:fix": "prettier --write .",
     "lint:check": "oxlint --type-aware",
     "lint:fix": "oxlint --fix --type-aware --fix-dangerously --fix-suggestions",
-    "cloudflare-types": "wrangler types src/worker-configuration.d.ts && pnpm run format:fix",
+    "cloudflare-types": "wrangler types src/worker-configuration.d.ts",
     "db:generate": "drizzle-kit generate",
     "db:generate:roller": "drizzle-kit generate --config=./drizzle-roller.config.ts",
     "db:migrate:local": "wrangler d1 migrations apply todos --local",

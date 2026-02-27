@@ -1,7 +1,5 @@
 import handler from "@astrojs/cloudflare/entrypoints/server";
 
-export { ChatRoom } from "./ChatRoom";
-export { Counter } from "./Counter";
 export { DiceRollerRoom } from "./DiceRollerRoom";
 
 const HTTP_SWITCHING_PROTOCOLS = 101;
