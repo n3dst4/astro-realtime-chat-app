@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "astro-realtime-chat-app",
+  "name": "@lumphammer/chat-with-dice",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
