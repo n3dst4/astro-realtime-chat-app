@@ -50,7 +50,7 @@ function DieChip({
 
   let extraClasses = "";
   if (isDropped) {
-    extraClasses = "opacity-35 line-through decoration-2";
+    extraClasses = "opacity-50 line-through decoration-2";
   } else if (isPoolCrit) {
     // success AND crit — stands out from plain success
     extraClasses = "text-success font-bold ring-2 ring-success";
@@ -67,7 +67,7 @@ function DieChip({
   } else if (isRerolled) {
     extraClasses = "opacity-50 line-through";
   } else if (isMiss) {
-    extraClasses = "opacity-35";
+    extraClasses = "opacity-50";
   }
 
   return (
@@ -178,7 +178,7 @@ export const DiceRollResult = memo(
 
     return (
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 py-1">
-        <span className="font-mono text-sm opacity-50">{formula}</span>
+        <span className="font-mono text-sm opacity-70">{formula}</span>
         <span className="opacity-30">→</span>
         {structured.map((entry, i) => (
           <RollEntryNode key={i} entry={entry} />
