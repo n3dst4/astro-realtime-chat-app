@@ -8,6 +8,22 @@ export default defineConfig({
   output: "static",
   adapter: cloudflare({}),
   integrations: [react()],
+  experimental: {
+    svgo: {
+      multipass: true,
+      plugins: [
+        {
+          name: "preset-default",
+        },
+        {
+          name: "removeAttrs",
+          params: {
+            attrs: "style",
+          },
+        },
+      ],
+    },
+  },
 
   vite: {
     plugins: [

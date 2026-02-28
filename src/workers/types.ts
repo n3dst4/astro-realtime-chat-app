@@ -1,5 +1,3 @@
-import { Messages } from "../db/roller-schema";
-import { createSelectSchema } from "drizzle-orm/zod";
 import { z } from "zod/v4";
 
 const USERNAME_MAX_LENGTH = 128;
@@ -98,7 +96,33 @@ export const sessionAttachmentSchema = z.object({
 
 export type SessionAttachment = z.infer<typeof sessionAttachmentSchema>;
 
-export const rollerMessageSchema = createSelectSchema(Messages);
+// export const rollerMessageSchema = createSelectSchema(Messages);
+
+// export const Messages = sqliteTable("Messages", {
+//   id: text()
+//     .primaryKey()
+//     .$defaultFn(() => crypto.randomUUID()),
+//   username: text().notNull(),
+//   userId: text().notNull(),
+//   created_time: int().notNull(),
+//   formula: text(),
+//   result: text(),
+//   rolls: text(),
+//   total: int(),
+//   text: text(),
+// });
+
+export const rollerMessageSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  userId: z.string(),
+  created_time: z.number(),
+  formula: z.string().nullable(),
+  result: z.string().nullable(),
+  rolls: z.string().nullable(),
+  total: z.number().nullable(),
+  text: z.string().nullable(),
+});
 
 export type RollerMessage = z.infer<typeof rollerMessageSchema>;
 
