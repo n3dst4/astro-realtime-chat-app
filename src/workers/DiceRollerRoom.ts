@@ -1,6 +1,6 @@
-import * as dbSchema from "../db/roller-schema";
-import { Messages } from "../db/roller-schema";
 import migrations from "../durable-object-migrations/roller/migrations";
+import * as dbSchema from "../schemas/roller-schema";
+import { Messages } from "../schemas/roller-schema";
 import {
   type RollerMessage,
   type SessionAttachment,

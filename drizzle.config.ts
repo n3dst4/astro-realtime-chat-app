@@ -31,7 +31,7 @@ if (!DATABASE_BINDING) {
 }
 
 export default defineConfig({
-  schema: `./src/db/${DATABASE_BINDING}-schema.ts`,
+  schema: `./src/schemas/${DATABASE_BINDING}-schema.ts`,
   out: `./migrations/${DATABASE_BINDING}`,
   dialect: "sqlite",
   ...(LOCAL
