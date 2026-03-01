@@ -19,7 +19,7 @@
     "db:migrate:todos:local": "wrangler d1 migrations apply todos --local",
     "db:migrate:todos:prod": "wrangler d1 migrations apply todos --remote",
     "db:migrate:todos:staging": "wrangler d1 migrations apply --env preview todos-preview --remote",
-    "db:migrate:chatdb:local": "wrangler d1 migrations apply chat-with-dice-prod --local",
+    "db:migrate:chatdb:local": "DATABASE_BINDING=chatDB LOCAL=yes drizzle-kit migrate",
     "db:migrate:chatdb:prod": "wrangler d1 migrations apply chat-with-dice-prod --remote",
     "db:migrate:chatdb:staging": "wrangler d1 migrations apply --env staging chat-with-dice-staging --remote",
     "db:studio:todos:preview": "DB_ID='b7a13c53-a008-474b-8986-813e414477b1' drizzle-kit studio",
