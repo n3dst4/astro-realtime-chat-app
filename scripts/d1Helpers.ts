@@ -51,5 +51,5 @@ export function getIdForD1Binding(binding: string, env?: string) {
   const databaseId = databaseConfigs.find(
     (databaseConfig: any) => databaseConfig.binding === binding,
   ).database_id;
-  return databaseId?.database_id;
+  return databaseId;
 }
