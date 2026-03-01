@@ -1,31 +1,47 @@
 ---
+import { actions } from "astro:actions";
 import Layout from "../../layouts/Layout.astro";
+
+const result = Astro.getActionResult(actions.createChatWithDiceRoom);
+if (result && !result.error) {
+  return Astro.redirect(`room/${result.data.roomId}`);
+}
+
+console.log("ROOM FORM", result?.data?.roomId);
+
+export const prerender = false;
 ---
 
 <Layout title="Dice Roller">
-  <form id="roomForm" class="card bg-base-100 w-200" action="./goToRoom">
+  {
+    result?.error && (
+      <div class="mb-4 rounded bg-red-500 p-4 text-white">
+        X {result.error.message}
+      </div>
+    )
+  }
+
+  <form
+    id="roomForm"
+    class="card bg-base-100 w-200"
+    action={actions.createChatWithDiceRoom}
+  >
     <label class="input input-primary mb-2 w-200">
       <span class="label">Room name</span>
       <input name="roomName" />
+      <input type="hidden" name="userId" />
     </label>
     <button class="btn btn-primary">Go</button>
   </form>
 </Layout>
 
 <script>
-  function init() {
-    const form = document.getElementById("roomForm");
-    if (!(form instanceof HTMLFormElement)) {
-      return;
-    }
-    form.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const nameInput = form?.elements.namedItem("roomName");
-      if (!(nameInput instanceof HTMLInputElement) || !nameInput.value) {
-        return;
-      }
-      window.location.href = `./rooms/${nameInput.value}`;
-    });
+  let userId = localStorage.getItem("userId");
+  if (userId === null) {
+    userId = crypto.randomUUID();
+    localStorage.setItem("userId", userId);
   }
-  init();
+  const nameInput = document.querySelector("input[name=userId");
+  if (nameInput && nameInput instanceof HTMLInputElement)
+    nameInput.value = userId;
 </script>
