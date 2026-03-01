@@ -18,3 +18,9 @@ Set up database:
 ```sh
 pnpm run db:migrate
 ```
+
+Add a new D1 db:
+
+```
+npx wrangler d1 create my-database
+```

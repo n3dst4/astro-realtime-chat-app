@@ -1,8 +1,8 @@
 ---
 import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/d1";
-import { customersTable } from "../../db/schema";
 import Layout from "../../layouts/Layout.astro";
+import { customersTable } from "../../schemas/todos-schema";
 
 export const prerender = false;
 

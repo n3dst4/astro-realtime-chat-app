@@ -1,0 +1,11 @@
+import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+export const Rooms = sqliteTable("Rooms", {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text().notNull(),
+  description: text(),
+  created_by_user_id: text().notNull(),
+  created_time: int().notNull(),
+});
