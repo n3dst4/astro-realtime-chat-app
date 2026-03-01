@@ -16,14 +16,18 @@
     "db:generate:todos": " DATABASE_BINDING=todos drizzle-kit generate",
     "db:generate:chatdb": " DATABASE_BINDING=chatDB drizzle-kit generate",
     "db:generate:roller": "drizzle-kit generate --config=./drizzle.config.roller.ts",
-    "db:migrate:todos:local": "wrangler d1 migrations apply todos --local",
-    "db:migrate:todos:prod": "wrangler d1 migrations apply todos --remote",
-    "db:migrate:todos:staging": "wrangler d1 migrations apply --env preview todos-preview --remote",
+    "db:migrate:todos:local": "DATABASE_BINDING=todos LOCAL=yes drizzle-kit migrate",
+    "db:migrate:todos:prod": "DATABASE_BINDING=todos drizzle-kit migrate",
+    "db:migrate:todos:staging": "DATABASE_BINDING=todos ENV=staging drizzle-kit migrate",
     "db:migrate:chatdb:local": "DATABASE_BINDING=chatDB LOCAL=yes drizzle-kit migrate",
     "db:migrate:chatdb:prod": "DATABASE_BINDING=chatDB drizzle-kit migrate",
     "db:migrate:chatdb:staging": "DATABASE_BINDING=chatDB ENV=staging  drizzle-kit migrate",
-    "db:studio:todos:preview": "DB_ID='b7a13c53-a008-474b-8986-813e414477b1'drizzle-kit studio",
-    "db:studio:todos:prod": "DB_ID='a0f7d176-26be-4bde-ae3b-d71768d46c7c' drizzle-kit studio"
+    "db:studio:todos:local": "DATABASE_BINDING=todos LOCAL=yes drizzle-kit studio",
+    "db:studio:todos:prod": "DATABASE_BINDING=todos drizzle-kit studio",
+    "db:studio:todos:staging": "DATABASE_BINDING=todos ENV=staging drizzle-kit studio",
+    "db:studio:chatdb:local": "DATABASE_BINDING=chatdb LOCAL=yes drizzle-kit studio",
+    "db:studio:chatdb:prod": "DATABASE_BINDING=chatdb drizzle-kit studio",
+    "db:studio:chatdb:staging": "DATABASE_BINDING=chatdb ENV=staging drizzle-kit studio"
   },
   "dependencies": {
     "@astrojs/check": "0.9.7-beta.1",
