@@ -1,10 +1,10 @@
 # TODO
 
-* [ ] Add created rooms to a db
-* [ ] Admin page
+* [x] Add created rooms to a db
+* [x] Room URLs should be nanoids
 * [ ] Authentication
+* [ ] Admin page
 * [ ] "Claim" a room
-* [ ] Room URLs should be nanoids
 
 https://docs.google.com/document/d/
 
