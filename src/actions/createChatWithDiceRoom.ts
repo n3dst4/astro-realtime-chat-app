@@ -5,12 +5,12 @@ import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/d1";
 import { nanoid } from "nanoid";
 
-const MIN_ROOM_NAME_LENGTH = 6;
-const MAX_ROOM_NAME_LENGTH = 7;
+const MIN_ROOM_NAME_LENGTH = 1;
+const MAX_ROOM_NAME_LENGTH = 128;
 
 export const createChatWithDiceRoom = defineAction({
   input: z.object({
-    name: z.string().min(MIN_ROOM_NAME_LENGTH).max(MAX_ROOM_NAME_LENGTH),
+    roomName: z.string().min(MIN_ROOM_NAME_LENGTH).max(MAX_ROOM_NAME_LENGTH),
     description: z.string().optional(),
     userId: z.string(),
   }),
@@ -27,10 +27,10 @@ export const createChatWithDiceRoom = defineAction({
     await db.insert(Rooms).values({
       created_by_user_id: input.userId,
       created_time: Date.now(),
-      name: input.name,
+      name: input.roomName,
       description: input.description,
       id: roomId,
     });
-    return { id: roomId };
+    return { roomId };
   },
 });

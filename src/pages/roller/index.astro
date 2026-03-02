@@ -1,31 +1,11 @@
 ---
-import { actions } from "astro:actions";
 import Layout from "../../layouts/Layout.astro";
-
-const result = Astro.getActionResult(actions.createChatWithDiceRoom);
-if (result && !result.error) {
-  return Astro.redirect(`room/${result.data.roomId}`);
-}
-
-console.log("ROOM FORM", result?.data?.roomId);
-
-export const prerender = false;
 ---
 
 <Layout title="Dice Roller">
-  {
-    result?.error && (
-      <div class="mb-4 rounded bg-red-500 p-4 text-white">
-        X {result.error.message}
-      </div>
-    )
-  }
+  <div class="mb-4 hidden rounded bg-red-500 p-4 text-white"></div>
 
-  <form
-    id="roomForm"
-    class="card bg-base-100 w-200"
-    action={actions.createChatWithDiceRoom}
-  >
+  <form id="roomForm" class="card bg-base-100 w-200">
     <label class="input input-primary mb-2 w-200">
       <span class="label">Room name</span>
       <input name="roomName" />
@@ -36,12 +16,36 @@ export const prerender = false;
 </Layout>
 
 <script>
+  import { actions } from "astro:actions";
+  import { navigate } from "astro:transitions/client";
+
   let userId = localStorage.getItem("userId");
   if (userId === null) {
     userId = crypto.randomUUID();
     localStorage.setItem("userId", userId);
   }
-  const nameInput = document.querySelector("input[name=userId");
-  if (nameInput && nameInput instanceof HTMLInputElement)
-    nameInput.value = userId;
+  function init() {
+    const formElement = document.getElementById("roomForm");
+    if (!(formElement instanceof HTMLFormElement)) {
+      return;
+    }
+    const inputElement = formElement.elements.namedItem("roomName");
+    if (!(inputElement instanceof HTMLInputElement)) {
+      return;
+    }
+
+    formElement.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const result = await actions.createChatWithDiceRoom({
+        roomName: inputElement.value,
+        userId,
+      });
+      if (result.error) {
+        console.error(result.error);
+      } else if (!(result.data instanceof Response)) {
+        navigate(`rooms/${result.data.roomId}`);
+      }
+    });
+  }
+  init();
 </script>
