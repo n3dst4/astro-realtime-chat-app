@@ -25,9 +25,9 @@
     "db:studio:todos:local": "DATABASE_BINDING=todos LOCAL=yes drizzle-kit studio",
     "db:studio:todos:prod": "DATABASE_BINDING=todos drizzle-kit studio",
     "db:studio:todos:staging": "DATABASE_BINDING=todos ENV=staging drizzle-kit studio",
-    "db:studio:chatdb:local": "DATABASE_BINDING=chatdb LOCAL=yes drizzle-kit studio",
-    "db:studio:chatdb:prod": "DATABASE_BINDING=chatdb drizzle-kit studio",
-    "db:studio:chatdb:staging": "DATABASE_BINDING=chatdb ENV=staging drizzle-kit studio"
+    "db:studio:chatdb:local": "DATABASE_BINDING=chatDB LOCAL=yes drizzle-kit studio",
+    "db:studio:chatdb:prod": "DATABASE_BINDING=chatDB drizzle-kit studio",
+    "db:studio:chatdb:staging": "DATABASE_BINDING=chatDB ENV=staging drizzle-kit studio"
   },
   "dependencies": {
     "@astrojs/check": "0.9.7-beta.1",
