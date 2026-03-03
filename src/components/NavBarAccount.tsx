@@ -14,7 +14,7 @@ type Props = {
 
 export function NavBarAccount({ initialUser }: Props) {
   const { data: sessionData, isPending } = authClient.useSession();
-  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // While the client-side session is still loading, use the server-provided
   // initial state so there's no skeleton flash or layout shift.
@@ -28,14 +28,12 @@ export function NavBarAccount({ initialUser }: Props) {
         }
       : null;
 
-  function closeDropdown() {
-    if (detailsRef.current) {
-      detailsRef.current.open = false;
-    }
+  function closeMenu() {
+    menuRef.current?.hidePopover();
   }
 
   async function handleLogOut() {
-    closeDropdown();
+    closeMenu();
     await authClient.signOut();
     window.location.href = "/";
   }
@@ -51,17 +49,25 @@ export function NavBarAccount({ initialUser }: Props) {
   const initials = getInitials(user.name, user.email);
 
   return (
-    <details className="dropdown dropdown-end" ref={detailsRef}>
-      <summary className="btn btn-ghost btn-circle list-none">
+    <>
+      <button
+        className="btn btn-ghost btn-circle"
+        popoverTarget="nav-user-menu"
+        style={{ anchorName: "--nav-user-menu" } as React.CSSProperties}
+      >
         <AvatarDisplay
           image={user.image}
           name={user.name}
           initials={initials}
         />
-      </summary>
+      </button>
       <div
-        className="dropdown-content rounded-box bg-base-100 ring-base-200 z-10
-          mt-2 w-56 shadow-lg ring-1"
+        id="nav-user-menu"
+        ref={menuRef}
+        popover="auto"
+        className="dropdown dropdown-end rounded-box bg-base-100 ring-base-200
+          w-56 shadow-lg ring-1"
+        style={{ positionAnchor: "--nav-user-menu" } as React.CSSProperties}
       >
         <div className="border-base-200 border-b px-4 py-3">
           {user.name && <p className="truncate font-semibold">{user.name}</p>}
@@ -69,7 +75,7 @@ export function NavBarAccount({ initialUser }: Props) {
         </div>
         <ul className="menu p-2">
           <li>
-            <a href="/account" onClick={closeDropdown}>
+            <a href="/account" onClick={closeMenu}>
               <Settings size={16} />
               Account Settings
             </a>
@@ -82,7 +88,7 @@ export function NavBarAccount({ initialUser }: Props) {
           </li>
         </ul>
       </div>
-    </details>
+    </>
   );
 }
 
