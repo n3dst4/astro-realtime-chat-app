@@ -2,6 +2,7 @@ import {
   getIdForD1Binding,
   getLocalPathForD1Binding,
 } from "./scripts/d1Helpers";
+import { envOrDie } from "@/lib/envOrDie";
 import "dotenv/config";
 import { defineConfig } from "drizzle-kit";
 
@@ -12,23 +13,13 @@ import { defineConfig } from "drizzle-kit";
 // when launching drizzle studio on local.
 // Pass ENV to work in a particular cloudflare environment
 
-const { DATABASE_BINDING, LOCAL, ENV, D1_TOKEN, CLOUDFLARE_ACCOUNT_ID } =
-  process.env;
+const { LOCAL, ENV } = process.env;
 
-if (!CLOUDFLARE_ACCOUNT_ID) {
-  console.error("CLOUDFLARE_ACCOUNT_ID environment variable is not set");
-  process.exit(1);
-}
-
-if (!D1_TOKEN) {
-  console.error("D1_TOKEN environment variable is not set");
-  process.exit(1);
-}
-
-if (!DATABASE_BINDING) {
-  console.error("DATABASE_BINDING environment variable is not set");
-  process.exit(1);
-}
+const { CLOUDFLARE_ACCOUNT_ID, D1_TOKEN, DATABASE_BINDING } = envOrDie([
+  "CLOUDFLARE_ACCOUNT_ID",
+  "D1_TOKEN",
+  "DATABASE_BINDING",
+]);
 
 export default defineConfig({
   schema: `./src/schemas/${DATABASE_BINDING}-schema.ts`,
