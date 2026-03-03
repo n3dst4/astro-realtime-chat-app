@@ -19,11 +19,19 @@ import Layout from "../../layouts/Layout.astro";
   import { actions } from "astro:actions";
   import { navigate } from "astro:transitions/client";
 
-  let userId = localStorage.getItem("userId");
-  if (userId === null) {
-    userId = crypto.randomUUID();
-    localStorage.setItem("userId", userId);
+  function getUserId() {
+    const stored = localStorage.getItem("userId");
+    if (stored) {
+      return stored;
+    } else {
+      const generated = crypto.randomUUID();
+      localStorage.setItem("userId", generated);
+      return generated;
+    }
   }
+
+  let userId = getUserId();
+
   function init() {
     const formElement = document.getElementById("roomForm");
     if (!(formElement instanceof HTMLFormElement)) {
