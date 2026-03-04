@@ -1,0 +1,19 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { AccountSettingsForm } from "./_components/AccountSettingsForm";
+
+const user = Astro.locals.user;
+
+if (!user) {
+  return Astro.redirect("/signin");
+}
+
+const initialUser = {
+  name: user.name ?? null,
+  email: user.email,
+};
+---
+
+<Layout title="Account Settings" class="flex justify-center p-8">
+  <AccountSettingsForm client:load initialUser={initialUser} />
+</Layout>

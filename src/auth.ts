@@ -36,6 +36,12 @@ export const auth = betterAuth({
     usePlural: true,
   }),
 
+  user: {
+    changeEmail: {
+      enabled: true,
+    },
+  },
+
   emailVerification: {
     sendOnSignUp: true,
     requireEmailVerification: true,
@@ -50,6 +56,26 @@ export const auth = betterAuth({
           subject: "Verify your Chat with Dice email address",
           html: verificationEmailHtml(url),
           text: `Verify your email address by visiting: ${url}`,
+        }),
+      );
+    },
+    // Avoid awaiting to prevent timing attacks.
+    sendChangeEmailVerification: async ({
+      newEmail,
+      url,
+    }: {
+      newEmail: string;
+      url: string;
+      user: { email: string };
+    }) => {
+      waitUntil(
+        sendEmail({
+          apiKey: RESEND_API_KEY,
+          from: RESEND_FROM_EMAIL,
+          to: newEmail,
+          subject: "Confirm your new Chat with Dice email address",
+          html: changeEmailVerificationHtml(url),
+          text: `Confirm your new email address by visiting: ${url}`,
         }),
       );
     },
@@ -117,6 +143,34 @@ function verificationEmailHtml(url: string): string {
     <hr style="margin:32px 0;border:none;border-top:1px solid #eee;">
     <p style="margin:0;color:#bbb;font-size:12px;">
       If you didn't create an account you can safely ignore this email.
+    </p>
+  </div>
+</body>
+</html>`;
+}
+
+function changeEmailVerificationHtml(url: string): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:sans-serif;">
+  <div style="max-width:560px;margin:40px auto;background:#fff;border-radius:8px;padding:40px;">
+    <h1 style="margin:0 0 8px;font-size:24px;color:#1a1a1a;">Confirm your new email</h1>
+    <p style="margin:0 0 24px;color:#555;">
+      Someone requested an email address change on your <strong>Chat with Dice</strong> account.
+      Click the button below to confirm this is your new address.
+    </p>
+    <a href="${url}"
+       style="display:inline-block;background:#6366f1;color:#fff;padding:12px 28px;
+              border-radius:6px;text-decoration:none;font-weight:600;">
+      Confirm new email address
+    </a>
+    <p style="margin:24px 0 0;color:#999;font-size:13px;">
+      Or copy this link into your browser:<br>
+      <span style="color:#6366f1;word-break:break-all;">${url}</span>
+    </p>
+    <hr style="margin:32px 0;border:none;border-top:1px solid #eee;">
+    <p style="margin:0;color:#bbb;font-size:12px;">
+      If you didn't request this change you can safely ignore this email.
     </p>
   </div>
 </body>
