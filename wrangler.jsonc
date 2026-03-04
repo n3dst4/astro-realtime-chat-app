@@ -91,4 +91,10 @@
       ],
     },
   },
+  "r2_buckets": [
+    {
+      "bucket_name": "chat-with-dice",
+      "binding": "ChatWithDiceBucket",
+    },
+  ],
 }
