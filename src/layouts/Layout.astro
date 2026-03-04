@@ -5,15 +5,8 @@ import "../styles/global.css";
 
 type Props = {
   class?: string;
-  title: string;
+  title: string | null;
 };
-
-const url = new URL(Astro.request.url);
-const parentUrl =
-  url.pathname === "/"
-    ? null
-    : (url.pathname.replace(/\/$/, "").split("/").slice(0, -1).join("/") ||
-        "") + "/";
 
 const { title, class: className } = Astro.props;
 
@@ -33,7 +26,7 @@ const initialUser = serverUser
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | Chat with Dice</title>
+    <title>{`${title ?? ""}${title ? " | " : ""}Chat with Dice`}</title>
   </head>
   <body class="flex h-full w-full flex-col overflow-hidden">
     <header
@@ -58,17 +51,10 @@ const initialUser = serverUser
       </div>
       <div class="navbar-center">
         <h1 class="font-bold lg:text-4xl">
-          {title}
+          {title ?? "Chat with Dice"}
         </h1>
       </div>
       <div class="navbar-end gap-4">
-        {
-          parentUrl && (
-            <a class="link link-hover link-primary" href={parentUrl}>
-              Up
-            </a>
-          )
-        }
         <NavBarAccount client:load initialUser={initialUser} />
       </div>
       <hr />
