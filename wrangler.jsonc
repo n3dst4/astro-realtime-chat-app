@@ -98,7 +98,7 @@
     },
   ],
   "vars": {
-    "BETTER_AUTH_URL": "https://chat-with-dice.neil-358.workers.dev/",
+    "BETTER_AUTH_URL": "https://chatwithdice.lumphammer.net/",
     "BUCKET_PUBLIC_URL": "https://r2.chatwithdice.lumphammer.net",
     "GITHUB_CLIENT_ID": "Ov23liodlIl9o0JSyRY6",
     "GOOGLE_CLIENT_ID": "869954021187-jbep8bgnl19da678buk1t3v21vm5rvgt.apps.googleusercontent.com",
