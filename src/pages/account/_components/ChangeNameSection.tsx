@@ -1,5 +1,6 @@
 import { authClient } from "@/lib/auth-client";
-import { User } from "lucide-react";
+import { generateRandomName } from "@/lib/generateRandomName";
+import { Dice6, User } from "lucide-react";
 import { useState } from "react";
 
 export function ChangeNameSection({ currentName }: { currentName: string }) {
@@ -46,20 +47,35 @@ export function ChangeNameSection({ currentName }: { currentName: string }) {
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <fieldset className="fieldset">
             <legend className="fieldset-legend">Name</legend>
-            <label className="input w-full">
-              <User size={16} className="opacity-50" />
-              <input
-                type="text"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
+            <div className="join w-full">
+              <label className="input join-item flex-1">
+                <User size={16} className="opacity-50" />
+                <input
+                  type="text"
+                  placeholder="Adventurous Badger"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setSuccess(false);
+                  }}
+                  required
+                  disabled={loading}
+                />
+              </label>
+              <button
+                type="button"
+                className="btn btn-neutral join-item"
+                title="Generate random name"
+                aria-label="Generate random name"
+                onClick={() => {
+                  setName(generateRandomName());
                   setSuccess(false);
                 }}
-                required
                 disabled={loading}
-              />
-            </label>
+              >
+                <Dice6 size={18} />
+              </button>
+            </div>
           </fieldset>
 
           <button
@@ -67,9 +83,7 @@ export function ChangeNameSection({ currentName }: { currentName: string }) {
             className="btn btn-primary w-full"
             disabled={loading || name === currentName}
           >
-            {loading && (
-              <span className="loading loading-spinner loading-sm" />
-            )}
+            {loading && <span className="loading loading-spinner loading-sm" />}
             Save name
           </button>
         </form>
