@@ -40,6 +40,14 @@ export const auth = betterAuth({
     changeEmail: {
       enabled: true,
     },
+    additionalFields: {
+      chatId: {
+        type: "string",
+        required: true,
+        unique: true,
+        input: true,
+      },
+    },
   },
 
   emailVerification: {

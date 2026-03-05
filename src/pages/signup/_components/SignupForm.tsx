@@ -32,6 +32,7 @@ export function SignupForm() {
       name,
       email,
       password,
+      chatId: "",
     });
 
     if (authError) {
