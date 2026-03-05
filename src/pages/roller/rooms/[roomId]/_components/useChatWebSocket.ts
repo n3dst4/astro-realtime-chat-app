@@ -25,6 +25,9 @@ export const useChatWebSocket = ({
   const websocketRef = useRef<ReconnectingWebSocket>(null);
 
   useEffect(() => {
+    if (!chatId) {
+      return;
+    }
     // Build WebSocket URL
     const wsUrl = `../ws/?roomName=${encodeURIComponent(roomName)}&chatId=${encodeURIComponent(chatId)}`;
 
