@@ -1,9 +1,9 @@
-import { ReconnectingWebSocket } from "../../../../../utils/ReconnectingWebSocket";
+import type { ConnectionStatus } from "./types";
+import { ReconnectingWebSocket } from "@/lib/ReconnectingWebSocket";
 import {
   type RollerMessage,
   webSocketServerMessageSchema,
-} from "../../../../../workers/types";
-import type { ConnectionStatus } from "./types";
+} from "@/workers/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type UseChatWebSocketArgs = {
@@ -75,7 +75,7 @@ export const useChatWebSocket = ({
       console.log("Closing websocket because effect re-ran");
       ws.close();
     };
-  }, [roomName]);
+  }, [roomName, chatId]);
 
   const sendJSON = useCallback((content: any) => {
     websocketRef.current?.json(content);

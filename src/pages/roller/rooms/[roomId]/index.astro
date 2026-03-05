@@ -1,8 +1,8 @@
 ---
 import { db } from "@/db";
+import Layout from "@/layouts/Layout.astro";
+import { Rooms } from "@/schemas/chatDB-schema";
 import { eq } from "drizzle-orm";
-import Layout from "../../../../layouts/Layout.astro";
-import { Rooms } from "../../../../schemas/chatDB-schema";
 import { DiceRoller } from "./_components/DiceRoller";
 
 export const prerender = false;
