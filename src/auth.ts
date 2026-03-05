@@ -41,6 +41,10 @@ export const auth = betterAuth({
       enabled: true,
     },
     additionalFields: {
+      // this is used to sync up with the locally-generated UUID that we use for
+      // anonymous users. When a user signs up, we want them to "retain
+      // ownership" of their messages so we take the local UUID if any and add
+      // it to the db.
       chatId: {
         type: "string",
         required: true,

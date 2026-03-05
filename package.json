@@ -13,6 +13,7 @@
     "lint:check": "oxlint --type-aware",
     "lint:fix": "oxlint --fix --type-aware --fix-dangerously --fix-suggestions",
     "cloudflare-types": "wrangler types src/worker-configuration.d.ts",
+    "db:generateauthschema": "npx https://pkg.pr.new/better-auth/better-auth/@better-auth/cli@6913 generate --output=src/schemas/auth-schema.ts",
     "db:generate:todos": " DATABASE_BINDING=todos drizzle-kit generate",
     "db:generate:chatdb": " DATABASE_BINDING=chatDB drizzle-kit generate",
     "db:generate:roller": "drizzle-kit generate --config=./drizzle.config.roller.ts",
