@@ -1,32 +1,36 @@
 import { generateRandomName } from "@/lib/generateRandomName";
 import { memo, useId, useLayoutEffect, useRef, useState } from "react";
 
-type UsernameDialogProps = {
-  initialUsername: string;
-  onSetUsername: ((username: string) => void) | null;
+type DisplayNameDialogProps = {
+  initialDisplayName: string;
+  onSetDisplayName: ((newDisplayName: string) => void) | null;
   loggedIn: boolean;
 };
 
-export const UsernameDialog = memo(
-  ({ initialUsername, onSetUsername, loggedIn }: UsernameDialogProps) => {
-    const usernameDialogRef = useRef<HTMLDialogElement>(null);
+export const DisplayNameDialog = memo(
+  ({
+    initialDisplayName,
+    onSetDisplayName,
+    loggedIn,
+  }: DisplayNameDialogProps) => {
+    const dialogRef = useRef<HTMLDialogElement>(null);
     const dialogId = useId();
-    const [username, setUsername] = useState(
-      initialUsername ?? generateRandomName(),
+    const [displayName, setDisplayName] = useState(
+      initialDisplayName ?? generateRandomName(),
     );
 
     useLayoutEffect(() => {
-      if (usernameDialogRef.current && initialUsername === "") {
-        usernameDialogRef.current.showModal();
+      if (dialogRef.current && initialDisplayName === "") {
+        dialogRef.current.showModal();
       }
-    }, [initialUsername]);
+    }, [initialDisplayName]);
 
     return (
       <>
         <div
           className="text-middle inline-flex h-(--size) flex-col justify-center"
         >
-          {initialUsername}
+          {initialDisplayName}
         </div>
         {!loggedIn && (
           <>
@@ -41,8 +45,8 @@ export const UsernameDialog = memo(
 
             <dialog
               id={dialogId}
-              ref={usernameDialogRef}
-              closedby={initialUsername ? "any" : "none"}
+              ref={dialogRef}
+              closedby={initialDisplayName ? "any" : "none"}
               className="animate-fadeout open:animate-fadein
                 backdrop:animate-fadeout open:backdrop:animate-fadein prose
                 absolute m-auto max-w-200 min-w-1/2 flex-col rounded-lg
@@ -50,20 +54,20 @@ export const UsernameDialog = memo(
                 [transition:display_300ms_allow-discrete,overlay_300ms_allow-discrete]
                 backdrop:bg-black/50 backdrop:backdrop-blur-sm open:flex"
             >
-              <h2 className="">Pick a username</h2>
+              <h2 className="">Enter a display name</h2>
               <form
                 className="join flex w-full flex-row flex-wrap"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (onSetUsername) {
-                    onSetUsername(username);
+                  if (onSetDisplayName) {
+                    onSetDisplayName(displayName);
                   }
-                  usernameDialogRef?.current?.close();
+                  dialogRef?.current?.close();
                 }}
               >
                 <input
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
                   className="input input-primary join-item flex-2 basis-auto"
                 />
                 <button
@@ -71,15 +75,15 @@ export const UsernameDialog = memo(
                   type="button"
                   onClick={(e) => {
                     e.preventDefault();
-                    setUsername(generateRandomName());
+                    setDisplayName(generateRandomName());
                   }}
                 >
                   Generate random
                 </button>
                 <button className="btn btn-primary join-item flex-1 basis-auto">
-                  Save username
+                  Save display name
                 </button>
-                {initialUsername && (
+                {initialDisplayName && (
                   <button
                     type="button"
                     // @ts-expect-error invoker api not in react types yet
@@ -99,4 +103,4 @@ export const UsernameDialog = memo(
   },
 );
 
-UsernameDialog.displayName = "UsernameDialog";
+DisplayNameDialog.displayName = "DisplayNameDialog";

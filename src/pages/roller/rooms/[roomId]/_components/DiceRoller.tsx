@@ -1,7 +1,7 @@
 import { type WebSocketClientMessage } from "../../../../../workers/types";
 import { ChatBubble } from "./ChatBubble";
 import { ChatForm } from "./ChatForm";
-import { UsernameDialog } from "./UsernameDialog";
+import { DisplayNameDialog } from "./DisplayNameDialog";
 import { deriveHueFromUserId } from "./deriveHueFromUserId";
 import type { UserHueStyle } from "./types";
 import { useChatWebSocket } from "./useChatWebSocket";
@@ -15,14 +15,15 @@ type DiceRollerProps = {
 };
 
 export const DiceRoller = memo(({ roomId: roomName }: DiceRollerProps) => {
-  const { connectionStatus, messages, sendJSON } = useChatWebSocket({
-    roomName,
-  });
-
-  const { userIdentity, handleSetUsername, loggedIn } =
+  const { userIdentity, handleSetDisplayName, loggedIn } =
     useUserIdentityStorage();
 
-  const hue = deriveHueFromUserId(userIdentity.userId);
+  const { connectionStatus, messages, sendJSON } = useChatWebSocket({
+    roomName,
+    chatId: userIdentity.chatId,
+  });
+
+  const hue = deriveHueFromUserId(userIdentity.chatId);
 
   const {
     scrollContainerRef,
@@ -39,8 +40,8 @@ export const DiceRoller = memo(({ roomId: roomName }: DiceRollerProps) => {
         payload: {
           formula: formula.toLowerCase(),
           text,
-          userId: userIdentity.userId,
-          username: userIdentity.username,
+          userId: userIdentity.chatId,
+          username: userIdentity.displayName,
         },
       };
       sendJSON(msg);
@@ -60,9 +61,9 @@ export const DiceRoller = memo(({ roomId: roomName }: DiceRollerProps) => {
       >
         <header className="bg-base-200 flex flex-row px-4">
           <div className="flex-1" />
-          <UsernameDialog
-            initialUsername={userIdentity.username}
-            onSetUsername={handleSetUsername}
+          <DisplayNameDialog
+            initialDisplayName={userIdentity.displayName}
+            onSetDisplayName={handleSetDisplayName}
             loggedIn={loggedIn}
           />
           <div

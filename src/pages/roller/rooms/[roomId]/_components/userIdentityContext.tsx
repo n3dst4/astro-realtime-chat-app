@@ -1,6 +1,6 @@
 import { type PropsWithChildren, createContext, memo, useContext } from "react";
 
-type UserIdentityContextValue = { username: string; userId: string };
+type UserIdentityContextValue = { displayName: string; chatId: string };
 
 const UserIdentityContext = createContext<UserIdentityContextValue | null>(
   null,

@@ -8,11 +8,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 type UseChatWebSocketArgs = {
   roomName: string;
+  chatId: string;
 };
 
 const MAX_HISTORY_BUFFER_LENGTH = 100;
 
-export const useChatWebSocket = ({ roomName }: UseChatWebSocketArgs) => {
+export const useChatWebSocket = ({
+  roomName,
+  chatId,
+}: UseChatWebSocketArgs) => {
   const [messages, setMessages] = useState<RollerMessage[]>([]);
 
   const [connectionStatus, setConnectionStatus] =
@@ -22,7 +26,7 @@ export const useChatWebSocket = ({ roomName }: UseChatWebSocketArgs) => {
 
   useEffect(() => {
     // Build WebSocket URL
-    const wsUrl = `../ws/?roomName=${roomName}`;
+    const wsUrl = `../ws/?roomName=${encodeURIComponent(roomName)}&chatId=${encodeURIComponent(chatId)}`;
 
     // return;
     // Create WebSocket connection

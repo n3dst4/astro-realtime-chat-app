@@ -28,7 +28,7 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
   // const [showMore, setShowMore] = useState(false);
   const [showShowMore, setShowShowMore] = useState(false);
 
-  const { userId } = useUserIdentityContext();
+  const { chatId: userId } = useUserIdentityContext();
 
   const html = useMemo(() => {
     return addLinkTargets(

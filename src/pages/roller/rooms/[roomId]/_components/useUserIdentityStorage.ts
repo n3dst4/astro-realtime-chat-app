@@ -1,50 +1,54 @@
+import {
+  CHAT_ID_LOCAL_STORAGE_KEY,
+  DISPLAY_NAME_LOCAL_STORAGE_KEY,
+} from "@/constants";
 import { authClient } from "@/lib/auth-client";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 type UseUserIdentityStorageReturn = {
-  userIdentity: { username: string; userId: string };
+  userIdentity: { displayName: string; chatId: string };
 } & (
-  | { loggedIn: false; handleSetUsername: (newUsername: string) => void }
-  | { loggedIn: true; handleSetUsername: null }
+  | { loggedIn: false; handleSetDisplayName: (newDisplayName: string) => void }
+  | { loggedIn: true; handleSetDisplayName: null }
 );
 
 export const useUserIdentityStorage = (): UseUserIdentityStorageReturn => {
   const { data: sessionData, isPending } = authClient.useSession();
 
-  const [username, setUsername] = useState<string>(
-    localStorage.getItem("username") ?? "",
+  const [localDisplayName, setLocalDislayName] = useState<string>(
+    localStorage.getItem(DISPLAY_NAME_LOCAL_STORAGE_KEY) ?? "",
   );
-  const [userId, setUserId] = useState<string>(
-    localStorage.getItem("userId") ?? "",
+  const [localChatId, setLocalChatId] = useState<string>(
+    localStorage.getItem(CHAT_ID_LOCAL_STORAGE_KEY) ?? "",
   );
   useEffect(() => {
-    if (userId === "" && !isPending) {
+    if (localChatId === "" && !isPending && !sessionData) {
       const newUserId = crypto.randomUUID();
-      localStorage.setItem("userId", newUserId);
-      setUserId(newUserId);
+      localStorage.setItem(CHAT_ID_LOCAL_STORAGE_KEY, newUserId);
+      setLocalChatId(newUserId);
     }
-  }, [userId, isPending]);
+  }, [localChatId, isPending, sessionData]);
 
-  const handleSetUsername = useCallback((newUsername: string) => {
-    setUsername(newUsername);
-    localStorage.setItem("username", newUsername);
+  const handleSetDisplayName = useCallback((newDisplayName: string) => {
+    setLocalDislayName(newDisplayName);
+    localStorage.setItem(DISPLAY_NAME_LOCAL_STORAGE_KEY, newDisplayName);
   }, []);
 
   const userIdentity = useMemo(
-    () => ({ username, userId }),
-    [username, userId],
+    () => ({ displayName: localDisplayName, chatId: localChatId }),
+    [localDisplayName, localChatId],
   );
 
   if (sessionData && sessionData.user) {
     return {
       loggedIn: true,
-      handleSetUsername: null,
+      handleSetDisplayName: null,
       userIdentity: {
-        username: sessionData.user.name,
-        userId: sessionData.user.id,
+        displayName: sessionData.user.name,
+        chatId: sessionData.user.id,
       },
     };
   } else {
-    return { loggedIn: false, userIdentity, handleSetUsername };
+    return { loggedIn: false, userIdentity, handleSetDisplayName };
   }
 };
