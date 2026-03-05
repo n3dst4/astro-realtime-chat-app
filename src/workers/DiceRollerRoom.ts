@@ -127,9 +127,14 @@ export class DiceRollerRoom extends DurableObject {
         console.error("Invalid message format:", parsed.error);
         return;
       }
-      const attachment = sessionAttachmentSchema.parse(
+      const { data: attachment, error } = sessionAttachmentSchema.safeParse(
         ws.deserializeAttachment(),
       );
+      if (error) {
+        console.error("Error parsing attachment", error);
+        console.log("Attachment", ws.deserializeAttachment());
+        return;
+      }
       const data = parsed.data;
       if (data.type === "chat") {
         await this.runFormula(
