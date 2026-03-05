@@ -1,11 +1,40 @@
+import type { User } from "@/auth";
+import { db } from "@/db";
+import { users } from "@/schemas/chatDB-schema";
 import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
+import { eq, sql } from "drizzle-orm";
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ url, request, locals: _locals }) => {
+async function validateChatId(user: User | null, chatId: string) {
+  if (user && user.chatId === chatId) {
+    return true;
+  }
+  const chatIdIsNotUsedByAnAccount =
+    (
+      await db
+        .select({ n: sql<number>`1` })
+        .from(users)
+        .where(eq(users.chatId, chatId))
+        .limit(1)
+        .all()
+    ).length === 0;
+
+  return chatIdIsNotUsedByAnAccount;
+}
+
+export const GET: APIRoute = async ({ url, request, locals }) => {
   const roomName = url.searchParams.get("roomName");
-  if (!roomName) return new Response("Room name is required", { status: 400 });
+  const chatId = url.searchParams.get("chatId");
+  if (!roomName) return new Response("roomName is required", { status: 400 });
+  if (!chatId) return new Response("chatId is required", { status: 400 });
+
+  const user = locals.user;
+  const chatIdOkay = await validateChatId(user, chatId);
+  if (!chatIdOkay)
+    return new Response("chatId is not available", { status: 400 });
+
   // Get the ChatRoom Durable Object namespace
   const RollerNamespace = env.DiceRollerRoom;
   if (!RollerNamespace)
@@ -15,5 +44,6 @@ export const GET: APIRoute = async ({ url, request, locals: _locals }) => {
   const durableObjectId = RollerNamespace.idFromName(roomName);
   // Get a stub (reference) to the Durable Object
   const durableObjectStub = RollerNamespace.get(durableObjectId);
+  // request.url
   return durableObjectStub.fetch(request);
 };

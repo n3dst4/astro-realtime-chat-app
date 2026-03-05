@@ -21,24 +21,10 @@ const log = console.log.bind(console, "[Roller DO]");
 const logError = console.error.bind(console, "[Roller DO]");
 
 export class DiceRollerRoom extends DurableObject {
-  private sessions: Map<WebSocket, SessionAttachment>;
   private readonly db: DrizzleSqliteDODatabase<typeof dbSchema>;
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
-
-    this.sessions = new Map();
-
-    // Restore hibernating WebSocket connections
-    // When the DO wakes up, we need to restore session data from attachments
-    this.ctx.getWebSockets().forEach((websocket) => {
-      const attachment = sessionAttachmentSchema.safeParse(
-        websocket.deserializeAttachment(),
-      );
-      if (attachment.success) {
-        this.sessions.set(websocket, attachment.data);
-      }
-    });
 
     // Set up automatic ping/pong responses
     // This keeps connections alive without waking the DO
@@ -93,6 +79,10 @@ export class DiceRollerRoom extends DurableObject {
     if (upgradeHeader !== "websocket") {
       return new Response("Expected WebSocket upgrade", { status: 426 });
     }
+    const chatId = URL.parse(request.url)?.searchParams.get("chatId");
+    if (!chatId) {
+      return new Response("chatId is required", { status: 400 });
+    }
     // Create a WebSocket pair (client and server)
     const pair = new WebSocketPair();
     const [client, server] = Object.values(pair);
@@ -101,6 +91,13 @@ export class DiceRollerRoom extends DurableObject {
     // Unlike server.accept(), this allows the DO to hibernate while
     // keeping the WebSocket connection open
     this.ctx.acceptWebSocket(server);
+
+    const attachment: SessionAttachment = {
+      chatId: "",
+      // displayName: "",
+    };
+
+    server.serializeAttachment(attachment);
 
     void this.sendCatchUp(server);
 
@@ -117,7 +114,7 @@ export class DiceRollerRoom extends DurableObject {
    * Called when a message is received, even after hibernation
    */
   override async webSocketMessage(
-    _ws: WebSocket,
+    ws: WebSocket,
     message: ArrayBuffer | string,
   ): Promise<void> {
     try {
@@ -130,13 +127,16 @@ export class DiceRollerRoom extends DurableObject {
         console.error("Invalid message format:", parsed.error);
         return;
       }
+      const attachment = sessionAttachmentSchema.parse(
+        ws.deserializeAttachment(),
+      );
       const data = parsed.data;
       if (data.type === "chat") {
         await this.runFormula(
           data.payload.formula,
           data.payload.text,
-          data.payload.username,
-          data.payload.userId,
+          data.payload.displayName,
+          attachment.chatId,
         );
       }
     } catch (error) {
@@ -170,8 +170,8 @@ export class DiceRollerRoom extends DurableObject {
   async runFormula(
     formula: string | null,
     text: string | null,
-    username: string,
-    userId: string,
+    displayName: string,
+    chatId: string,
   ): Promise<void> {
     const roll = formula ? new DiceRoll(formula) : null;
 
@@ -188,8 +188,8 @@ export class DiceRollerRoom extends DurableObject {
       total: roll?.total ?? null,
       text,
       // username,
-      userId,
-      username,
+      chatId,
+      displayName,
     };
     await this.db.insert(Messages).values(rollerMessage);
     console.log("inserting into Messages", rollerMessage);

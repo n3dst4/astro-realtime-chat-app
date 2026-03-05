@@ -89,33 +89,16 @@ export const structuredRollsSchema = z.array(rollEntrySchema);
 export type StructuredRolls = z.infer<typeof structuredRollsSchema>;
 
 export const sessionAttachmentSchema = z.object({
-  id: z.uuid(),
-  userId: z.uuid(),
-  username: z.string().min(1).max(USERNAME_MAX_LENGTH),
+  chatId: z.uuid(),
+  // displayName: z.string().min(1).max(USERNAME_MAX_LENGTH),
 });
 
 export type SessionAttachment = z.infer<typeof sessionAttachmentSchema>;
 
-// export const rollerMessageSchema = createSelectSchema(Messages);
-
-// export const Messages = sqliteTable("Messages", {
-//   id: text()
-//     .primaryKey()
-//     .$defaultFn(() => crypto.randomUUID()),
-//   username: text().notNull(),
-//   userId: text().notNull(),
-//   created_time: int().notNull(),
-//   formula: text(),
-//   result: text(),
-//   rolls: text(),
-//   total: int(),
-//   text: text(),
-// });
-
 export const rollerMessageSchema = z.object({
   id: z.string(),
-  username: z.string(),
-  userId: z.string(),
+  displayName: z.string(),
+  chatId: z.string(),
   created_time: z.number(),
   formula: z.string().nullable(),
   result: z.string().nullable(),
@@ -147,8 +130,7 @@ export const webSocketClientMessageSchema = z.discriminatedUnion("type", [
     payload: z.object({
       formula: z.string().nullable(),
       text: z.string().nullable(),
-      username: z.string(),
-      userId: z.string(),
+      displayName: z.string().min(1).max(USERNAME_MAX_LENGTH),
     }),
   }),
 ]);

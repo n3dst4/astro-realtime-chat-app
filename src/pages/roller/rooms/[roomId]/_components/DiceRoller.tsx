@@ -40,8 +40,7 @@ export const DiceRoller = memo(({ roomId: roomName }: DiceRollerProps) => {
         payload: {
           formula: formula.toLowerCase(),
           text,
-          userId: userIdentity.chatId,
-          username: userIdentity.displayName,
+          displayName: userIdentity.displayName,
         },
       };
       sendJSON(msg);

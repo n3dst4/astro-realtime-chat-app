@@ -23,12 +23,12 @@ export function addLinkTargets(html: string): string {
 }
 
 export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
-  const hue = deriveHueFromUserId(message.userId);
+  const hue = deriveHueFromUserId(message.chatId);
   const textRef = useRef<HTMLParagraphElement>(null);
   // const [showMore, setShowMore] = useState(false);
   const [showShowMore, setShowShowMore] = useState(false);
 
-  const { chatId: userId } = useUserIdentityContext();
+  const { chatId } = useUserIdentityContext();
 
   const html = useMemo(() => {
     return addLinkTargets(
@@ -54,7 +54,7 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
 
   return (
     <article
-      data-is-mine={message.userId === userId ? "" : undefined}
+      data-is-mine={message.chatId === chatId ? "" : undefined}
       className="group mb-2 w-full
         [--user-colour:oklch(var(--bubble-light-l)_var(--bubble-light-c)_var(--user-hue))]
         data-is-mine:text-right
@@ -62,7 +62,7 @@ export const ChatBubble = memo(({ message }: ChatBubbleProps) => {
       style={{ "--user-hue": hue } satisfies UserHueStyle as UserHueStyle}
     >
       <header className="text-sm">
-        <span className="mr-4">{message.username}</span>
+        <span className="mr-4">{message.displayName}</span>
         <TimeDisplay timeStamp={message.created_time} />
       </header>
       <div
