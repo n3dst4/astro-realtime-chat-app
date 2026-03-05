@@ -4,6 +4,8 @@ import m0002 from './20260222195846_misty_puff_adder/migration.sql';
 import m0003 from './20260223123852_tan_masked_marvel/migration.sql';
 import m0004 from './20260223144242_fuzzy_kulan_gath/migration.sql';
 import m0005 from './20260223192408_motionless_catseye/migration.sql';
+import m0006 from './20260305141659_colorful_forge/migration.sql';
+import m0007 from './20260305141724_empty_captain_america/migration.sql';
 
   export default {
     migrations: {
@@ -12,7 +14,9 @@ import m0005 from './20260223192408_motionless_catseye/migration.sql';
 "20260222195846_misty_puff_adder": m0002,
 "20260223123852_tan_masked_marvel": m0003,
 "20260223144242_fuzzy_kulan_gath": m0004,
-"20260223192408_motionless_catseye": m0005
+"20260223192408_motionless_catseye": m0005,
+"20260305141659_colorful_forge": m0006,
+"20260305141724_empty_captain_america": m0007
 }
   }
   
