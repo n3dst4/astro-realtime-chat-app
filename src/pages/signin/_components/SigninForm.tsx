@@ -47,6 +47,8 @@ export function SigninForm() {
     } else {
       localStorage.removeItem(CHAT_ID_LOCAL_STORAGE_KEY);
       localStorage.removeItem(DISPLAY_NAME_LOCAL_STORAGE_KEY);
+      const returnUrl =
+        new URLSearchParams(window.location.search).get("returnUrl") ?? "/";
       window.location.href = returnUrl;
     }
   }
@@ -73,9 +75,8 @@ export function SigninForm() {
     } else {
       localStorage.removeItem(CHAT_ID_LOCAL_STORAGE_KEY);
       localStorage.removeItem(DISPLAY_NAME_LOCAL_STORAGE_KEY);
+      // on success the browser is redirected by the OAuth flow
     }
-
-    // on success the browser is redirected by the OAuth flow
   }
 
   return (
