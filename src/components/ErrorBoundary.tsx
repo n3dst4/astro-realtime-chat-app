@@ -8,22 +8,45 @@ function ErrorDisplay({ error }: { error: Error }) {
   return (
     <div
       className="relative flex h-full flex-col items-center justify-center
-        overflow-hidden bg-black p-8 font-mono text-green-400"
+        overflow-hidden bg-black p-8 font-mono text-green-400
+        [--grid-color:var(--color-cyan-500)]"
     >
       {/* Scanline overlay */}
       <div
         className="pointer-events-none absolute inset-0 z-40
           bg-[repeating-linear-gradient(0deg,rgba(0,0,0,0.25)_0px,rgba(0,0,0,0.25)_1px,transparent_1px,transparent_2px)]"
       />
-      {/* Glitch flicker layer */}
-      <div
-        className="pointer-events-none absolute inset-0 z-30 animate-pulse
-          bg-linear-to-b from-fuchsia-500/40 via-transparent to-cyan-400/40
-          mix-blend-screen"
-      />
+
+      {/*Top gridlines*/}
+      {/*<div
+        className="absolute top-0 z-15 h-1/2 w-full perspective-dramatic
+          perspective-origin-bottom"
+      >
+        <div
+          className="h-full w-[400%] -translate-x-1/2 -rotate-x-45
+            bg-[repeating-linear-gradient(0deg,transparent_0px,transparent_12px,var(--grid-color)_14px,transparent_16px),repeating-linear-gradient(90deg,transparent_0px,transparent_50px,var(--grid-color)_60px,transparent_70px)]
+            mix-blend-screen"
+        />
+      </div>*/}
+
+      {/*bottom gridlines*/}
+      {/*<div
+        className="absolute top-1/2 z-15 h-1/2 w-full perspective-dramatic
+          perspective-origin-top"
+      >
+        <div
+          className="h-full w-[400%] -translate-x-1/2 rotate-x-45
+            bg-[repeating-linear-gradient(0deg,transparent_0px,transparent_12px,var(--grid-color)_14px,transparent_16px),repeating-linear-gradient(90deg,transparent_0px,transparent_50px,var(--grid-color)_60px,transparent_70px)]"
+        />
+      </div>*/}
+
+      {/*<div
+        className="absolute z-16 h-full w-full
+          bg-linear-[transparent_0px,black_50%,black_50%,transparent_100%]"
+      />*/}
 
       <div
-        className="relative z-20 w-full max-w-2xl -skew-x-3 border
+        className="relative z-20 w-full max-w-2xl -skew-x-3 transform-gpu border
           border-cyan-500 bg-black/80 p-8
           shadow-[0_0_40px_#00ffff66,0_0_80px_#ff00ff33]"
       >
@@ -31,39 +54,36 @@ function ErrorDisplay({ error }: { error: Error }) {
         <div
           className="mb-6 flex items-center gap-3 border-b border-pink-500 pb-4"
         >
-          <span className="animate-ping text-2xl text-pink-500">▓</span>
           <h2
-            className="text-2xl font-extrabold tracking-widest text-pink-500
-              uppercase drop-shadow-[0_0_8px_#ff00ff]
+            className="animate-pulse text-2xl font-extrabold tracking-widest
+              text-pink-500 uppercase drop-shadow-[0_0_8px_#ff00ff]
               [text-shadow:0_0_10px_#ff00ff,0_0_30px_#ff00ff]"
           >
-            !! SYSTEM FAILURE !!
+            &gt; ERROR
           </h2>
-          <span className="animate-ping text-2xl text-pink-500">▓</span>
         </div>
 
         {/* Subheading */}
         <p
-          className="mb-4 text-xs tracking-[0.3em] text-cyan-400 uppercase
+          className="mb-4 text-xs tracking-[0.3em] text-pink-400
             drop-shadow-[0_0_6px_#00ffff]"
         >
-          &gt;&gt; MAINFRAME CORE DUMP DETECTED &lt;&lt;
+          &gt;&gt; {error.message}
         </p>
 
         {/* Error message block */}
-        <pre
-          className="relative max-h-60 overflow-auto border border-green-500/40
-            bg-black p-4 text-sm leading-relaxed break-all whitespace-pre-wrap
-            text-green-300 shadow-[inset_0_0_20px_#00ff0022] before:absolute
-            before:inset-0
-            before:bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,rgba(0,255,255,0.03)_2px,rgba(0,255,255,0.03)_4px)]
-            before:content-['']"
-        >
-          <span className="font-bold text-red-500 drop-shadow-[0_0_6px_#ff0000]">
-            [ERR]{" "}
-          </span>
-          {error.message}
-        </pre>
+        {error.stack && (
+          <pre
+            className="relative max-h-60 overflow-auto border border-cyan-500/40
+              bg-black p-4 text-sm leading-relaxed break-all whitespace-pre-wrap
+              text-cyan-300 shadow-[inset_0_0_20px_#00ff0022] before:absolute
+              before:inset-0
+              before:bg-[repeating-linear-gradient(90deg,transparent,transparent_2px,rgba(0,255,255,0.03)_2px,rgba(0,255,255,0.03)_4px)]
+              before:content-['']"
+          >
+            {error.stack.split("\n").slice(1).join("\n")}
+          </pre>
+        )}
 
         {/* Footer glitch bar */}
         <div className="mt-6 flex gap-1">
@@ -75,11 +95,19 @@ function ErrorDisplay({ error }: { error: Error }) {
             />
           ))}
         </div>
-        <p
-          className="mt-3 animate-pulse text-right text-xs tracking-widest
-            text-pink-400/60 uppercase"
-        >
-          &gt; press any key to jack back in_
+        <p className="mt-3 text-right tracking-widest">
+          <button
+            className="animate-pulse cursor-pointer text-cyan-400/60
+              hover:animate-none hover:text-pink-400"
+            onClick={() => {
+              location.reload();
+            }}
+            onKeyDown={() => {
+              location.reload();
+            }}
+          >
+            &gt; refresh the page_
+          </button>
         </p>
       </div>
     </div>

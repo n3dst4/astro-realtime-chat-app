@@ -11,7 +11,6 @@ type Room = {
 };
 
 export const RoomList = () => {
-  throw new Error("fuck");
   const {
     data: rooms = [],
     isPending,
