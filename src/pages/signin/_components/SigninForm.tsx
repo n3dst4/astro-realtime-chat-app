@@ -12,6 +12,12 @@ const HTTP_FORBIDDEN = 403;
 
 type LoadingState = "idle" | "email" | "github" | "google";
 
+function getSafeReturnUrl(): string {
+  const raw =
+    new URLSearchParams(window.location.search).get("returnUrl") ?? "/";
+  return raw.startsWith("/") ? raw : "/";
+}
+
 export function SigninForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,9 +53,7 @@ export function SigninForm() {
     } else {
       localStorage.removeItem(CHAT_ID_LOCAL_STORAGE_KEY);
       localStorage.removeItem(DISPLAY_NAME_LOCAL_STORAGE_KEY);
-      const returnUrl =
-        new URLSearchParams(window.location.search).get("returnUrl") ?? "/";
-      window.location.href = returnUrl;
+      window.location.href = getSafeReturnUrl();
     }
   }
 
@@ -65,6 +69,7 @@ export function SigninForm() {
     setLoading(provider);
     const { error: authError } = await authClient.signIn.social({
       provider,
+      callbackURL: getSafeReturnUrl(),
       additionalData: {
         chatId: localStorage.getItem("userId") ?? crypto.randomUUID(),
       },
