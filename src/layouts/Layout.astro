@@ -56,7 +56,7 @@ const initialUser = serverUser
       </div>
       <div class="navbar-end gap-4">
         <a class="link" href="/roller/rooms">Manage</a>
-        <NavBarAccount client:load initialUser={initialUser} />
+        <NavBarAccount client:only initialUser={initialUser} />
       </div>
       <hr />
     </header>
