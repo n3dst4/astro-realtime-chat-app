@@ -1,0 +1,1 @@
+ALTER TABLE `Rooms` ADD `type` text DEFAULT 'generic';
